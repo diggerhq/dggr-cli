@@ -12,9 +12,9 @@ export default class Init extends Command {
   };
 
   public async run(): Promise<void> {
-    const { args, flags } = await this.parse(Init);
-    const { root, version } = this.config;
-    const diggerJson = `${root}/digger.json`;
+    const { flags } = await this.parse(Init);
+    const { version } = this.config;
+    const diggerJson = `${process.cwd()}/dgctl.json`;
 
     try {
       if (fs.existsSync(diggerJson) && !flags.force) {
@@ -31,6 +31,8 @@ export default class Init extends Command {
           created: Date.now(),
         };
         fs.writeFileSync(diggerJson, JSON.stringify(content));
+        fs.writeFileSync(`${process.cwd()}/.dgctlsecrets`, "");
+        fs.writeFileSync(`${process.cwd()}/.dgctlvariables`, "");
         this.log("Successfully initiated a Digger project");
       }
     } catch (err: any) {
