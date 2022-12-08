@@ -1,5 +1,5 @@
 import { Command, Flags } from "@oclif/core";
-import * as fs from "fs";
+import * as fs from "node:fs";
 
 export default class Init extends Command {
   static description = "describe the command here";
@@ -12,13 +12,13 @@ export default class Init extends Command {
   };
 
   public async run(): Promise<void> {
-    const { args, flags } = await this.parse(Init);
-    const { root, version } = this.config;
-    const diggerJson = `${root}/digger.json`;
+    const { flags } = await this.parse(Init);
+    const { version } = this.config;
+    const diggerJson = `${process.cwd()}/dgctl.json`;
 
     try {
       if (fs.existsSync(diggerJson) && !flags.force) {
-        const rawContent = fs.readFileSync(diggerJson, "utf-8");
+        const rawContent = fs.readFileSync(diggerJson, "utf8");
         const parsedContent = JSON.parse(rawContent);
         fs.writeFileSync(
           diggerJson,
@@ -31,10 +31,12 @@ export default class Init extends Command {
           created: Date.now(),
         };
         fs.writeFileSync(diggerJson, JSON.stringify(content));
+        fs.writeFileSync(`${process.cwd()}/.dgctlsecrets`, "");
+        fs.writeFileSync(`${process.cwd()}/.dgctlvariables`, "");
         this.log("Successfully initiated a Digger project");
       }
-    } catch (err: any) {
-      this.error(err);
+    } catch (error: any) {
+      this.error(error);
     }
   }
 }
