@@ -1,5 +1,5 @@
 import { Command, Flags } from "@oclif/core";
-import * as fs from "fs";
+import * as fs from "node:fs";
 
 export default class Init extends Command {
   static description = "describe the command here";
@@ -18,7 +18,7 @@ export default class Init extends Command {
 
     try {
       if (fs.existsSync(diggerJson) && !flags.force) {
-        const rawContent = fs.readFileSync(diggerJson, "utf-8");
+        const rawContent = fs.readFileSync(diggerJson, "utf8");
         const parsedContent = JSON.parse(rawContent);
         fs.writeFileSync(
           diggerJson,
@@ -35,8 +35,8 @@ export default class Init extends Command {
         fs.writeFileSync(`${process.cwd()}/.dgctlvariables`, "");
         this.log("Successfully initiated a Digger project");
       }
-    } catch (err: any) {
-      this.error(err);
+    } catch (error: any) {
+      this.error(error);
     }
   }
 }
