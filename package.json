@@ -1,15 +1,15 @@
 {
   "name": "dgctl",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Digger CLI",
   "author": "Digger",
   "bin": {
     "dgctl": "./bin/run"
   },
-  "homepage": "https://github.com/Projects/hello-world",
+  "homepage": "https://github.com/diggerhq/dggr-cli",
   "license": "MIT",
   "main": "dist/index.js",
-  "repository": "Projects/hello-world",
+  "repository": "diggerhq/dggr-cli",
   "files": [
     "/bin",
     "/dist",
@@ -67,7 +67,7 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "bugs": "https://github.com/Projects/hello-world/issues",
+  "bugs": "https://github.com/diggerhq/dggr-cli.git/issues",
   "keywords": [
     "oclif"
   ],
