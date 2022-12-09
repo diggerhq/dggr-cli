@@ -60,10 +60,22 @@
     "topicSeparator": " ",
     "topics": {
       "init": {
-        "description": "Create digger infra project"
+        "description": "Initialise a Digger infra bundle"
       },
       "infra": {
         "description": "Commands to run generated infra"
+      },
+      "block": {
+        "description": "Commands to generate and manage bundle blocks"
+      },
+      "generate": {
+        "description": "Generate terraform code based on bundle configuration"
+      },
+      "secret": {
+        "description": "Commands to manage secrets"
+      },
+      "variable": {
+        "description": "Commands to manage variables"
       }
     }
   },

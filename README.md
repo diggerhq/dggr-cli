@@ -18,7 +18,7 @@ $ npm install -g dgctl
 $ dgctl COMMAND
 running command...
 $ dgctl (--version)
-dgctl/0.0.0 darwin-arm64 node-v16.13.1
+dgctl/0.0.1 darwin-arm64 node-v16.13.1
 $ dgctl --help [COMMAND]
 USAGE
   $ dgctl COMMAND
@@ -27,51 +27,95 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`dgctl init`](#dgctl-init)
-* [`dgctl infra`](#dgctl-infra)
+* [`dgctl autocomplete [SHELL]`](#dgctl-autocomplete-shell)
+* [`dgctl block [FILE]`](#dgctl-block-file)
+* [`dgctl generate [FILE]`](#dgctl-generate-file)
 * [`dgctl help [COMMAND]`](#dgctl-help-command)
+* [`dgctl infra [ACTION]`](#dgctl-infra-action)
+* [`dgctl init`](#dgctl-init)
+* [`dgctl plugins`](#dgctl-plugins)
+* [`dgctl plugins:install PLUGIN...`](#dgctl-pluginsinstall-plugin)
+* [`dgctl plugins:inspect PLUGIN...`](#dgctl-pluginsinspect-plugin)
+* [`dgctl plugins:install PLUGIN...`](#dgctl-pluginsinstall-plugin-1)
+* [`dgctl plugins:link PLUGIN`](#dgctl-pluginslink-plugin)
+* [`dgctl plugins:uninstall PLUGIN...`](#dgctl-pluginsuninstall-plugin)
+* [`dgctl plugins:uninstall PLUGIN...`](#dgctl-pluginsuninstall-plugin-1)
+* [`dgctl plugins:uninstall PLUGIN...`](#dgctl-pluginsuninstall-plugin-2)
+* [`dgctl plugins update`](#dgctl-plugins-update)
+* [`dgctl secret [FILE]`](#dgctl-secret-file)
+* [`dgctl update [CHANNEL]`](#dgctl-update-channel)
+* [`dgctl variable [FILE]`](#dgctl-variable-file)
 
-## `dgctl init`
+## `dgctl autocomplete [SHELL]`
 
-Initialise a Digger project
-
-```
-USAGE
-  $ dgctl init --force
-
-FLAGS
-  --force (optional) Forcefully reinitialise a project. Overrides existing files
-
-DESCRIPTION
-  Initialises a Digger project
-
-EXAMPLES
-  $ dgctl init
-  Successfully initiated a Digger project
-```
-
-_See code: [src/commands/init.ts](https://github.com/diggerhq/dggr-cli/blob/main/src/commands/init.ts)_
-
-## `dgctl infra [COMMAND]`
-
-Applies generated Terraform infrastructure
+display autocomplete installation instructions
 
 ```
 USAGE
-  $ dgctl infra apply
+  $ dgctl autocomplete [SHELL] [-r]
 
 ARGUMENTS
-  COMMAND Infra command to run
+  SHELL  shell type
+
+FLAGS
+  -r, --refresh-cache  Refresh cache (ignores displaying instructions)
 
 DESCRIPTION
-  Applies generated infrastructure
+  display autocomplete installation instructions
 
 EXAMPLES
-  $ dgctl infra apply
-  Applied infrastructure successfully!
+  $ dgctl autocomplete
+
+  $ dgctl autocomplete bash
+
+  $ dgctl autocomplete zsh
+
+  $ dgctl autocomplete --refresh-cache
 ```
 
-_See code: [src/commands/infra.ts](https://github.com/diggerhq/dggr-cli/blob/main/src/commands/infra.ts)_
+_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v1.3.6/src/commands/autocomplete/index.ts)_
+
+## `dgctl block [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ dgctl block [FILE] [-n <value>] [-f]
+
+FLAGS
+  -f, --force
+  -n, --name=<value>  name to print
+
+DESCRIPTION
+  describe the command here
+
+EXAMPLES
+  $ dgctl block
+```
+
+_See code: [dist/commands/block.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.1/dist/commands/block.ts)_
+
+## `dgctl generate [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ dgctl generate [FILE] [-n <value>] [-f]
+
+FLAGS
+  -f, --force
+  -n, --name=<value>  name to print
+
+DESCRIPTION
+  describe the command here
+
+EXAMPLES
+  $ dgctl generate
+```
+
+_See code: [dist/commands/generate.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.1/dist/commands/generate.ts)_
 
 ## `dgctl help [COMMAND]`
 
@@ -92,4 +136,354 @@ DESCRIPTION
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.19/src/commands/help.ts)_
+
+## `dgctl infra [ACTION]`
+
+describe the command here
+
+```
+USAGE
+  $ dgctl infra [ACTION] [-n <value>] [-f]
+
+FLAGS
+  -f, --force
+  -n, --name=<value>  name to print
+
+DESCRIPTION
+  describe the command here
+
+EXAMPLES
+  $ dgctl infra
+```
+
+_See code: [dist/commands/infra.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.1/dist/commands/infra.ts)_
+
+## `dgctl init`
+
+describe the command here
+
+```
+USAGE
+  $ dgctl init [-f]
+
+FLAGS
+  -f, --force
+
+DESCRIPTION
+  describe the command here
+
+EXAMPLES
+  $ dgctl init
+```
+
+_See code: [dist/commands/init.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.1/dist/commands/init.ts)_
+
+## `dgctl plugins`
+
+List installed plugins.
+
+```
+USAGE
+  $ dgctl plugins [--core]
+
+FLAGS
+  --core  Show core plugins.
+
+DESCRIPTION
+  List installed plugins.
+
+EXAMPLES
+  $ dgctl plugins
+```
+
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v2.1.7/src/commands/plugins/index.ts)_
+
+## `dgctl plugins:install PLUGIN...`
+
+Installs a plugin into the CLI.
+
+```
+USAGE
+  $ dgctl plugins:install PLUGIN...
+
+ARGUMENTS
+  PLUGIN  Plugin to install.
+
+FLAGS
+  -f, --force    Run yarn install with force flag.
+  -h, --help     Show CLI help.
+  -v, --verbose
+
+DESCRIPTION
+  Installs a plugin into the CLI.
+  Can be installed from npm or a git url.
+
+  Installation of a user-installed plugin will override a core plugin.
+
+  e.g. If you have a core plugin that has a 'hello' command, installing a user-installed plugin with a 'hello' command
+  will override the core plugin implementation. This is useful if a user needs to update core plugin functionality in
+  the CLI without the need to patch and update the whole CLI.
+
+
+ALIASES
+  $ dgctl plugins add
+
+EXAMPLES
+  $ dgctl plugins:install myplugin 
+
+  $ dgctl plugins:install https://github.com/someuser/someplugin
+
+  $ dgctl plugins:install someuser/someplugin
+```
+
+## `dgctl plugins:inspect PLUGIN...`
+
+Displays installation properties of a plugin.
+
+```
+USAGE
+  $ dgctl plugins:inspect PLUGIN...
+
+ARGUMENTS
+  PLUGIN  [default: .] Plugin to inspect.
+
+FLAGS
+  -h, --help     Show CLI help.
+  -v, --verbose
+
+DESCRIPTION
+  Displays installation properties of a plugin.
+
+EXAMPLES
+  $ dgctl plugins:inspect myplugin
+```
+
+## `dgctl plugins:install PLUGIN...`
+
+Installs a plugin into the CLI.
+
+```
+USAGE
+  $ dgctl plugins:install PLUGIN...
+
+ARGUMENTS
+  PLUGIN  Plugin to install.
+
+FLAGS
+  -f, --force    Run yarn install with force flag.
+  -h, --help     Show CLI help.
+  -v, --verbose
+
+DESCRIPTION
+  Installs a plugin into the CLI.
+  Can be installed from npm or a git url.
+
+  Installation of a user-installed plugin will override a core plugin.
+
+  e.g. If you have a core plugin that has a 'hello' command, installing a user-installed plugin with a 'hello' command
+  will override the core plugin implementation. This is useful if a user needs to update core plugin functionality in
+  the CLI without the need to patch and update the whole CLI.
+
+
+ALIASES
+  $ dgctl plugins add
+
+EXAMPLES
+  $ dgctl plugins:install myplugin 
+
+  $ dgctl plugins:install https://github.com/someuser/someplugin
+
+  $ dgctl plugins:install someuser/someplugin
+```
+
+## `dgctl plugins:link PLUGIN`
+
+Links a plugin into the CLI for development.
+
+```
+USAGE
+  $ dgctl plugins:link PLUGIN
+
+ARGUMENTS
+  PATH  [default: .] path to plugin
+
+FLAGS
+  -h, --help     Show CLI help.
+  -v, --verbose
+
+DESCRIPTION
+  Links a plugin into the CLI for development.
+  Installation of a linked plugin will override a user-installed or core plugin.
+
+  e.g. If you have a user-installed or core plugin that has a 'hello' command, installing a linked plugin with a 'hello'
+  command will override the user-installed or core plugin implementation. This is useful for development work.
+
+
+EXAMPLES
+  $ dgctl plugins:link myplugin
+```
+
+## `dgctl plugins:uninstall PLUGIN...`
+
+Removes a plugin from the CLI.
+
+```
+USAGE
+  $ dgctl plugins:uninstall PLUGIN...
+
+ARGUMENTS
+  PLUGIN  plugin to uninstall
+
+FLAGS
+  -h, --help     Show CLI help.
+  -v, --verbose
+
+DESCRIPTION
+  Removes a plugin from the CLI.
+
+ALIASES
+  $ dgctl plugins unlink
+  $ dgctl plugins remove
+```
+
+## `dgctl plugins:uninstall PLUGIN...`
+
+Removes a plugin from the CLI.
+
+```
+USAGE
+  $ dgctl plugins:uninstall PLUGIN...
+
+ARGUMENTS
+  PLUGIN  plugin to uninstall
+
+FLAGS
+  -h, --help     Show CLI help.
+  -v, --verbose
+
+DESCRIPTION
+  Removes a plugin from the CLI.
+
+ALIASES
+  $ dgctl plugins unlink
+  $ dgctl plugins remove
+```
+
+## `dgctl plugins:uninstall PLUGIN...`
+
+Removes a plugin from the CLI.
+
+```
+USAGE
+  $ dgctl plugins:uninstall PLUGIN...
+
+ARGUMENTS
+  PLUGIN  plugin to uninstall
+
+FLAGS
+  -h, --help     Show CLI help.
+  -v, --verbose
+
+DESCRIPTION
+  Removes a plugin from the CLI.
+
+ALIASES
+  $ dgctl plugins unlink
+  $ dgctl plugins remove
+```
+
+## `dgctl plugins update`
+
+Update installed plugins.
+
+```
+USAGE
+  $ dgctl plugins update [-h] [-v]
+
+FLAGS
+  -h, --help     Show CLI help.
+  -v, --verbose
+
+DESCRIPTION
+  Update installed plugins.
+```
+
+## `dgctl secret [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ dgctl secret [FILE] [-n <value>] [-f]
+
+FLAGS
+  -f, --force
+  -n, --name=<value>  name to print
+
+DESCRIPTION
+  describe the command here
+
+EXAMPLES
+  $ dgctl secret
+```
+
+_See code: [dist/commands/secret.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.1/dist/commands/secret.ts)_
+
+## `dgctl update [CHANNEL]`
+
+update the dgctl CLI
+
+```
+USAGE
+  $ dgctl update [CHANNEL] [-a] [-v <value> | -i] [--force]
+
+FLAGS
+  -a, --available        Install a specific version.
+  -i, --interactive      Interactively select version to install. This is ignored if a channel is provided.
+  -v, --version=<value>  Install a specific version.
+  --force                Force a re-download of the requested version.
+
+DESCRIPTION
+  update the dgctl CLI
+
+EXAMPLES
+  Update to the stable channel:
+
+    $ dgctl update stable
+
+  Update to a specific version:
+
+    $ dgctl update --version 1.0.0
+
+  Interactively select version:
+
+    $ dgctl update --interactive
+
+  See available versions:
+
+    $ dgctl update --available
+```
+
+_See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v3.0.7/src/commands/update.ts)_
+
+## `dgctl variable [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ dgctl variable [FILE] [-n <value>] [-f]
+
+FLAGS
+  -f, --force
+  -n, --name=<value>  name to print
+
+DESCRIPTION
+  describe the command here
+
+EXAMPLES
+  $ dgctl variable
+```
+
+_See code: [dist/commands/variable.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.1/dist/commands/variable.ts)_
 <!-- commandsstop -->
