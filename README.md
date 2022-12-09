@@ -1,9 +1,7 @@
-oclif-hello-world
+Digger dgctl CLI
 =================
 
-oclif example Hello World CLI
-
-[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
+[![dgctl](https://img.shields.io/badge/cli-dgctl-brightgreen.svg)](https://digger.dev)
 [![Version](https://img.shields.io/npm/v/oclif-hello-world.svg)](https://npmjs.org/package/oclif-hello-world)
 [![CircleCI](https://circleci.com/gh/oclif/hello-world/tree/main.svg?style=shield)](https://circleci.com/gh/oclif/hello-world/tree/main)
 [![Downloads/week](https://img.shields.io/npm/dw/oclif-hello-world.svg)](https://npmjs.org/package/oclif-hello-world)
@@ -52,7 +50,7 @@ EXAMPLES
   Successfully initiated a Digger project
 ```
 
-_See code: [dist/commands/init/index.ts](https://github.com/digger/dggr-cli/blob/v0.0.1/dist/commands/init/index.ts)_
+_See code: [src/commands/init.ts](https://github.com/diggerhq/dggr-cli/blob/main/src/commands/init.ts)_
 
 ## `dgctl infra [COMMAND]`
 
@@ -72,6 +70,8 @@ EXAMPLES
   $ dgctl infra apply
   Applied infrastructure successfully!
 ```
+
+_See code: [src/commands/infra.ts](https://github.com/diggerhq/dggr-cli/blob/main/src/commands/infra.ts)_
 
 ## `dgctl help [COMMAND]`
 
