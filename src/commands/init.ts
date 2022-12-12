@@ -31,6 +31,7 @@ export default class Init extends Command {
           blocks: [],
           created: Date.now(),
         };
+        fs.mkdirSync(`${process.cwd()}/overrides`);
         fs.writeFileSync(diggerJson, JSON.stringify(content));
         fs.writeFileSync(`${process.cwd()}/.dgctlsecrets`, "");
         fs.writeFileSync(`${process.cwd()}/.dgctlvariables`, "");

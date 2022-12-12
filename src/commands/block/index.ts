@@ -9,11 +9,21 @@ export default class Index extends Command {
   static examples = ["<%= config.bin %> <%= command.id %>"];
 
   static flags = {
-    // flag with no value (-f, --force)
-    force: Flags.boolean({ char: "f" }),
+    type: Flags.string({
+      char: "t",
+      description: "type of block",
+      options: ["container"],
+    }),
+    name: Flags.string({
+      char: "n",
+      description: "new name for the block",
+    }),
   };
 
-  static args = [{ name: "type", options: ["container"] }, { name: "name" }];
+  static args = [
+    { name: "command", options: ["add", "remove", "rename"] },
+    { name: "name" },
+  ];
 
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Index);
@@ -26,9 +36,95 @@ export default class Index extends Command {
       return;
     }
 
-    if (!args.type) {
+    if (!args.command) {
       this.log(
-        "No type provided for the block. Example: dgctl block container <name>"
+        "No command provided for the block. Example command: dgctl block add -t=container <name>"
+      );
+      return;
+    }
+
+    if (args.command === "remove") {
+      if (!args.name) {
+        this.log(`No app name provided. Example: dgctl block remove <name> `);
+        return;
+      }
+
+      if (fs.existsSync(`${process.cwd()}/${args.name}`)) {
+        const rawContent = fs.readFileSync(diggerJson, "utf8");
+        const parsedContent = JSON.parse(rawContent);
+        const removedBlock = parsedContent.blocks.filter(
+          ({ name }: any) => name !== args.name
+        );
+
+        fs.writeFileSync(
+          diggerJson,
+          JSON.stringify({
+            ...parsedContent,
+            blocks: [...removedBlock],
+          })
+        );
+
+        fs.renameSync(
+          `${process.cwd()}/${args.name}`,
+          `${process.cwd()}/REMOVED_${args.name}`
+        );
+
+        this.log(`${args.name} block removed`);
+      } else {
+        this.log(`${args.name} app directory not found`);
+      }
+
+      return;
+    }
+
+    if (args.command === "rename") {
+      if (!args.name) {
+        this.log(
+          `No app name provided. Example: dgctl block rename <name> -n=<newName>`
+        );
+        return;
+      }
+
+      if (!fs.existsSync(`${process.cwd()}/${args.name}`)) {
+        this.log(`${args.name} directory not found.`);
+        return;
+      }
+
+      if (!flags.name) {
+        this.log(
+          `No new app name provided. Example: dgctl block rename ${args.name} -n=<newName>`
+        );
+        return;
+      }
+
+      const rawContent = fs.readFileSync(diggerJson, "utf8");
+      const parsedContent = JSON.parse(rawContent);
+      const renamedApp = parsedContent.blocks.map((block: any) => {
+        if (block.name === args.name) {
+          return { ...block, name: flags.name };
+        }
+
+        return block;
+      });
+
+      fs.renameSync(
+        `${process.cwd()}/${args.name}`,
+        `${process.cwd()}/${flags.name}`
+      );
+      fs.writeFileSync(
+        diggerJson,
+        JSON.stringify({
+          ...parsedContent,
+          blocks: [...renamedApp],
+        })
+      );
+
+      return;
+    }
+
+    if (!flags.type) {
+      this.log(
+        "No type provided for the block. Example: dgctl block add -t=container <name>"
       );
       return;
     }
@@ -41,7 +137,7 @@ export default class Index extends Command {
       const rawContent = fs.readFileSync(diggerJson, "utf8");
       const parsedContent = JSON.parse(rawContent);
       const blockName = args.name ?? crypto.randomUUID();
-      const type = args.type;
+      const type = flags.type;
 
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -52,15 +148,18 @@ export default class Index extends Command {
         JSON.stringify({
           ...parsedContent,
           blocks: [
-            ...parsedContent.blocks,
-            { name: blockName, type: args.type },
+            ...(parsedContent.blocks ?? []),
+            { name: blockName, type: flags.type },
           ],
         })
       );
       fs.mkdirSync(`${process.cwd()}/${blockName}`);
       fs.mkdirSync(`${process.cwd()}/${blockName}/overrides`);
 
-      fs.writeFileSync(`${process.cwd()}/${blockName}/config.json`, JSON.stringify(defaults));
+      fs.writeFileSync(
+        `${process.cwd()}/${blockName}/config.json`,
+        JSON.stringify(defaults)
+      );
       fs.writeFileSync(`${process.cwd()}/${blockName}/.dgctlsecrets`, "");
       fs.writeFileSync(`${process.cwd()}/${blockName}/.dgctlvariables`, "");
       this.log("Successfully added a block to the Digger project");
