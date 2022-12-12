@@ -2,7 +2,7 @@ import { Command, Flags } from "@oclif/core";
 import * as fs from "node:fs";
 
 export default class Init extends Command {
-  static description = "describe the command here";
+  static description = "Creates a Digger infra bundle project";
 
   static examples = ["<%= config.bin %> <%= command.id %>"];
 
@@ -28,6 +28,7 @@ export default class Init extends Command {
       } else {
         const content = {
           version,
+          blocks: [],
           created: Date.now(),
         };
         fs.writeFileSync(diggerJson, JSON.stringify(content));
