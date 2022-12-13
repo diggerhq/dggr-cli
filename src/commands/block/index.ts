@@ -2,6 +2,11 @@ import { Command, Flags } from "@oclif/core";
 import * as fs from "node:fs";
 import * as crypto from "node:crypto";
 import * as blocks from "../../utils/block-defaults";
+import {
+  diggerJson,
+  diggerJsonExists,
+  updateDiggerJson,
+} from "../../utils/helpers";
 
 export default class Index extends Command {
   static description = "Adds a infra block to a Digger infra bundle";
@@ -27,9 +32,8 @@ export default class Index extends Command {
 
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Index);
-    const diggerJson = `${process.cwd()}/dgctl.json`;
 
-    if (!fs.existsSync(diggerJson)) {
+    if (!diggerJsonExists()) {
       this.log(
         "No Digger infra project found. Try running `dgctl init` first or changing to a directory with dgctl.json"
       );
@@ -50,19 +54,15 @@ export default class Index extends Command {
       }
 
       if (fs.existsSync(`${process.cwd()}/${args.name}`)) {
-        const rawContent = fs.readFileSync(diggerJson, "utf8");
-        const parsedContent = JSON.parse(rawContent);
+        const parsedContent = diggerJson();
         const removedBlock = parsedContent.blocks.filter(
           ({ name }: any) => name !== args.name
         );
 
-        fs.writeFileSync(
-          diggerJson,
-          JSON.stringify({
-            ...parsedContent,
-            blocks: [...removedBlock],
-          })
-        );
+        updateDiggerJson({
+          ...parsedContent,
+          blocks: [...removedBlock],
+        });
 
         fs.renameSync(
           `${process.cwd()}/${args.name}`,
@@ -97,9 +97,8 @@ export default class Index extends Command {
         return;
       }
 
-      const rawContent = fs.readFileSync(diggerJson, "utf8");
-      const parsedContent = JSON.parse(rawContent);
-      const renamedApp = parsedContent.blocks.map((block: any) => {
+      const currentDiggerJson = diggerJson();
+      const renamedApp = currentDiggerJson.blocks.map((block: any) => {
         if (block.name === args.name) {
           return { ...block, name: flags.name };
         }
@@ -111,13 +110,10 @@ export default class Index extends Command {
         `${process.cwd()}/${args.name}`,
         `${process.cwd()}/${flags.name}`
       );
-      fs.writeFileSync(
-        diggerJson,
-        JSON.stringify({
-          ...parsedContent,
-          blocks: [...renamedApp],
-        })
-      );
+      updateDiggerJson({
+        ...currentDiggerJson,
+        blocks: [...renamedApp],
+      });
 
       return;
     }
@@ -134,8 +130,7 @@ export default class Index extends Command {
     }
 
     try {
-      const rawContent = fs.readFileSync(diggerJson, "utf8");
-      const parsedContent = JSON.parse(rawContent);
+      const currentDiggerJson = diggerJson();
       const blockName = args.name ?? crypto.randomUUID();
       const type = flags.type;
 
@@ -143,16 +138,14 @@ export default class Index extends Command {
       // @ts-ignore
       const defaults = blocks[type];
 
-      fs.writeFileSync(
-        diggerJson,
-        JSON.stringify({
-          ...parsedContent,
-          blocks: [
-            ...(parsedContent.blocks ?? []),
-            { name: blockName, type: flags.type },
-          ],
-        })
-      );
+      updateDiggerJson({
+        ...currentDiggerJson,
+        blocks: [
+          ...(currentDiggerJson.blocks ?? []),
+          { name: blockName, type: flags.type },
+        ],
+      });
+
       fs.mkdirSync(`${process.cwd()}/${blockName}`);
       fs.mkdirSync(`${process.cwd()}/${blockName}/overrides`);
 

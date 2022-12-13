@@ -20,7 +20,7 @@ export default class Variable extends Command {
     const {args, flags} = await this.parse(Variable)
 
     const name = flags.name ?? 'world'
-    this.log(`hello ${name} from /Users/matasjonys/Projects/dggr-cli/src/commands/variable.ts`)
+    this.log(`hello ${name}`)
     if (args.file && flags.force) {
       this.log(`you input --force and --file: ${args.file}`)
     }
