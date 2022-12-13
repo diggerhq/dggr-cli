@@ -19,7 +19,7 @@ export default class Infra extends Command {
 
     const name = flags.name ?? "world";
     this.log(
-      `hello ${name} from /Users/matasjonys/Projects/dggr-cli/src/commands/infra.ts`
+      `hello ${name}`
     );
     if (args.file && flags.force) {
       this.log(`you input --force and --file: ${args.file}`);

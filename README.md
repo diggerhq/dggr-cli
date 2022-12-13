@@ -28,7 +28,7 @@ USAGE
 # Commands
 <!-- commands -->
 * [`dgctl autocomplete [SHELL]`](#dgctl-autocomplete-shell)
-* [`dgctl block [FILE]`](#dgctl-block-file)
+* [`dgctl block [COMMAND] [NAME]`](#dgctl-block-command-name)
 * [`dgctl generate [FILE]`](#dgctl-generate-file)
 * [`dgctl help [COMMAND]`](#dgctl-help-command)
 * [`dgctl infra [ACTION]`](#dgctl-infra-action)
@@ -73,28 +73,29 @@ EXAMPLES
   $ dgctl autocomplete --refresh-cache
 ```
 
-_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v1.3.6/src/commands/autocomplete/index.ts)_
+_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v1.3.7/src/commands/autocomplete/index.ts)_
 
-## `dgctl block [FILE]`
+## `dgctl block [COMMAND] [NAME]`
 
-describe the command here
+Adds a infra block to a Digger infra bundle
 
 ```
 USAGE
-  $ dgctl block [FILE] [-n <value>] [-f]
+  $ dgctl block [COMMAND] [NAME] [-t container] [-n <value>]
 
 FLAGS
-  -f, --force
-  -n, --name=<value>  name to print
+  -n, --name=<value>   new name for the block
+  -t, --type=<option>  type of block
+                       <options: container>
 
 DESCRIPTION
-  describe the command here
+  Adds a infra block to a Digger infra bundle
 
 EXAMPLES
   $ dgctl block
 ```
 
-_See code: [dist/commands/block.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.1/dist/commands/block.ts)_
+_See code: [dist/commands/block/index.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.1/dist/commands/block/index.ts)_
 
 ## `dgctl generate [FILE]`
 
@@ -135,7 +136,7 @@ DESCRIPTION
   Display help for dgctl.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.19/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.20/src/commands/help.ts)_
 
 ## `dgctl infra [ACTION]`
 
@@ -160,7 +161,7 @@ _See code: [dist/commands/infra.ts](https://github.com/diggerhq/dggr-cli/blob/v0
 
 ## `dgctl init`
 
-describe the command here
+Creates a Digger infra bundle project
 
 ```
 USAGE
@@ -170,7 +171,7 @@ FLAGS
   -f, --force
 
 DESCRIPTION
-  describe the command here
+  Creates a Digger infra bundle project
 
 EXAMPLES
   $ dgctl init
@@ -196,7 +197,7 @@ EXAMPLES
   $ dgctl plugins
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v2.1.7/src/commands/plugins/index.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v2.1.8/src/commands/plugins/index.ts)_
 
 ## `dgctl plugins:install PLUGIN...`
 
@@ -464,7 +465,7 @@ EXAMPLES
     $ dgctl update --available
 ```
 
-_See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v3.0.7/src/commands/update.ts)_
+_See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v3.0.8/src/commands/update.ts)_
 
 ## `dgctl variable [FILE]`
 
