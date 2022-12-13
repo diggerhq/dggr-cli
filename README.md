@@ -28,8 +28,8 @@ USAGE
 # Commands
 <!-- commands -->
 * [`dgctl autocomplete [SHELL]`](#dgctl-autocomplete-shell)
-* [`dgctl block [TYPE] [NAME]`](#dgctl-block-type-name)
-* [`dgctl generate [FILE]`](#dgctl-generate-file)
+* [`dgctl block [COMMAND] [NAME]`](#dgctl-block-command-name)
+* [`dgctl generate [ENVIRONMENT]`](#dgctl-generate-environment)
 * [`dgctl help [COMMAND]`](#dgctl-help-command)
 * [`dgctl infra [ACTION]`](#dgctl-infra-action)
 * [`dgctl init`](#dgctl-init)
@@ -42,6 +42,7 @@ USAGE
 * [`dgctl plugins:uninstall PLUGIN...`](#dgctl-pluginsuninstall-plugin-1)
 * [`dgctl plugins:uninstall PLUGIN...`](#dgctl-pluginsuninstall-plugin-2)
 * [`dgctl plugins update`](#dgctl-plugins-update)
+* [`dgctl provision [FILE]`](#dgctl-provision-file)
 * [`dgctl secret [FILE]`](#dgctl-secret-file)
 * [`dgctl update [CHANNEL]`](#dgctl-update-channel)
 * [`dgctl variable [FILE]`](#dgctl-variable-file)
@@ -75,16 +76,18 @@ EXAMPLES
 
 _See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v1.3.6/src/commands/autocomplete/index.ts)_
 
-## `dgctl block [TYPE] [NAME]`
+## `dgctl block [COMMAND] [NAME]`
 
 Adds a infra block to a Digger infra bundle
 
 ```
 USAGE
-  $ dgctl block [TYPE] [NAME] [-f]
+  $ dgctl block [COMMAND] [NAME] [-t container] [-n <value>]
 
 FLAGS
-  -f, --force
+  -n, --name=<value>   new name for the block
+  -t, --type=<option>  type of block
+                       <options: container>
 
 DESCRIPTION
   Adds a infra block to a Digger infra bundle
@@ -95,23 +98,16 @@ EXAMPLES
 
 _See code: [dist/commands/block/index.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.3/dist/commands/block/index.ts)_
 
-## `dgctl generate [FILE]`
+## `dgctl generate [ENVIRONMENT]`
 
-describe the command here
+Generates terraform based on the Digger infra bundle
 
 ```
 USAGE
-  $ dgctl generate [FILE] [-n <value>] [-f]
-
-FLAGS
-  -f, --force
-  -n, --name=<value>  name to print
+  $ dgctl generate [ENVIRONMENT]
 
 DESCRIPTION
-  describe the command here
-
-EXAMPLES
-  $ dgctl generate
+  Generates terraform based on the Digger infra bundle
 ```
 
 _See code: [dist/commands/generate.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.3/dist/commands/generate.ts)_
@@ -406,6 +402,27 @@ FLAGS
 DESCRIPTION
   Update installed plugins.
 ```
+
+## `dgctl provision [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ dgctl provision [FILE] [-n <value>] [-f]
+
+FLAGS
+  -f, --force
+  -n, --name=<value>  name to print
+
+DESCRIPTION
+  describe the command here
+
+EXAMPLES
+  $ dgctl provision
+```
+
+_See code: [dist/commands/provision.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.3/dist/commands/provision.ts)_
 
 ## `dgctl secret [FILE]`
 
