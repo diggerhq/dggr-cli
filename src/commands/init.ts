@@ -1,5 +1,10 @@
 import { Command, Flags } from "@oclif/core";
 import * as fs from "node:fs";
+import {
+  diggerJson,
+  diggerJsonExists,
+  updateDiggerJson,
+} from "../utils/helpers";
 
 export default class Init extends Command {
   static description = "Creates a Digger infra bundle project";
@@ -14,16 +19,12 @@ export default class Init extends Command {
   public async run(): Promise<void> {
     const { flags } = await this.parse(Init);
     const { version } = this.config;
-    const diggerJson = `${process.cwd()}/dgctl.json`;
 
     try {
-      if (fs.existsSync(diggerJson) && !flags.force) {
-        const rawContent = fs.readFileSync(diggerJson, "utf8");
-        const parsedContent = JSON.parse(rawContent);
-        fs.writeFileSync(
-          diggerJson,
-          JSON.stringify({ ...parsedContent, updated: Date.now() })
-        );
+      if (diggerJsonExists() && !flags.force) {
+        const currentJson = diggerJson();
+        updateDiggerJson({ ...currentJson, updated: Date.now() });
+
         this.log("Successfully updated a Digger project");
       } else {
         const content = {
@@ -32,7 +33,7 @@ export default class Init extends Command {
           created: Date.now(),
         };
         fs.mkdirSync(`${process.cwd()}/overrides`);
-        fs.writeFileSync(diggerJson, JSON.stringify(content));
+        updateDiggerJson(content);
         fs.writeFileSync(`${process.cwd()}/.dgctlsecrets`, "");
         fs.writeFileSync(`${process.cwd()}/.dgctlvariables`, "");
         this.log("Successfully initiated a Digger project");
