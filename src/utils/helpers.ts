@@ -12,5 +12,5 @@ export const diggerJson = () => {
 };
 
 export const updateDiggerJson = (obj: unknown) => {
-  fs.writeFileSync(diggerJsonPath, JSON.stringify(obj));
+  fs.writeFileSync(diggerJsonPath, JSON.stringify(obj, null, 4));
 };
