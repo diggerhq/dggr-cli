@@ -36,6 +36,9 @@ export default class Init extends Command {
           environment_id: envid,
           for_local_run: false,
           version,
+          id: crypto.randomUUID(),
+          target: "diggerhq/tf-module-bundler@master",
+          region: "us-west-1",
           blocks: [],
           created: Date.now(),
         };

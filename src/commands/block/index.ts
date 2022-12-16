@@ -11,6 +11,7 @@ import {
 // eslint-disable-next-line unicorn/import-style
 import * as chalk from "chalk";
 import { createBrotliCompress } from "node:zlib";
+import { lookpath } from "lookpath";
 
 export default class Index extends Command {
   static description = "Adds a infra block to a Digger infra bundle";
@@ -79,6 +80,14 @@ export default class Index extends Command {
       }
 
       case "build": {
+        const dockerExist = await lookpath("docker");
+        if (!dockerExist) {
+          this.log(
+            "Docker installation not found. Visit https://docs.docker.com/get-docker/ to learn more."
+          );
+          return;
+        }
+
         if (!args.name) {
           this.log("No application name provided");
           return;
@@ -97,6 +106,13 @@ export default class Index extends Command {
       }
 
       case "deploy": {
+        const terraformExists = await lookpath("terraform");
+        this.log(terraformExists)
+        if (!terraformExists) {
+          this.log("Terraform installation not found.");
+          return;
+        }
+
         if (!args.name) {
           this.log("No application name provided");
           return;
