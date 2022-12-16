@@ -26,7 +26,9 @@
     "@oclif/plugin-plugins": "^2.1.8",
     "@oclif/plugin-update": "^3.0.8",
     "@oclif/plugin-warn-if-update-available": "^2.0.16",
+    "axios": "^1.2.1",
     "chalk": "^4.1.2",
+    "extract-zip": "^2.0.1"
     "lookpath": "^1.2.2"
   },
   "devDependencies": {

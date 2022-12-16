@@ -3,12 +3,14 @@ import * as fs from "node:fs";
 import * as crypto from "node:crypto";
 import * as blocks from "../../utils/block-defaults";
 import {
+  createBlock,
   diggerJson,
   diggerJsonExists,
   updateDiggerJson,
 } from "../../utils/helpers";
 // eslint-disable-next-line unicorn/import-style
 import * as chalk from "chalk";
+import { createBrotliCompress } from "node:zlib";
 import { lookpath } from "lookpath";
 
 export default class Index extends Command {
@@ -66,37 +68,14 @@ export default class Index extends Command {
           this.log("No name provided, will be using an auto generated name.");
         }
 
+        const blockName = args.name ?? crypto.randomUUID().replace(/\-/g, "_");
+        const type = flags.type;    
         try {
-          const currentDiggerJson = diggerJson();
-          const blockName = args.name ?? crypto.randomUUID();
-          const type = flags.type;
-
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          const defaults = blocks[type];
-
-          updateDiggerJson({
-            ...currentDiggerJson,
-            blocks: [
-              ...(currentDiggerJson.blocks ?? []),
-              { name: blockName, type: flags.type },
-            ],
-          });
-
-          fs.mkdirSync(`${process.cwd()}/${blockName}`);
-          fs.mkdirSync(`${process.cwd()}/${blockName}/overrides`);
-
-          fs.writeFileSync(
-            `${process.cwd()}/${blockName}/config.json`,
-            JSON.stringify(defaults, null, 4)
-          );
-          fs.writeFileSync(`${process.cwd()}/${blockName}/.dgctlsecrets`, "");
-          fs.writeFileSync(`${process.cwd()}/${blockName}/.dgctlvariables`, "");
+          createBlock(type, blockName, {aws_app_identifier: blockName})
           this.log("Successfully added a block to the Digger project");
         } catch (error: any) {
           this.error(error);
-        }
-
+        }  
         break;
       }
 

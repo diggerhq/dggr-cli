@@ -2,6 +2,7 @@ import { Command, Flags } from "@oclif/core";
 import * as fs from "node:fs";
 import * as crypto from "node:crypto";
 import {
+  createBlock,
   diggerJson,
   diggerJsonExists,
   updateDiggerJson,
@@ -28,7 +29,12 @@ export default class Init extends Command {
 
         this.log("Successfully updated a Digger project");
       } else {
+        const envid = crypto.randomUUID().replace(/\-/g, "_");
         const content = {
+          target: "diggerhq/tf-module-bundler@master",
+          aws_region: "us-east-1",
+          environment_id: envid,
+          for_local_run: false,
           version,
           id: crypto.randomUUID(),
           target: "diggerhq/tf-module-bundler@master",
@@ -36,8 +42,16 @@ export default class Init extends Command {
           blocks: [],
           created: Date.now(),
         };
-        fs.mkdirSync(`${process.cwd()}/overrides`);
+
         updateDiggerJson(content);
+
+        try {
+          createBlock("vpc", "default_network", {});
+          this.log("Successfully added default network block to the Digger project");
+        } catch (error: any) {
+          this.error(error);
+        }
+        fs.mkdirSync(`${process.cwd()}/overrides`);
         fs.writeFileSync(`${process.cwd()}/.dgctlsecrets`, "");
         fs.writeFileSync(`${process.cwd()}/.dgctlvariables`, "");
         this.log("Successfully initiated a Digger project");

@@ -1,6 +1,8 @@
 import { Command } from "@oclif/core";
 import { diggerJson, diggerJsonExists } from "../utils/helpers";
 import * as fs from "node:fs";
+import axios from "axios";
+import extract = require("extract-zip");
 
 export default class Generate extends Command {
   static description = "Generates terraform based on the Digger infra bundle";
@@ -17,13 +19,6 @@ export default class Generate extends Command {
       return;
     }
 
-    if (!args.environment) {
-      this.log(
-        "No environment provided for the block. Example command: dgctl generate <environment>"
-      );
-      return;
-    }
-
     const currentDiggerJson = diggerJson();
     const mergedBlocks = currentDiggerJson.blocks.map((block: any) => {
       const configRaw = fs.readFileSync(`${process.cwd()}/${block.name}/config.json`, "utf8");
@@ -31,8 +26,22 @@ export default class Generate extends Command {
       return { ...block, ...config };
     });
 
-    // remove later, just to commit without issue
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const combinedJson = { ...currentDiggerJson, blocks: mergedBlocks };
+    const response = await axios.post("https://ejvbvuq6kceclqiehhnu75igt40pbuju.lambda-url.us-east-1.on.aws", combinedJson);
+    
+    // write response to file
+    fs.writeFileSync("tmp.zip", Buffer.from(response.data, 'base64'));
+    // remove previous generated folder
+    fs.rmdir("generated", err => {})
+
+    try {
+      await extract("tmp.zip", { dir: `${process.cwd()}/generated` })
+      console.log('Infrastructure generation complete!')
+      console.log('You can now create your infrastructure using dgctl provision command')
+    } catch (err) {
+      console.log(err)
+    } finally {
+      fs.unlink("tmp.zip", err => {})
+    }
   }
 }
