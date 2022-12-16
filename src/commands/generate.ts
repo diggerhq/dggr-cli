@@ -31,6 +31,9 @@ export default class Generate extends Command {
     
     // write response to file
     fs.writeFileSync("tmp.zip", Buffer.from(response.data, 'base64'));
+    // remove previous generated folder
+    fs.rmdir("generated", err => {})
+
     try {
       await extract("tmp.zip", { dir: `${process.cwd()}/generated` })
       console.log('Infrastructure generation complete!')
