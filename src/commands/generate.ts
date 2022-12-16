@@ -1,6 +1,7 @@
 import { Command } from "@oclif/core";
 import { diggerJson, diggerJsonExists } from "../utils/helpers";
 import * as fs from "node:fs";
+import axios from "axios";
 
 export default class Generate extends Command {
   static description = "Generates terraform based on the Digger infra bundle";
@@ -31,8 +32,10 @@ export default class Generate extends Command {
       return { ...block, ...config };
     });
 
-    // remove later, just to commit without issue
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const combinedJson = { ...currentDiggerJson, blocks: mergedBlocks };
+    console.log(combinedJson)
+    
+    const response = await axios.post("https://ejvbvuq6kceclqiehhnu75igt40pbuju.lambda-url.us-east-1.on.aws", combinedJson)
+    console.log(response)
   }
 }
