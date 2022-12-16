@@ -1,5 +1,6 @@
 import { Command, Flags } from "@oclif/core";
 import * as fs from "node:fs";
+import * as crypto from "node:crypto";
 import {
   diggerJson,
   diggerJsonExists,
@@ -29,6 +30,9 @@ export default class Init extends Command {
       } else {
         const content = {
           version,
+          id: crypto.randomUUID(),
+          target: "diggerhq/tf-module-bundler@master",
+          region: "us-west-1",
           blocks: [],
           created: Date.now(),
         };
