@@ -4,7 +4,7 @@ import * as AWS from "@aws-sdk/client-s3";
 import { diggerJson } from "../utils/helpers";
 // eslint-disable-next-line unicorn/import-style
 import * as chalk from "chalk";
-import { spawn } from "node:child_process";
+import { execSync } from "node:child_process";
 import { lookpath } from "lookpath";
 
 export default class Provision extends Command {
@@ -49,24 +49,31 @@ export default class Provision extends Command {
     const bucketName = flags.bucket ?? diggerConfig.id;
 
     try {
-      const initTF = await callTF(["init", "generated"]);
-      const applyTF = await callTF([
-        "apply",
-        "--auto-approve",
-        "plan-name.out",
-      ]);
+      process.env.AWS_ACCESS_KEY_ID = awsLogin;
+      process.env.AWS_SECRET_ACCESS_KEY = awsPassword;
+  
+      console.log("init started")
+      const terraformDir = "generated"
+      const initTF = await callTF("init", terraformDir);
+      console.log("init completed")
+
+      console.log("apply started")
+      const applyTF = await callTF("apply --auto-approve", terraformDir);
+      console.log("apply completed")
+
     } catch (error: any) {
       this.error(error);
     }
   }
 }
 
-const callTF = async (args: any) => {
+const callTF = async (args: string, workingDirectory: string) => {
   const tfPath = (await lookpath("terraform")) ?? "terraform";
 
-  const terraform = spawn(tfPath, args, {
+  const terraform = execSync(`${tfPath} ${args}`, {
     stdio: [process.stdin, process.stdout, process.stderr],
+    cwd: workingDirectory
   });
 
-  terraform.on("close", (code) => console.log(code || undefined));
+  // terraform.on("close", (code) => console.log(code || undefined));
 };
