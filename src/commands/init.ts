@@ -34,6 +34,7 @@ export default class Init extends Command {
           target: "diggerhq/tf-module-bundler@master",
           aws_region: "us-east-1",
           environment_id: envid,
+          for_local_run: false,
           version,
           blocks: [],
           created: Date.now(),
