@@ -18,7 +18,7 @@ $ npm install -g dgctl
 $ dgctl COMMAND
 running command...
 $ dgctl (--version)
-dgctl/0.0.3 darwin-arm64 node-v16.14.0
+dgctl/0.0.4 darwin-arm64 node-v16.14.0
 $ dgctl --help [COMMAND]
 USAGE
   $ dgctl COMMAND
@@ -74,7 +74,7 @@ EXAMPLES
   $ dgctl autocomplete --refresh-cache
 ```
 
-_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v1.3.6/src/commands/autocomplete/index.ts)_
+_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v1.3.7/src/commands/autocomplete/index.ts)_
 
 ## `dgctl block [COMMAND] [NAME]`
 
@@ -96,7 +96,7 @@ EXAMPLES
   $ dgctl block
 ```
 
-_See code: [dist/commands/block/index.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.3/dist/commands/block/index.ts)_
+_See code: [dist/commands/block/index.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.4/dist/commands/block/index.ts)_
 
 ## `dgctl generate [ENVIRONMENT]`
 
@@ -110,7 +110,7 @@ DESCRIPTION
   Generates terraform based on the Digger infra bundle
 ```
 
-_See code: [dist/commands/generate.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.3/dist/commands/generate.ts)_
+_See code: [dist/commands/generate.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.4/dist/commands/generate.ts)_
 
 ## `dgctl help [COMMAND]`
 
@@ -130,7 +130,7 @@ DESCRIPTION
   Display help for dgctl.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.19/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.20/src/commands/help.ts)_
 
 ## `dgctl infra [ACTION]`
 
@@ -151,7 +151,7 @@ EXAMPLES
   $ dgctl infra
 ```
 
-_See code: [dist/commands/infra.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.3/dist/commands/infra.ts)_
+_See code: [dist/commands/infra.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.4/dist/commands/infra.ts)_
 
 ## `dgctl init`
 
@@ -171,7 +171,7 @@ EXAMPLES
   $ dgctl init
 ```
 
-_See code: [dist/commands/init.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.3/dist/commands/init.ts)_
+_See code: [dist/commands/init.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.4/dist/commands/init.ts)_
 
 ## `dgctl plugins`
 
@@ -191,7 +191,7 @@ EXAMPLES
   $ dgctl plugins
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v2.1.7/src/commands/plugins/index.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v2.1.8/src/commands/plugins/index.ts)_
 
 ## `dgctl plugins:install PLUGIN...`
 
@@ -409,11 +409,11 @@ describe the command here
 
 ```
 USAGE
-  $ dgctl provision [FILE] [-n <value>] [-f]
+  $ dgctl provision [FILE] [-s] [-b <value>]
 
 FLAGS
-  -f, --force
-  -n, --name=<value>  name to print
+  -b, --bucket=<value>  S3 bucket name
+  -s, --s3-state        Store terraform state in s3
 
 DESCRIPTION
   describe the command here
@@ -422,7 +422,7 @@ EXAMPLES
   $ dgctl provision
 ```
 
-_See code: [dist/commands/provision.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.3/dist/commands/provision.ts)_
+_See code: [dist/commands/provision.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.4/dist/commands/provision.ts)_
 
 ## `dgctl secret [FILE]`
 
@@ -443,7 +443,7 @@ EXAMPLES
   $ dgctl secret
 ```
 
-_See code: [dist/commands/secret.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.3/dist/commands/secret.ts)_
+_See code: [dist/commands/secret.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.4/dist/commands/secret.ts)_
 
 ## `dgctl update [CHANNEL]`
 
@@ -480,7 +480,7 @@ EXAMPLES
     $ dgctl update --available
 ```
 
-_See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v3.0.7/src/commands/update.ts)_
+_See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v3.0.8/src/commands/update.ts)_
 
 ## `dgctl variable [FILE]`
 
@@ -501,5 +501,5 @@ EXAMPLES
   $ dgctl variable
 ```
 
-_See code: [dist/commands/variable.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.3/dist/commands/variable.ts)_
+_See code: [dist/commands/variable.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.4/dist/commands/variable.ts)_
 <!-- commandsstop -->
