@@ -5,6 +5,7 @@ import { diggerJson } from "../utils/helpers";
 // eslint-disable-next-line unicorn/import-style
 import * as chalk from "chalk";
 import { spawn } from "node:child_process";
+import { lookpath } from "lookpath";
 
 export default class Provision extends Command {
   static description = "describe the command here";
@@ -48,14 +49,24 @@ export default class Provision extends Command {
     const bucketName = flags.bucket ?? diggerConfig.id;
 
     try {
-      const initTF = await spawn("terraform init generated")
-      const applyTF = await spawn("terraform apply --auto-approve plan-name.out")
-
-      console.log(initTF);
-      console.log(applyTF);
-
+      const initTF = await callTF(["init", "generated"]);
+      const applyTF = await callTF([
+        "apply",
+        "--auto-approve",
+        "plan-name.out",
+      ]);
     } catch (error: any) {
       this.error(error);
     }
   }
 }
+
+const callTF = async (args: any) => {
+  const tfPath = (await lookpath("terraform")) ?? "terraform";
+
+  const terraform = spawn(tfPath, args, {
+    stdio: [process.stdin, process.stdout, process.stderr],
+  });
+
+  terraform.on("close", (code) => console.log(code || undefined));
+};
