@@ -16,6 +16,7 @@ export default class Provision extends Command {
     "s3-state": Flags.boolean({
       char: "s",
       description: "Store terraform state in s3",
+      default: true
     }),
     bucket: Flags.string({ char: "b", description: "S3 bucket name" }),
   };
