@@ -70,6 +70,4 @@ const callTF = async (args: string, workingDirectory: string) => {
     stdio: [process.stdin, process.stdout, process.stderr],
     cwd: workingDirectory
   });
-
-  // terraform.on("close", (code) => console.log(code || undefined));
 };
