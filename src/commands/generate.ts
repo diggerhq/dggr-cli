@@ -27,7 +27,6 @@ export default class Generate extends Command {
     });
 
     const combinedJson = { ...currentDiggerJson, blocks: mergedBlocks };
-    console.log(combinedJson)
     const response = await axios.post("https://ejvbvuq6kceclqiehhnu75igt40pbuju.lambda-url.us-east-1.on.aws", combinedJson);
     
     // write response to file

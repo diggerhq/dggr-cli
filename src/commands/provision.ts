@@ -53,14 +53,9 @@ export default class Provision extends Command {
       process.env.AWS_ACCESS_KEY_ID = awsLogin;
       process.env.AWS_SECRET_ACCESS_KEY = awsPassword;
   
-      console.log("init started")
       const terraformDir = "generated"
       const initTF = await callTF("init", terraformDir);
-      console.log("init completed")
-
-      console.log("apply started")
       const applyTF = await callTF("apply --auto-approve", terraformDir);
-      console.log("apply completed")
 
     } catch (error: any) {
       this.error(error);
