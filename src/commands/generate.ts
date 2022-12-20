@@ -3,6 +3,7 @@ import { diggerJson, diggerJsonExists } from "../utils/helpers";
 import * as fs from "node:fs";
 import axios from "axios";
 import extract = require("extract-zip");
+import path = require("node:path");
 
 export default class Generate extends Command {
   static description = "Generates terraform based on the Digger infra bundle";
@@ -27,13 +28,23 @@ export default class Generate extends Command {
     });
 
     const combinedJson = { ...currentDiggerJson, blocks: mergedBlocks };
-    const response = await axios.post("https://ejvbvuq6kceclqiehhnu75igt40pbuju.lambda-url.us-east-1.on.aws", combinedJson);
+    const response = await axios.post("https://nzo5lri7z2zdkzgtca5bkdpgom0jpjui.lambda-url.us-east-1.on.aws", combinedJson);
     
     // write response to file
     fs.writeFileSync("tmp.zip", Buffer.from(response.data, 'base64'));
-    // remove previous generated folder
-    fs.rmdir("generated", err => {})
-
+    // remove previous generated folder except tfstate file
+    fs.readdir('generated', (err, files) => {
+        if (err) {
+            console.log(err);
+        }
+        files.forEach(file => {
+            const fileDir = path.join('generated', file);
+            if (file !== "terraform.tfstate" && file !== ".terraform") {
+                fs.rmSync(fileDir, {recursive: true, force: true});
+            }
+        });
+    });
+    
     try {
       await extract("tmp.zip", { dir: `${process.cwd()}/generated` })
       console.log('Infrastructure generation complete!')

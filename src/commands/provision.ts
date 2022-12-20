@@ -6,6 +6,8 @@ import { diggerJson } from "../utils/helpers";
 import * as chalk from "chalk";
 import { execSync } from "node:child_process";
 import { lookpath } from "lookpath";
+import { callTF } from "../utils/terraform";
+import { getAwsCreds } from "../utils/aws";
 
 export default class Provision extends Command {
   static description = "describe the command here";
@@ -35,16 +37,12 @@ export default class Provision extends Command {
 
     const { flags } = await this.parse(Provision);
     const diggerConfig = diggerJson();
-
-    const awsLogin = await CliUx.ux.prompt("AWS Access key?");
-    const awsPassword = await CliUx.ux.prompt("AWS Secret access key?", {
-      type: "hide",
-    });
-
-    const client = new AWS.S3({
-      region: diggerConfig.region,
-      credentials: { accessKeyId: awsLogin, secretAccessKey: awsPassword },
-    });
+    const {awsLogin, awsPassword} = await getAwsCreds()
+    console.log(awsLogin, awsPassword)
+    // const client = new AWS.S3({
+    //   region: diggerConfig.region,
+    //   credentials: { accessKeyId: awsLogin, secretAccessKey: awsPassword },
+    // });
 
     const s3Enabled = flags["s3-state"];
     const bucketName = flags.bucket ?? diggerConfig.id;
@@ -62,12 +60,3 @@ export default class Provision extends Command {
     }
   }
 }
-
-const callTF = async (args: string, workingDirectory: string) => {
-  const tfPath = (await lookpath("terraform")) ?? "terraform";
-
-  const terraform = execSync(`${tfPath} ${args}`, {
-    stdio: [process.stdin, process.stdout, process.stderr],
-    cwd: workingDirectory
-  });
-};
