@@ -15,6 +15,7 @@ import { lookpath } from "lookpath";
 import { execSync } from "node:child_process";
 import { TFOutput } from "../../utils/terraform";
 import { getAwsCreds } from "../../utils/aws";
+import { track_event } from "../../utils/mixpanel";
 
 export default class Index extends Command {
   static description = "Adds a infra block to a Digger infra bundle";
@@ -74,6 +75,7 @@ export default class Index extends Command {
 
     switch (args.command) {
       case "add": {
+        track_event("block add called", { flags, args })
         if (!flags.type) {
           this.log(
             "No type provided for the block. Example: dgctl block add -t=container <name>"
@@ -97,6 +99,7 @@ export default class Index extends Command {
       }
 
       case "deploy": {
+        track_event("block deploy called", { flags, args })
         const terraform = (await lookpath("terraform")) ?? "terraform";;
         const awsExists = await lookpath("aws");
         this.log(awsExists)
@@ -172,10 +175,12 @@ export default class Index extends Command {
           this.log(chalk.greenBright(`Success! Your app is deployed at ${url}`));
         }
 
+        track_event("block deploy successful", { flags, args, diggerConfig })
         break;
       }
 
       case "remove": {
+        track_event("block remove called", { flags, args })
         if (!args.name) {
           this.log(`No app name provided. Example: dgctl block remove <name> `);
           return;
@@ -206,6 +211,7 @@ export default class Index extends Command {
       }
 
       case "rename": {
+        track_event("block rename called", { flags, args })
         if (!args.name) {
           this.log(
             `No app name provided. Example: dgctl block rename <name> -n=<newName>`

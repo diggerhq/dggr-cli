@@ -8,6 +8,7 @@ import { execSync } from "node:child_process";
 import { lookpath } from "lookpath";
 import { callTF } from "../utils/terraform";
 import { getAwsCreds } from "../utils/aws";
+import { track_event } from "../utils/mixpanel";
 
 export default class Provision extends Command {
   static description = "describe the command here";
@@ -31,6 +32,7 @@ export default class Provision extends Command {
   static args = [{ name: "file" }];
 
   public async run(): Promise<void> {
+    
     if (!fs.existsSync(`${process.cwd()}/generated`)) {
       this.log(
         `No generated terraform found. Run ${chalk.green(
@@ -42,6 +44,7 @@ export default class Provision extends Command {
 
     const { flags } = await this.parse(Provision);
     const diggerConfig = diggerJson();
+    track_event("provision called", {flags, diggerConfig})
     const {awsLogin, awsPassword, awsProfile} = await getAwsCreds(flags.profile)
     this.log(`[INFO] Using profile from aws credentials file: ${awsProfile}`)
 
