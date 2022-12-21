@@ -7,8 +7,10 @@ import {
   diggerJsonExists,
   updateDiggerJson,
 } from "../utils/helpers";
+import {track_event} from "../utils/mixpanel"
 
 export default class Init extends Command {
+  
   static description = "Creates a Digger infra bundle project";
 
   static examples = ["<%= config.bin %> <%= command.id %>"];
@@ -21,6 +23,7 @@ export default class Init extends Command {
   public async run(): Promise<void> {
     const { flags } = await this.parse(Init);
     const { version } = this.config;
+    track_event("init called", {flags})
 
     try {
       if (diggerJsonExists() && !flags.force) {

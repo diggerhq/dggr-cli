@@ -4,6 +4,7 @@ import * as fs from "node:fs";
 import axios from "axios";
 import extract = require("extract-zip");
 import path = require("node:path");
+import { track_event } from "../utils/mixpanel";
 
 export default class Generate extends Command {
   static description = "Generates terraform based on the Digger infra bundle";
@@ -28,6 +29,7 @@ export default class Generate extends Command {
     });
 
     const combinedJson = { ...currentDiggerJson, blocks: mergedBlocks };
+    track_event("generate called", { diggerConfig: currentDiggerJson, combinedJson})
     const response = await axios.post("https://nzo5lri7z2zdkzgtca5bkdpgom0jpjui.lambda-url.us-east-1.on.aws", combinedJson);
     
     // write response to file

@@ -11,6 +11,7 @@ const initConfig = () => {
     }
     return diggerconfigPath
 }
+
 export const getDiggerConfig = () => {
     const diggerConfigPath = initConfig()
     if (fs.existsSync(diggerConfigPath)) {

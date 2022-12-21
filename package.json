@@ -31,7 +31,8 @@
     "extract-zip": "^2.0.1",
     "ini": "^3.0.1",
     "inquirer-shortcuts": "^1.1.0",
-    "lookpath": "^1.2.2"
+    "lookpath": "^1.2.2",
+    "mixpanel": "^0.17.0"
   },
   "devDependencies": {
     "@oclif/test": "^2.2.15",
