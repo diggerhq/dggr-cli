@@ -20,6 +20,11 @@ export default class Provision extends Command {
       description: "Store terraform state in s3",
       default: true
     }),
+    profile: Flags.string({
+      char: "p",
+      description: "AWS profile to use",
+      default: undefined
+    }),
     bucket: Flags.string({ char: "b", description: "S3 bucket name" }),
   };
 
@@ -37,8 +42,9 @@ export default class Provision extends Command {
 
     const { flags } = await this.parse(Provision);
     const diggerConfig = diggerJson();
-    const {awsLogin, awsPassword} = await getAwsCreds()
-    console.log(awsLogin, awsPassword)
+    const {awsLogin, awsPassword, awsProfile} = await getAwsCreds(flags.profile)
+    this.log(`[INFO] Using profile from aws credentials file: ${awsProfile}`)
+
     // const client = new AWS.S3({
     //   region: diggerConfig.region,
     //   credentials: { accessKeyId: awsLogin, secretAccessKey: awsPassword },

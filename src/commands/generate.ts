@@ -33,17 +33,19 @@ export default class Generate extends Command {
     // write response to file
     fs.writeFileSync("tmp.zip", Buffer.from(response.data, 'base64'));
     // remove previous generated folder except tfstate file
-    fs.readdir('generated', (err, files) => {
-        if (err) {
-            console.log(err);
-        }
-        files.forEach(file => {
-            const fileDir = path.join('generated', file);
-            if (file !== "terraform.tfstate" && file !== ".terraform") {
-                fs.rmSync(fileDir, {recursive: true, force: true});
-            }
-        });
-    });
+    if (fs.existsSync("generated")) {
+      fs.readdir('generated', (err, files) => {
+          if (err) {
+              console.log(err);
+          }
+          files.forEach(file => {
+              const fileDir = path.join('generated', file);
+              if (file !== "terraform.tfstate" && file !== ".terraform") {
+                  fs.rmSync(fileDir, {recursive: true, force: true});
+              }
+          });
+      });
+    }
     
     try {
       await extract("tmp.zip", { dir: `${process.cwd()}/generated` })

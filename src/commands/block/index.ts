@@ -14,6 +14,7 @@ import { createBrotliCompress } from "node:zlib";
 import { lookpath } from "lookpath";
 import { execSync } from "node:child_process";
 import { TFOutput } from "../../utils/terraform";
+import { getAwsCreds } from "../../utils/aws";
 
 export default class Index extends Command {
   static description = "Adds a infra block to a Digger infra bundle";
@@ -39,6 +40,11 @@ export default class Index extends Command {
       description: "Only display commands, do not run them for block deployment",
       default: false
     }),
+    profile: Flags.string({
+      char: "p",
+      description: "AWS profile to use",
+      default: undefined
+    }),    
   };
 
   static args = [
@@ -90,32 +96,6 @@ export default class Index extends Command {
         break;
       }
 
-      case "build": {
-        const dockerExist = await lookpath("docker");
-        if (!dockerExist) {
-          this.log(
-            "Docker installation not found. Visit https://docs.docker.com/get-docker/ to learn more."
-          );
-          return;
-        }
-
-        if (!args.name) {
-          this.log("No application name provided");
-          return;
-        }
-
-        this.log(
-          `To build this application, in the folder containing the Dockerfile run:`
-        );
-        this.log(chalk.green(`docker build . -t ${args.name}:latest`));
-        const styledCommand = chalk.green(
-          `dgctl block rename ${args.name} -n=<new_name>`
-        );
-        this.log(`Application name can be changed by running ${styledCommand}`);
-
-        break;
-      }
-
       case "deploy": {
         const terraform = (await lookpath("terraform")) ?? "terraform";;
         const awsExists = await lookpath("aws");
@@ -142,9 +122,9 @@ export default class Index extends Command {
         const infraDirectory = "generated"
         const region = diggerConfig.aws_region
         const terraformOutputs = await TFOutput(infraDirectory)
-        const url = terraformOutputs.nodeapp.value.lb_dns
-        const ecrRepoUrl = terraformOutputs.nodeapp.value.docker_registry_url
-        const ecsClusterName = terraformOutputs.nodeapp.value.ecs_cluster_name
+        const url = terraformOutputs[args.name].value.lb_dns
+        const ecrRepoUrl = terraformOutputs[args.name].value.docker_registry_url
+        const ecsClusterName = terraformOutputs[args.name].value.ecs_cluster_name
         const awsProfile = "default"
 
         
@@ -160,7 +140,9 @@ export default class Index extends Command {
 
           this.log(`The block is accessible in this url: ${url}`);
         } else {
-
+          const {awsLogin, awsPassword, awsProfile} = await getAwsCreds(flags.profile)
+          this.log(`[INFO] Using profile from aws credentials file: ${awsProfile}`)
+      
           this.log(chalk.blueBright(`[INFO] Logging to ECR registry ${ecrRepoUrl}`));
           execSync(`aws ecr get-login-password --region ${region} --profile ${awsProfile} | 
                       docker login --username AWS --password-stdin ${ecrRepoUrl}`, {
@@ -182,6 +164,7 @@ export default class Index extends Command {
                       --cluster ${ecsClusterName} \
                       --service ${ecsClusterName}\
                       --profile ${awsProfile} \
+                      --region ${region} \
                       --force-new-deployment`, {
             cwd: codeDirectory
           });
