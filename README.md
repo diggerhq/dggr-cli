@@ -18,7 +18,7 @@ $ npm install -g dgctl
 $ dgctl COMMAND
 running command...
 $ dgctl (--version)
-dgctl/0.0.4 darwin-arm64 node-v16.14.0
+dgctl/0.0.5 darwin-arm64 node-v16.14.0
 $ dgctl --help [COMMAND]
 USAGE
   $ dgctl COMMAND
@@ -82,12 +82,15 @@ Adds a infra block to a Digger infra bundle
 
 ```
 USAGE
-  $ dgctl block [COMMAND] [NAME] [-t container] [-n <value>]
+  $ dgctl block [COMMAND] [NAME] [-t container] [-n <value>] [-c <value>] [-d] [-p <value>]
 
 FLAGS
-  -n, --name=<value>   new name for the block
-  -t, --type=<option>  type of block
-                       <options: container>
+  -c, --context=<value>  The code context for block deployment
+  -d, --display_only     Only display commands, do not run them for block deployment
+  -n, --name=<value>     new name for the block
+  -p, --profile=<value>  AWS profile to use
+  -t, --type=<option>    type of block
+                         <options: container>
 
 DESCRIPTION
   Adds a infra block to a Digger infra bundle
@@ -96,7 +99,7 @@ EXAMPLES
   $ dgctl block
 ```
 
-_See code: [dist/commands/block/index.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.4/dist/commands/block/index.ts)_
+_See code: [dist/commands/block/index.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.5/dist/commands/block/index.ts)_
 
 ## `dgctl generate [ENVIRONMENT]`
 
@@ -110,7 +113,7 @@ DESCRIPTION
   Generates terraform based on the Digger infra bundle
 ```
 
-_See code: [dist/commands/generate.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.4/dist/commands/generate.ts)_
+_See code: [dist/commands/generate.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.5/dist/commands/generate.ts)_
 
 ## `dgctl help [COMMAND]`
 
@@ -151,7 +154,7 @@ EXAMPLES
   $ dgctl infra
 ```
 
-_See code: [dist/commands/infra.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.4/dist/commands/infra.ts)_
+_See code: [dist/commands/infra.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.5/dist/commands/infra.ts)_
 
 ## `dgctl init`
 
@@ -171,7 +174,7 @@ EXAMPLES
   $ dgctl init
 ```
 
-_See code: [dist/commands/init.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.4/dist/commands/init.ts)_
+_See code: [dist/commands/init.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.5/dist/commands/init.ts)_
 
 ## `dgctl plugins`
 
@@ -409,11 +412,12 @@ describe the command here
 
 ```
 USAGE
-  $ dgctl provision [FILE] [-s] [-b <value>]
+  $ dgctl provision [FILE] [-s] [-p <value>] [-b <value>]
 
 FLAGS
-  -b, --bucket=<value>  S3 bucket name
-  -s, --s3-state        Store terraform state in s3
+  -b, --bucket=<value>   S3 bucket name
+  -p, --profile=<value>  AWS profile to use
+  -s, --s3-state         Store terraform state in s3
 
 DESCRIPTION
   describe the command here
@@ -422,7 +426,7 @@ EXAMPLES
   $ dgctl provision
 ```
 
-_See code: [dist/commands/provision.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.4/dist/commands/provision.ts)_
+_See code: [dist/commands/provision.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.5/dist/commands/provision.ts)_
 
 ## `dgctl secret [FILE]`
 
@@ -443,7 +447,7 @@ EXAMPLES
   $ dgctl secret
 ```
 
-_See code: [dist/commands/secret.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.4/dist/commands/secret.ts)_
+_See code: [dist/commands/secret.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.5/dist/commands/secret.ts)_
 
 ## `dgctl update [CHANNEL]`
 
@@ -501,5 +505,5 @@ EXAMPLES
   $ dgctl variable
 ```
 
-_See code: [dist/commands/variable.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.4/dist/commands/variable.ts)_
+_See code: [dist/commands/variable.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.5/dist/commands/variable.ts)_
 <!-- commandsstop -->
