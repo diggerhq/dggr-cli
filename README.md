@@ -18,7 +18,7 @@ $ npm install -g dgctl
 $ dgctl COMMAND
 running command...
 $ dgctl (--version)
-dgctl/0.0.6 darwin-arm64 node-v16.14.0
+dgctl/0.0.7 darwin-arm64 node-v16.14.0
 $ dgctl --help [COMMAND]
 USAGE
   $ dgctl COMMAND
@@ -99,7 +99,7 @@ EXAMPLES
   $ dgctl block
 ```
 
-_See code: [dist/commands/block/index.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.6/dist/commands/block/index.ts)_
+_See code: [dist/commands/block/index.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.7/dist/commands/block/index.ts)_
 
 ## `dgctl generate [ENVIRONMENT]`
 
@@ -113,7 +113,7 @@ DESCRIPTION
   Generates terraform based on the Digger infra bundle
 ```
 
-_See code: [dist/commands/generate.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.6/dist/commands/generate.ts)_
+_See code: [dist/commands/generate.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.7/dist/commands/generate.ts)_
 
 ## `dgctl help [COMMAND]`
 
@@ -154,7 +154,7 @@ EXAMPLES
   $ dgctl infra
 ```
 
-_See code: [dist/commands/infra.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.6/dist/commands/infra.ts)_
+_See code: [dist/commands/infra.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.7/dist/commands/infra.ts)_
 
 ## `dgctl init`
 
@@ -174,7 +174,7 @@ EXAMPLES
   $ dgctl init
 ```
 
-_See code: [dist/commands/init.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.6/dist/commands/init.ts)_
+_See code: [dist/commands/init.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.7/dist/commands/init.ts)_
 
 ## `dgctl plugins`
 
@@ -426,7 +426,7 @@ EXAMPLES
   $ dgctl provision
 ```
 
-_See code: [dist/commands/provision.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.6/dist/commands/provision.ts)_
+_See code: [dist/commands/provision.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.7/dist/commands/provision.ts)_
 
 ## `dgctl secret [FILE]`
 
@@ -447,7 +447,7 @@ EXAMPLES
   $ dgctl secret
 ```
 
-_See code: [dist/commands/secret.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.6/dist/commands/secret.ts)_
+_See code: [dist/commands/secret.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.7/dist/commands/secret.ts)_
 
 ## `dgctl update [CHANNEL]`
 
@@ -505,5 +505,5 @@ EXAMPLES
   $ dgctl variable
 ```
 
-_See code: [dist/commands/variable.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.6/dist/commands/variable.ts)_
+_See code: [dist/commands/variable.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.7/dist/commands/variable.ts)_
 <!-- commandsstop -->
