@@ -5,15 +5,15 @@ export const vpc = {
   ...sharedDefaults,
   target: "diggerhq/target-network-module@main",
   // eslint-disable-next-line camelcase
-  enable_vpc_endpoints: true,
+  enable_vpc_endpoints: false,
   // eslint-disable-next-line camelcase
   enable_dns_hostnames: false,
   // eslint-disable-next-line camelcase
-  enable_dns_support: true,
+  enable_dns_support: false,
   // eslint-disable-next-line camelcase
-  one_nat_gateway_per_az: true,
+  one_nat_gateway_per_az: false,
   // eslint-disable-next-line camelcase
-  enable_nat_gateway: true
+  enable_nat_gateway: false
 };
 
 export const container = {
