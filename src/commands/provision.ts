@@ -9,8 +9,9 @@ import { lookpath } from "lookpath";
 import { callTF } from "../utils/terraform";
 import { getAwsCreds } from "../utils/aws";
 import { track_event } from "../utils/mixpanel";
+import { BaseCommand } from "./base";
 
-export default class Provision extends Command {
+export default class Provision extends BaseCommand<typeof Provision> {
   static description = "describe the command here";
 
   static examples = ["<%= config.bin %> <%= command.id %>"];

@@ -1,6 +1,7 @@
 import { Command, Flags } from "@oclif/core";
+import { BaseCommand } from "./base";
 
-export default class Infra extends Command {
+export default class Infra extends BaseCommand<typeof Infra> {
   static description = "describe the command here";
 
   static examples = ["<%= config.bin %> <%= command.id %>"];

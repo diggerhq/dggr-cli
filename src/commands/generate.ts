@@ -5,8 +5,9 @@ import axios from "axios";
 import extract = require("extract-zip");
 import path = require("node:path");
 import { track_event } from "../utils/mixpanel";
+import { BaseCommand } from "./base";
 
-export default class Generate extends Command {
+export default class Generate extends BaseCommand<typeof Generate> {
   static description = "Generates terraform based on the Digger infra bundle";
 
   static args = [{ name: "environment" }];

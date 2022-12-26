@@ -26,7 +26,12 @@ export const createBlock = (blockType: String, blockName: String, extraOptions={
     ...currentDiggerJson,
     blocks: [
       ...(currentDiggerJson.blocks ?? []),
-      { name: blockName, type: blockType, ...extraOptions },
+      { 
+        name: blockName, 
+        // TODO: Better logic to determine type based on top-level type since for resources it differs
+        type: blockType == "container" || blockType == "vpc" ? blockType : "resource", 
+        ...extraOptions 
+      },
     ],
   });
 

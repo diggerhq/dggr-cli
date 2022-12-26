@@ -40,10 +40,35 @@ export const container = {
   lb_monitoring_enabled: false
 };
 
-export const mysql = { ...sharedDefaults };
+export const mysql = {
+  ...sharedDefaults,
+  target: "diggerhq/target-rds-module@dev",
+  resource_type: "database",
+  connection_schema: "mysql",
+  rds_engine: "mysql",
+  rds_engine_version: "8.0.30",
+  rds_instance_class: "db.t3.micro"  
+  
+};
 
-export const postgres = { ...sharedDefaults };
+export const postgres = { 
+  ...sharedDefaults,
+  target: "diggerhq/target-rds-module@dev",
+  resource_type: "database",
+  connection_schema: "postgres",
+  rds_engine: "postgres",
+  rds_engine_version: "14.4",
+  rds_instance_class: "db.t3.micro"
+};
 
-export const docdb = { ...sharedDefaults };
+export const docdb = { 
+  ...sharedDefaults,
+  target: "diggerhq/target-docdb-module@dev",
+  resource_type: "docdb",
+};
 
-export const redis = { ...sharedDefaults };
+export const redis = { 
+  ...sharedDefaults,
+  target: "diggerhq/target-redis-module@dev",
+  resource_type: "redis",
+};
