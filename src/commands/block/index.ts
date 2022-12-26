@@ -16,8 +16,9 @@ import { execSync } from "node:child_process";
 import { TFOutput } from "../../utils/terraform";
 import { getAwsCreds } from "../../utils/aws";
 import { track_event } from "../../utils/mixpanel";
+import { BaseCommand } from "../base";
 
-export default class Index extends Command {
+export default class Index extends BaseCommand<typeof Index> {
   static description = "Adds a infra block to a Digger infra bundle";
 
   static examples = ["<%= config.bin %> <%= command.id %>"];
@@ -26,7 +27,7 @@ export default class Index extends Command {
     type: Flags.string({
       char: "t",
       description: "type of block",
-      options: ["container"],
+      options: ["container", "mysql", "postgres", "docdb", "redis"],
     }),
     name: Flags.string({
       char: "n",
@@ -88,13 +89,13 @@ export default class Index extends Command {
         }
 
         const blockName = args.name ?? crypto.randomUUID().replace(/\-/g, "_");
-        const type = flags.type;    
+        const type = flags.type;
         try {
           createBlock(type, blockName, {aws_app_identifier: blockName})
           this.log("Successfully added a block to the Digger project");
         } catch (error: any) {
           this.error(error);
-        }  
+        }
         break;
       }
 

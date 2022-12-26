@@ -1,6 +1,7 @@
 import {Command, Flags} from '@oclif/core'
+import { BaseCommand } from './base'
 
-export default class Variable extends Command {
+export default class Variable extends BaseCommand<typeof Variable> {
   static description = 'describe the command here'
 
   static examples = [

@@ -8,8 +8,9 @@ import {
   updateDiggerJson,
 } from "../utils/helpers";
 import {track_event} from "../utils/mixpanel"
+import { BaseCommand } from "./base";
 
-export default class Init extends Command {
+export default class Init extends BaseCommand<typeof Init> {
   
   static description = "Creates a Digger infra bundle project";
 
