@@ -25,9 +25,6 @@ export default class Init extends BaseCommand<typeof Init> {
     const { flags } = await this.parse(Init);
     const { version } = this.config;
     track_event("init called", {flags})
-    var x:any = {}
-    console.log("I will crash now")
-    const crashed = x[2]["asds"]
 
     try {
       if (diggerJsonExists() && !flags.force) {

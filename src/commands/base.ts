@@ -27,13 +27,11 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
   }
 
   protected async catch(err: Error & {exitCode?: number}): Promise<any> {
-    console.log("sending error to mixpanel")
-      track_event("an error occured", {err})
-      
-    console.log("capturing exception")
+    track_event("an error occured", {err})
     Sentry.captureException(err);
     this.sentryTransaction.finish();
-
+    // need to wait here otheriwse process gets killed before errors sent
+    // TODO: Find cleaner solution
     await new Promise(r => setTimeout(r, 200));
     return super.catch(err)
   }
