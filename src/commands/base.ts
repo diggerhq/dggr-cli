@@ -14,7 +14,6 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
   protected sentryTransaction : any
 
   public async init(): Promise<void> {
-    console.log("initializing sentry")
     Sentry.init({
         dsn: "https://caf828c78be346f9b48897d792380542@o1089681.ingest.sentry.io/4504391811137536",      
         tracesSampleRate: 1.0,
