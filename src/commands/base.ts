@@ -34,9 +34,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     await new Promise(r => setTimeout(r, 200));
     return super.catch(err)
   }
-
   protected async finally(_: Error | undefined): Promise<any> {
-    console.log("sentry transaction being sent")
     return super.finally(_)
   }
 }
