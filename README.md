@@ -18,7 +18,7 @@ $ npm install -g dgctl
 $ dgctl COMMAND
 running command...
 $ dgctl (--version)
-dgctl/0.0.7 darwin-arm64 node-v16.14.0
+dgctl/0.0.8 darwin-arm64 node-v16.14.0
 $ dgctl --help [COMMAND]
 USAGE
   $ dgctl COMMAND
@@ -28,6 +28,7 @@ USAGE
 # Commands
 <!-- commands -->
 * [`dgctl autocomplete [SHELL]`](#dgctl-autocomplete-shell)
+* [`dgctl base`](#dgctl-base)
 * [`dgctl block [COMMAND] [NAME]`](#dgctl-block-command-name)
 * [`dgctl generate [ENVIRONMENT]`](#dgctl-generate-environment)
 * [`dgctl help [COMMAND]`](#dgctl-help-command)
@@ -76,13 +77,23 @@ EXAMPLES
 
 _See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v1.3.7/src/commands/autocomplete/index.ts)_
 
+## `dgctl base`
+
+```
+USAGE
+  $ dgctl base
+```
+
+_See code: [dist/commands/base.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.8/dist/commands/base.ts)_
+
 ## `dgctl block [COMMAND] [NAME]`
 
 Adds a infra block to a Digger infra bundle
 
 ```
 USAGE
-  $ dgctl block [COMMAND] [NAME] [-t container] [-n <value>] [-c <value>] [-d] [-p <value>]
+  $ dgctl block [COMMAND] [NAME] [-t container|mysql|postgres|docdb|redis] [-n <value>] [-c <value>] [-d]
+    [-p <value>]
 
 FLAGS
   -c, --context=<value>  The code context for block deployment
@@ -90,7 +101,7 @@ FLAGS
   -n, --name=<value>     new name for the block
   -p, --profile=<value>  AWS profile to use
   -t, --type=<option>    type of block
-                         <options: container>
+                         <options: container|mysql|postgres|docdb|redis>
 
 DESCRIPTION
   Adds a infra block to a Digger infra bundle
@@ -99,7 +110,7 @@ EXAMPLES
   $ dgctl block
 ```
 
-_See code: [dist/commands/block/index.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.7/dist/commands/block/index.ts)_
+_See code: [dist/commands/block/index.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.8/dist/commands/block/index.ts)_
 
 ## `dgctl generate [ENVIRONMENT]`
 
@@ -113,7 +124,7 @@ DESCRIPTION
   Generates terraform based on the Digger infra bundle
 ```
 
-_See code: [dist/commands/generate.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.7/dist/commands/generate.ts)_
+_See code: [dist/commands/generate.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.8/dist/commands/generate.ts)_
 
 ## `dgctl help [COMMAND]`
 
@@ -154,7 +165,7 @@ EXAMPLES
   $ dgctl infra
 ```
 
-_See code: [dist/commands/infra.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.7/dist/commands/infra.ts)_
+_See code: [dist/commands/infra.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.8/dist/commands/infra.ts)_
 
 ## `dgctl init`
 
@@ -174,7 +185,7 @@ EXAMPLES
   $ dgctl init
 ```
 
-_See code: [dist/commands/init.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.7/dist/commands/init.ts)_
+_See code: [dist/commands/init.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.8/dist/commands/init.ts)_
 
 ## `dgctl plugins`
 
@@ -426,7 +437,7 @@ EXAMPLES
   $ dgctl provision
 ```
 
-_See code: [dist/commands/provision.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.7/dist/commands/provision.ts)_
+_See code: [dist/commands/provision.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.8/dist/commands/provision.ts)_
 
 ## `dgctl secret [FILE]`
 
@@ -447,7 +458,7 @@ EXAMPLES
   $ dgctl secret
 ```
 
-_See code: [dist/commands/secret.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.7/dist/commands/secret.ts)_
+_See code: [dist/commands/secret.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.8/dist/commands/secret.ts)_
 
 ## `dgctl update [CHANNEL]`
 
@@ -505,5 +516,5 @@ EXAMPLES
   $ dgctl variable
 ```
 
-_See code: [dist/commands/variable.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.7/dist/commands/variable.ts)_
+_See code: [dist/commands/variable.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.8/dist/commands/variable.ts)_
 <!-- commandsstop -->
