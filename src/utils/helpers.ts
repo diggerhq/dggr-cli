@@ -32,6 +32,8 @@ export const createBlock = (
     blocks: [
       ...(currentDiggerJson.blocks ?? []),
       {
+        // eslint-disable-next-line camelcase
+        aws_app_identifier: "WILL_BE_REMOVED_NEXT",
         name: blockName,
         // TODO: Better logic to determine type based on top-level type since for resources it differs
         type:
