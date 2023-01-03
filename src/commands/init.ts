@@ -33,15 +33,11 @@ export default class Init extends BaseCommand<typeof Init> {
 
         this.log("Successfully updated a Digger project");
       } else {
-        const envid = crypto.randomUUID().replace(/\-/g, "_");
         const content = {
           target: "diggerhq/tf-module-bundler@master",
           aws_region: "us-east-1",
-          environment_id: envid,
-          for_local_run: false,
           version,
           id: crypto.randomUUID(),
-          region: "us-west-1",
           blocks: [],
           created: Date.now(),
         };

@@ -91,7 +91,7 @@ export default class Index extends BaseCommand<typeof Index> {
         const blockName = args.name ?? crypto.randomUUID().replace(/\-/g, "_");
         const type = flags.type;
         try {
-          createBlock(type, blockName, {aws_app_identifier: blockName})
+          createBlock(type, blockName, {})
           this.log("Successfully added a block to the Digger project");
         } catch (error: any) {
           this.error(error);
