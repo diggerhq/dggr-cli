@@ -38,17 +38,12 @@ export const updateDiggerConfig = (newSettings: object) => {
 };
 
 
-export const defaultContent = (envId: any, version: any) => ({
+export const defaultContent = (version: any) => ({
   target: "diggerhq/tf-module-bundler@master",
   // eslint-disable-next-line camelcase
   aws_region: "us-east-1",
-  // eslint-disable-next-line camelcase
-  environment_id: envId,
-  // eslint-disable-next-line camelcase
-  for_local_run: false,
   version,
   id: crypto.randomUUID(),
-  region: "us-west-1",
   blocks: [],
   created: Date.now(),
 })

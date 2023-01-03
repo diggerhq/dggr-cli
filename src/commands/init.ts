@@ -33,8 +33,7 @@ export default class Init extends BaseCommand<typeof Init> {
 
         this.log("Successfully updated a Digger project");
       } else {
-        const envId = crypto.randomUUID().replace(/-/g, "_");
-        const content = defaultContent(envId, version);
+        const content = defaultContent(version);
         updateDiggerJson(content);
 
         try {
