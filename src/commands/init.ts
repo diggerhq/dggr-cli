@@ -1,4 +1,4 @@
-import { Command, Flags } from "@oclif/core";
+import { Flags } from "@oclif/core";
 import * as fs from "node:fs";
 import * as crypto from "node:crypto";
 import {
@@ -7,11 +7,11 @@ import {
   diggerJsonExists,
   updateDiggerJson,
 } from "../utils/helpers";
-import {track_event} from "../utils/mixpanel"
+import { trackEvent } from "../utils/mixpanel";
 import { BaseCommand } from "./base";
+import { defaultContent } from "../utils/digger-settings";
 
 export default class Init extends BaseCommand<typeof Init> {
-  
   static description = "Creates a Digger infra bundle project";
 
   static examples = ["<%= config.bin %> <%= command.id %>"];
@@ -24,7 +24,7 @@ export default class Init extends BaseCommand<typeof Init> {
   public async run(): Promise<void> {
     const { flags } = await this.parse(Init);
     const { version } = this.config;
-    track_event("init called", {flags})
+    trackEvent("init called", { flags });
 
     try {
       if (diggerJsonExists() && !flags.force) {
@@ -33,27 +33,19 @@ export default class Init extends BaseCommand<typeof Init> {
 
         this.log("Successfully updated a Digger project");
       } else {
-        const envid = crypto.randomUUID().replace(/\-/g, "_");
-        const content = {
-          target: "diggerhq/tf-module-bundler@master",
-          aws_region: "us-east-1",
-          environment_id: envid,
-          for_local_run: false,
-          version,
-          id: crypto.randomUUID(),
-          region: "us-west-1",
-          blocks: [],
-          created: Date.now(),
-        };
-
+        const envId = crypto.randomUUID().replace(/-/g, "_");
+        const content = defaultContent(envId, version);
         updateDiggerJson(content);
 
         try {
           createBlock("vpc", "default_network", {});
-          this.log("Successfully added default network block to the Digger project");
+          this.log(
+            "Successfully added default network block to the Digger project"
+          );
         } catch (error: any) {
           this.error(error);
         }
+
         fs.mkdirSync(`${process.cwd()}/overrides`);
         fs.writeFileSync(`${process.cwd()}/.dgctlsecrets`, "");
         fs.writeFileSync(`${process.cwd()}/.dgctlvariables`, "");

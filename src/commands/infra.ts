@@ -1,4 +1,4 @@
-import { Command, Flags } from "@oclif/core";
+import { Flags } from "@oclif/core";
 import { BaseCommand } from "./base";
 
 export default class Infra extends BaseCommand<typeof Infra> {
@@ -19,9 +19,7 @@ export default class Infra extends BaseCommand<typeof Infra> {
     const { args, flags } = await this.parse(Infra);
 
     const name = flags.name ?? "world";
-    this.log(
-      `hello ${name}`
-    );
+    this.log(`hello ${name}`);
     if (args.file && flags.force) {
       this.log(`you input --force and --file: ${args.file}`);
     }

@@ -1,5 +1,6 @@
 import * as fs from "node:fs";
 import * as blocks from "../utils/block-defaults";
+
 export const diggerJsonPath = `${process.cwd()}/dgctl.json`;
 
 export const diggerJsonExists = () => {
@@ -15,7 +16,11 @@ export const updateDiggerJson = (obj: unknown) => {
   fs.writeFileSync(diggerJsonPath, JSON.stringify(obj, null, 4));
 };
 
-export const createBlock = (blockType: String, blockName: String, extraOptions={}) => {
+export const createBlock = (
+  blockType: string,
+  blockName: string,
+  extraOptions = {}
+) => {
   const currentDiggerJson = diggerJson();
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -26,11 +31,14 @@ export const createBlock = (blockType: String, blockName: String, extraOptions={
     ...currentDiggerJson,
     blocks: [
       ...(currentDiggerJson.blocks ?? []),
-      { 
-        name: blockName, 
+      {
+        name: blockName,
         // TODO: Better logic to determine type based on top-level type since for resources it differs
-        type: blockType == "container" || blockType == "vpc" ? blockType : "resource", 
-        ...extraOptions 
+        type:
+          blockType === "container" || blockType === "vpc"
+            ? blockType
+            : "resource",
+        ...extraOptions,
       },
     ],
   });
@@ -44,4 +52,4 @@ export const createBlock = (blockType: String, blockName: String, extraOptions={
   );
   fs.writeFileSync(`${process.cwd()}/${blockName}/.dgctlsecrets`, "");
   fs.writeFileSync(`${process.cwd()}/${blockName}/.dgctlvariables`, "");
-}
+};

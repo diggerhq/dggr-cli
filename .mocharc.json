@@ -1,4 +1,7 @@
 {
+  "extensions": [
+    "ts"
+  ],
   "require": [
     "test/helpers/init.js",
     "ts-node/register"
