@@ -5,6 +5,7 @@ import extract = require("extract-zip");
 import path = require("node:path");
 import { trackEvent } from "../utils/mixpanel";
 import { BaseCommand } from "./base";
+import chalk = require("chalk");
 
 export default class Generate extends BaseCommand<typeof Generate> {
   static description = "Generates terraform based on the Digger infra bundle";
@@ -45,7 +46,7 @@ export default class Generate extends BaseCommand<typeof Generate> {
       // write response to file
       fs.writeFileSync("tmp.zip", Buffer.from(response.data, "base64"));
     } catch (error) {
-      console.log(error);
+      console.log(chalk.red("An error occured while generating the terraform, please check your configurations"));
       throw error;
     }
 
@@ -72,7 +73,7 @@ export default class Generate extends BaseCommand<typeof Generate> {
         "You can now create your infrastructure using dgctl provision command"
       );
     } catch (error) {
-      console.log(error);
+      console.log(chalk.red("An error occured while unzipping terraform, please try again"))
       throw error;
     } finally {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
