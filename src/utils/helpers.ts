@@ -1,5 +1,6 @@
 import * as fs from "node:fs";
 import * as blocks from "../utils/block-defaults";
+import * as crypto from "node:crypto";
 
 export const diggerJsonPath = `${process.cwd()}/dgctl.json`;
 
@@ -27,13 +28,15 @@ export const createBlock = (
   // @ts-ignore
   const defaults = blocks[blockType];
 
+  const awsIdentifier = `${blockName}-${crypto.randomBytes(4).toString("hex")}`;
+
   updateDiggerJson({
     ...currentDiggerJson,
     blocks: [
       ...(currentDiggerJson.blocks ?? []),
       {
         // eslint-disable-next-line camelcase
-        aws_app_identifier: "WILL_BE_REMOVED_NEXT",
+        aws_app_identifier: awsIdentifier,
         name: blockName,
         // TODO: Better logic to determine type based on top-level type since for resources it differs
         type:
