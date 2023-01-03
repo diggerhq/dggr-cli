@@ -36,13 +36,19 @@ export default class Generate extends BaseCommand<typeof Generate> {
       diggerConfig: currentDiggerJson,
       combinedJson,
     });
-    const response = await axios.post(
-      "https://nzo5lri7z2zdkzgtca5bkdpgom0jpjui.lambda-url.us-east-1.on.aws",
-      combinedJson
-    );
 
-    // write response to file
-    fs.writeFileSync("tmp.zip", Buffer.from(response.data, "base64"));
+    try {
+      const response = await axios.post(
+        "https://nzo5lri7z2zdkzgtca5bkdpgom0jpjui.lambda-url.us-east-1.on.aws",
+        combinedJson
+      );
+      // write response to file
+      fs.writeFileSync("tmp.zip", Buffer.from(response.data, "base64"));
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+
     // remove previous generated folder except tfstate file
     if (fs.existsSync("generated")) {
       fs.readdir("generated", (err, files) => {
@@ -67,6 +73,7 @@ export default class Generate extends BaseCommand<typeof Generate> {
       );
     } catch (error) {
       console.log(error);
+      throw error;
     } finally {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       fs.unlink("tmp.zip", () => {});
