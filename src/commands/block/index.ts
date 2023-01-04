@@ -87,7 +87,8 @@ export default class Index extends BaseCommand<typeof Index> {
           this.log("No name provided, will be using an auto generated name.");
         }
 
-        const blockName = args.name ?? crypto.randomUUID().replace(/\-/g, "_");
+        const blockName =
+          args.name ?? `${flags.type}_${crypto.randomUUID().slice(0, 5)}`;
         const type = flags.type;
         try {
           createBlock(type, blockName, {});
@@ -95,6 +96,7 @@ export default class Index extends BaseCommand<typeof Index> {
         } catch (error: any) {
           this.error(error);
         }
+
         break;
       }
 
