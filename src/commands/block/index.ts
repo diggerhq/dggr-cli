@@ -97,6 +97,7 @@ export default class Index extends BaseCommand<typeof Index> {
           this.error(error);
         }
 
+        throw new Error("Not implemented");
         break;
       }
 
