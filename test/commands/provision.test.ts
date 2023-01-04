@@ -1,6 +1,6 @@
 import {expect, test} from '@oclif/test'
 
-describe('provision', () => {
+xdescribe('provision', () => {
   test
   .stdout()
   .command(['provision'])

@@ -5,6 +5,7 @@ import * as ini from "ini";
 import { getHomeDir } from "./io";
 import { diggerJson } from "./helpers";
 import { getDiggerConfig, updateDiggerConfig } from "./digger-settings";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import * as inquirer from "inquirer-shortcuts";
 
