@@ -1,4 +1,5 @@
 import * as fs from "node:fs";
+import * as AWS from "@aws-sdk/client-ssm";
 import { CliUx } from "@oclif/core";
 import * as path from "node:path";
 import * as ini from "ini";
@@ -91,3 +92,35 @@ export const getAwsCreds = async (
 
   return { awsLogin, awsPassword, awsProfile: selectedProfile };
 };
+
+
+export const createSsmParameter = async function(key:string, value:string, awsProfile=undefined) {
+  return new Promise(async (resolve, reject) => {
+    const diggerConfig = diggerJson();
+    const { awsLogin, awsPassword } = await getAwsCreds(
+      awsProfile
+    );
+    const params = {
+      Name: key,
+      Value: value,
+      Type: "SecureString",
+      Tags: [
+        {
+          Key: key,
+          Value: value
+        },
+      ],
+    };
+    const client = new AWS.SSM({
+      region: diggerConfig.region,
+      credentials: { accessKeyId: awsLogin, secretAccessKey: awsPassword },
+      });
+
+    client.putParameter(params, function(err:any, data:any) {
+      if (err) {
+        reject(err)
+      }
+      resolve(data)
+    })
+  });
+}

@@ -1,5 +1,7 @@
 import { Flags } from "@oclif/core";
 import { BaseCommand } from "./base";
+import {createSsmParameter} from "../utils/aws";
+import * as chalk from "chalk";
 
 export default class Secret extends BaseCommand<typeof Secret> {
   static description = "describe the command here";
@@ -7,21 +9,30 @@ export default class Secret extends BaseCommand<typeof Secret> {
   static examples = ["<%= config.bin %> <%= command.id %>"];
 
   static flags = {
-    // flag with a value (-n, --name=VALUE)
-    name: Flags.string({ char: "n", description: "name to print" }),
-    // flag with no value (-f, --force)
-    force: Flags.boolean({ char: "f" }),
   };
 
-  static args = [{ name: "file" }];
+  static args = [
+    { name: "key", require: true },
+    { name: "value", require: true },
+  ];
 
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Secret);
 
-    const name = flags.name ?? "world";
-    this.log(`hello ${name}`);
-    if (args.file && flags.force) {
-      this.log(`you input --force and --file: ${args.file}`);
+    const key = args.key
+    const value = args.value
+
+    if (!key || !value) {
+      console.log(chalk.red("Missing parameter: key and value"))
     }
+    
+    try {
+      const result = await createSsmParameter(key, value)
+      console.log(result)
+    } catch (error) {
+      console.log(error)
+      console.log(chalk.red("Could not create ssm parameter, does the key already exist?"))
+    }
+    
   }
 }
