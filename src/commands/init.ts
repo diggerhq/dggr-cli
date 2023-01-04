@@ -1,6 +1,5 @@
 import { Flags } from "@oclif/core";
 import * as fs from "node:fs";
-import * as crypto from "node:crypto";
 import {
   createBlock,
   diggerJson,
@@ -46,6 +45,7 @@ export default class Init extends BaseCommand<typeof Init> {
         }
 
         fs.mkdirSync(`${process.cwd()}/overrides`);
+        fs.writeFileSync(`${process.cwd()}/.gitignore`, ".archive\ngenerated/");
         fs.writeFileSync(`${process.cwd()}/.dgctlsecrets`, "");
         fs.writeFileSync(`${process.cwd()}/.dgctlvariables`, "");
         this.log("Successfully initiated a Digger project");
