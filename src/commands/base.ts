@@ -20,8 +20,8 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
   }
 
   protected async catch(err: Error & { exitCode?: number }): Promise<any> {
+    trackEvent("an error occured", { err });
     if (process.env.NODE_ENV === "production") {
-      trackEvent("an error occured", { err });
       Sentry.captureException(err);
     }
 
