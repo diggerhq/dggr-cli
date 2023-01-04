@@ -38,7 +38,7 @@ export const createBlock = (
         // eslint-disable-next-line camelcase
         aws_app_identifier: awsIdentifier,
         name: blockName,
-        // TODO: Better logic to determine type based on top-level type since for resources it differs
+        // Better logic to determine type based on top-level type since for resources it differs
         type:
           blockType === "container" || blockType === "vpc"
             ? blockType

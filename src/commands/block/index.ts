@@ -102,7 +102,7 @@ export default class Index extends BaseCommand<typeof Index> {
 
       case "deploy": {
         trackEvent("block deploy called", { flags, args });
-        const terraform = (await lookpath("terraform")) ?? "terraform";
+        // const terraform = (await lookpath("terraform")) ?? "terraform";
 
         const awsExists = await lookpath("aws");
         this.log(awsExists);
@@ -110,6 +110,7 @@ export default class Index extends BaseCommand<typeof Index> {
           this.log("aws cli installation not found.");
           return;
         }
+
         const dockerExist = await lookpath("docker");
         if (!dockerExist) {
           this.log(
@@ -155,9 +156,7 @@ export default class Index extends BaseCommand<typeof Index> {
 
           this.log(`The block is accessible in this url: ${url}`);
         } else {
-          const { awsLogin, awsPassword, awsProfile } = await getAwsCreds(
-            flags.profile
-          );
+          const { awsProfile } = await getAwsCreds(flags.profile);
           this.log(
             `[INFO] Using profile from aws credentials file: ${awsProfile}`
           );

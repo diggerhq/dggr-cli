@@ -4,7 +4,8 @@ describe("init", () => {
   test
     .stdout()
     .command(["init"])
-    .it("runs hello", (ctx) => {
-      expect(ctx.stdout).to.contain("Successfully initiated a Digger project");
+    .it("runs init", (ctx) => {
+      const value = ctx.stdout;
+      expect(value).to.contain("Successfully initiated a Digger project\n");
     });
 });

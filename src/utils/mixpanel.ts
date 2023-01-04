@@ -27,5 +27,6 @@ const getSessionId = () => {
 export const trackEvent = (eventName: string, extraData: object) => {
   const sessionId = getSessionId();
   // mixpanel.identify(sessionId)
+  // eslint-disable-next-line camelcase
   mixpanel.track(eventName, { distinct_id: sessionId, ...extraData });
 };
