@@ -3,10 +3,20 @@ import * as path from "node:path";
 import * as Mixpanel from "mixpanel";
 import { getHomeDir } from "./io";
 import * as crypto from "node:crypto";
+import { MIXPANEL_TOKEN } from "../config";
 
-const mixpanel = Mixpanel.init("48099e85f3813b7b22eaa082f514d8ca", {
-  debug: process.env.DEBUG || false,
-});
+const mixpanel = initialiseMixpanel();
+
+function initialiseMixpanel(): Mixpanel.Mixpanel | null {
+  if (process.env.NODE_ENV === "production") {
+    const mixpanel = Mixpanel.init(MIXPANEL_TOKEN, {
+      debug: process.env.DEBUG || false,
+    });
+    return mixpanel;
+  }
+  
+  return null;
+}
 
 const getSessionId = () => {
   const diggerFolder = path.join(getHomeDir(), ".digger");
@@ -26,7 +36,8 @@ const getSessionId = () => {
 
 export const trackEvent = (eventName: string, extraData: object) => {
   const sessionId = getSessionId();
-  // mixpanel.identify(sessionId)
+  if (mixpanel) {
   // eslint-disable-next-line camelcase
-  mixpanel.track(eventName, { distinct_id: sessionId, ...extraData });
+    mixpanel.track(eventName, { distinct_id: sessionId, ...extraData });
+  }
 };
