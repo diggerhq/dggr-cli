@@ -5,6 +5,7 @@ import extract = require("extract-zip");
 import path = require("node:path");
 import { trackEvent } from "../utils/mixpanel";
 import { BaseCommand } from "./base";
+import { getTrowelUrl } from "../config";
 
 export default class Generate extends BaseCommand<typeof Generate> {
   static description = "Generates terraform based on the Digger infra bundle";
@@ -36,10 +37,7 @@ export default class Generate extends BaseCommand<typeof Generate> {
       diggerConfig: currentDiggerJson,
       combinedJson,
     });
-    const response = await axios.post(
-      "https://nzo5lri7z2zdkzgtca5bkdpgom0jpjui.lambda-url.us-east-1.on.aws",
-      combinedJson
-    );
+    const response = await axios.post(getTrowelUrl(), combinedJson);
 
     // write response to file
     fs.writeFileSync("tmp.zip", Buffer.from(response.data, "base64"));
