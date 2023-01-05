@@ -93,8 +93,37 @@ export const getAwsCreds = async (
   return { awsLogin, awsPassword, awsProfile: selectedProfile };
 };
 
+export const getSsmParameterArn = async function(key:string, awsProfile=undefined): Promise<{arn:string}> {
+  return new Promise(async (resolve, reject) => {
+    const diggerConfig = diggerJson();
+    const { awsLogin, awsPassword } = await getAwsCreds(
+      awsProfile
+    );
+    const params = {
+      Name: key,
+      WithDecruption: false,
 
-export const createSsmParameter = async function(key:string, value:string, awsProfile=undefined) {
+    };
+    const client = new AWS.SSM({
+      region: diggerConfig.region,
+      credentials: { accessKeyId: awsLogin, secretAccessKey: awsPassword },
+      });
+    
+
+    client.getParameter(params, function(err:any, data:any) {
+      if (err) {
+        reject(err)
+      }
+      resolve({
+        arn: data.Parameter.ARN
+      })
+
+    });
+
+  });  
+}
+
+export const createSsmParameter = async function(key:string, value:string, awsProfile=undefined): Promise<{arn:string}> {
   return new Promise(async (resolve, reject) => {
     const diggerConfig = diggerJson();
     const { awsLogin, awsPassword } = await getAwsCreds(
@@ -105,12 +134,7 @@ export const createSsmParameter = async function(key:string, value:string, awsPr
       Value: value,
       Type: "SecureString",
       Overwrite: true,
-      // Tags: [
-      //   {
-      //     Key: key,
-      //     Value: value
-      //   },
-      // ],
+
     };
     const client = new AWS.SSM({
       region: diggerConfig.region,
@@ -122,7 +146,7 @@ export const createSsmParameter = async function(key:string, value:string, awsPr
       if (err) {
         reject(err)
       }
-      resolve(data)
+      resolve(getSsmParameterArn(key, awsProfile))
     })
   });
 }
