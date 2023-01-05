@@ -104,17 +104,19 @@ export const createSsmParameter = async function(key:string, value:string, awsPr
       Name: key,
       Value: value,
       Type: "SecureString",
-      Tags: [
-        {
-          Key: key,
-          Value: value
-        },
-      ],
+      Overwrite: true,
+      // Tags: [
+      //   {
+      //     Key: key,
+      //     Value: value
+      //   },
+      // ],
     };
     const client = new AWS.SSM({
       region: diggerConfig.region,
       credentials: { accessKeyId: awsLogin, secretAccessKey: awsPassword },
       });
+    
 
     client.putParameter(params, function(err:any, data:any) {
       if (err) {
