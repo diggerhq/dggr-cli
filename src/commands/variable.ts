@@ -2,26 +2,61 @@ import { Flags } from "@oclif/core";
 import { BaseCommand } from "./base";
 
 export default class Variable extends BaseCommand<typeof Variable> {
-  static description = "describe the command here";
+  static description = "Manage environment variables for your infrastructure";
 
   static examples = ["<%= config.bin %> <%= command.id %>"];
 
   static flags = {
-    // flag with a value (-n, --name=VALUE)
-    name: Flags.string({ char: "n", description: "name to print" }),
-    // flag with no value (-f, --force)
-    force: Flags.boolean({ char: "f" }),
+    block: Flags.string({ char: "b", description: "name of the block" }),
   };
 
-  static args = [{ name: "file" }];
+  static args = [
+    {
+      name: "command",
+      options: ["add", "get", "delete", "import", "list"],
+    },
+    { name: "kv" },
+  ];
 
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Variable);
 
-    const name = flags.name ?? "world";
-    this.log(`hello ${name}`);
-    if (args.file && flags.force) {
-      this.log(`you input --force and --file: ${args.file}`);
+    if (!args.command) {
+      this.log(
+        "No block provided for the variable. Example command: dgctl variable add -b=myapp key=value"
+      );
+      return;
+    }
+
+    switch (args.command) {
+      case "add": {
+        this.log(flags.block);
+        this.log(args.kv);
+
+        return;
+      }
+
+      case "get": {
+        this.log(args.kv);
+
+        return;
+      }
+
+      case "delete": {
+        this.log(args.kv);
+
+        return;
+      }
+
+      case "import": {
+        this.log(args.kv);
+
+        return;
+      }
+
+      case "list": {
+        this.log(args.kv);
+      }
     }
   }
 }
