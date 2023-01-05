@@ -1,9 +1,9 @@
-import { Command } from '@oclif/core'
 import { diggerJson, updateDiggerJson } from '../../utils/helpers'
 import { trackEvent } from '../../utils/mixpanel'
 import * as fs from "node:fs";
+import { BaseCommand } from '../base';
 
-export default class Remove extends Command {
+export default class Remove extends BaseCommand<typeof Remove>  {
   static description = 'removes a block from the project'
 
   static args = [{name: 'name'}]

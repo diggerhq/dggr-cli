@@ -1,8 +1,9 @@
-import {Command, Flags} from '@oclif/core'
+import { Flags } from '@oclif/core'
 import { createBlock } from '../../utils/helpers'
 import { trackEvent } from '../../utils/mixpanel'
+import { BaseCommand } from '../base'
 
-export default class Add extends Command {
+export default class Add extends BaseCommand<typeof Add>  {
   static description = 'Adds a block to the project'
 
   static flags = {
