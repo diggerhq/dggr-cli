@@ -2553,6 +2553,11 @@ concurrently@^7.6.0:
     tree-kill "^1.2.2"
     yargs "^17.3.1"
 
+config-ini-parser@^1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/config-ini-parser/-/config-ini-parser-1.6.1.tgz#7d35779e5a913b1a95789f4c4f91f78536508168"
+  integrity sha512-6YBVmXlWiUKDhjn+S/1ju2+8j8Qnj1PqR8yE5DmLrQRtBOc9kgMLyutFl2so1FNVHevR/A4nY7z9EWw8s6g/Cw==
+
 confusing-browser-globals@1.0.10:
   version "1.0.10"
   resolved "https://registry.npmjs.org/confusing-browser-globals/-/confusing-browser-globals-1.0.10.tgz"

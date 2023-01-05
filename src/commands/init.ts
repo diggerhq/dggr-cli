@@ -44,10 +44,10 @@ export default class Init extends BaseCommand<typeof Init> {
           this.error(error);
         }
 
-        fs.mkdirSync(`${process.cwd()}/overrides`);
-        fs.writeFileSync(`${process.cwd()}/.gitignore`, ".archive\ngenerated/");
-        fs.writeFileSync(`${process.cwd()}/.dgctlsecrets`, "");
-        fs.writeFileSync(`${process.cwd()}/.dgctlvariables`, "");
+        // fs.mkdirSync(`${process.cwd()}/overrides`); Re-enable when we start using it
+        fs.writeFileSync(`${process.cwd()}/.gitignore`, ".archive\ngenerated/\n");
+        fs.writeFileSync(`${process.cwd()}/dgctl.secrets.ini`, "");
+        fs.writeFileSync(`${process.cwd()}/dgctl.variables.ini`, "");
         this.log("Successfully initiated a Digger project");
       }
     } catch (error: any) {
