@@ -38,57 +38,91 @@ export default class Variable extends BaseCommand<typeof Variable> {
 
     switch (args.command) {
       case "add": {
-        if (!flags.block) {
-          this.log(
-            "No block provided for the variable. Example command: dgctl variable add -b=<myapp> key=value"
-          );
-          return;
-        }
-
         if (!args.kv) {
           this.log(
             "No key or value provided. Example command: dgctl variable add -b=myapp <key=value>"
           );
-          return;
-        }
-
-        if (!parser.isHaveSection(flags.block)) {
-          parser.addSection(flags.block);
+          break;
         }
 
         const [key, value] = args.kv.split("=");
-        parser.set(flags.block, key, value);
 
+        if (flags.block) {
+          if (!parser.isHaveSection(flags.block)) {
+            parser.addSection(flags.block);
+          }
 
-        fs.writeFileSync(
-          `${process.cwd()}/dgctl.variables.ini`,
-          parser.stringify("\n")
-        );
+          parser.set(flags.block, key, value);
+          break;
+        }
 
-        return;
+        parser.setOptionInDefaultSection(key, value);
+
+        break;
       }
 
       case "get": {
-        this.log(args.kv);
+        const key = args.kv;
+        if (!key) {
+          this.log(
+            "No key provided. Example command: dgctl variable get -b=myapp <key>"
+          );
+          break;
+        }
 
-        return;
+        if (flags.block) {
+          const blockName = flags.block;
+          this.log(parser.get(blockName, key));
+
+          break;
+        }
+
+        this.log(parser.getOptionFromDefaultSection(key));
+        break;
       }
 
       case "delete": {
-        this.log(args.kv);
+        if (!args.kv) {
+          this.log(
+            "No key provided. Example command: dgctl variable delete -b=myapp <key>"
+          );
+          break;
+        }
 
-        return;
+        if (flags.block) {
+          const blockName = flags.block;
+          parser.removeOption(blockName, args.kv);
+
+          break;
+        }
+
+        parser.removeOptionFromDefaultSection(args.kv);
+        break;
       }
 
       case "import": {
-        this.log(args.kv);
+        this.log("Not implemented yet");
 
-        return;
+        break;
       }
 
       case "list": {
-        this.log(args.kv);
+        if (flags.block) {
+          const blockName = flags.block;
+          const sectionVars = parser.options(blockName);
+          this.log(sectionVars.join("\n"));
+
+          break;
+        }
+
+        this.log(parser.stringify("\n"));
       }
     }
+
+    fs.writeFileSync(
+      `${process.cwd()}/dgctl.variables.ini`,
+      parser.stringify("\n")
+    );
+    this.log("Done");
   }
 }
