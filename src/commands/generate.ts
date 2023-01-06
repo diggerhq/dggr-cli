@@ -29,10 +29,24 @@ export default class Generate extends BaseCommand<typeof Generate> {
         "utf8"
       );
       const config = JSON.parse(configRaw);
+      console.log(config)
+      if (block.type === "imported") {
+        // eslint-disable-next-line camelcase
+        config.custom_terraform = config.terraform_files.map((tfFileName: string) => {
+          return {
+            filename: tfFileName,
+            content: Buffer.from(fs.readFileSync(`${tfFileName}`, "utf8")).toString("base64")
+          }
+        })
+        delete config.terraform_files;
+      }
+
+      console.log(config)
       return { ...block, ...config };
     });
 
     const combinedJson = { ...currentDiggerJson, blocks: mergedBlocks };
+    console.log(combinedJson)
     trackEvent("generate called", {
       diggerConfig: currentDiggerJson,
       combinedJson,
