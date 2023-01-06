@@ -22,8 +22,9 @@ export const importBlock = (blockName: string, id: string, service: string, prof
   const currentDiggerJson = diggerJson();
   const awsIdentifier = `${blockName}-${crypto.randomBytes(4).toString("hex")}`;
   fs.mkdirSync(`${process.cwd()}/${blockName}`);
-  const tfFileName = `${process.cwd()}/${blockName}/tf.hcl`
-  execSync(`npx former2 generate --output-terraform ${tfFileName} --search-filter ${id} --services ${service} --profile ${profile}`)
+  const tfFileName = "tf.hcl"
+  const tfFileLocation = `${process.cwd()}/${blockName}/${tfFileName}`
+  execSync(`npx former2 generate --output-terraform ${tfFileLocation} --search-filter ${id} --services ${service} --profile ${profile}`)
   updateDiggerJson({
     ...currentDiggerJson,
     blocks: [

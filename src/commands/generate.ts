@@ -33,9 +33,10 @@ export default class Generate extends BaseCommand<typeof Generate> {
       if (block.type === "imported") {
         // eslint-disable-next-line camelcase
         config.custom_terraform = config.terraform_files.map((tfFileName: string) => {
+          const tfFileLocation = `${process.cwd()}/${block.name}/${tfFileName}`;
           return {
             filename: tfFileName,
-            content: Buffer.from(fs.readFileSync(`${tfFileName}`, "utf8")).toString("base64")
+            content: Buffer.from(fs.readFileSync(`${tfFileLocation}`, "utf8")).toString("base64")
           }
         })
         delete config.terraform_files;
