@@ -24,13 +24,13 @@ export default class Add extends BaseCommand<typeof Add> {
     const { args, flags } = await this.parse(Add);
 
     let block:string;
-    if (!flags.block) {
+    if (flags.block) {
+      block = flags.block;
+    } else {
       this.warn(
         "No block provided for the variable. Secret will be stored as a global parameter"
       );
       block = "_bundle_";
-    } else {
-      block = flags.block;
     }
 
     if (!args.kv) {
