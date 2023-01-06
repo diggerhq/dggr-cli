@@ -93,7 +93,8 @@ export const getAwsCreds = async (
   return { awsLogin, awsPassword, awsProfile: selectedProfile };
 };
 
-export const getSsmParameterArn = async function(key:string, awsProfile=undefined): Promise<{arn:string}> {
+export const getSsmParameterArn = async function(key:string, awsProfile: string | undefined): Promise<{arn:string}> {
+  // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve, reject) => {
     const diggerConfig = diggerJson();
     const { awsLogin, awsPassword } = await getAwsCreds(
@@ -102,7 +103,6 @@ export const getSsmParameterArn = async function(key:string, awsProfile=undefine
     const params = {
       Name: key,
       WithDecruption: false,
-
     };
     const client = new AWS.SSM({
       region: diggerConfig.region,
@@ -114,16 +114,19 @@ export const getSsmParameterArn = async function(key:string, awsProfile=undefine
       if (err) {
         reject(err)
       }
+
       resolve({
         arn: data.Parameter.ARN
       })
 
     });
 
-  });  
+  });
 }
 
+// eslint-disable-next-line unicorn/no-useless-undefined
 export const createSsmParameter = async function(key:string, value:string, awsProfile=undefined): Promise<{arn:string}> {
+  // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve, reject) => {
     const diggerConfig = diggerJson();
     const { awsLogin, awsPassword } = await getAwsCreds(
@@ -142,10 +145,11 @@ export const createSsmParameter = async function(key:string, value:string, awsPr
       });
     
 
-    client.putParameter(params, function(err:any, data:any) {
+    client.putParameter(params, function(err:any, _data) {
       if (err) {
         reject(err)
       }
+
       resolve(getSsmParameterArn(key, awsProfile))
     })
   });
