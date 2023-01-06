@@ -3,6 +3,7 @@ import {BaseCommand}  from "../base";
 import {createSsmParameter} from "../../utils/aws";
 import { ConfigIniParser } from "config-ini-parser";
 import fs from "node:fs";
+// eslint-disable-next-line unicorn/import-style
 import * as chalk from "chalk";
 import { diggerJson } from "../../utils/helpers";
 
@@ -39,18 +40,21 @@ export default class Add extends BaseCommand<typeof Add> {
       );
       return;
     }
+
     const [key, value] = args.kv.split("=")
 
     if (!fs.existsSync("dgctl.secrets.ini")) {
       fs.writeFileSync("dgctl.secrets.ini", "");
     }
+
     if (!key || !value) {
       console.log(chalk.red("Missing parameter: key and value"))
     }
     
     const diggerConfig = diggerJson();
     const id = diggerConfig.id;
-    let result, valueSsmArn;
+    let result;
+    let valueSsmArn;
     try {
       result = await createSsmParameter(`/${id}/${block}/${key}`, value)
       valueSsmArn = result.arn
