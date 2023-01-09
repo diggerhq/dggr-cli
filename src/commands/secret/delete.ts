@@ -51,7 +51,7 @@ export default class Delete extends BaseCommand<typeof Delete> {
     const id = diggerConfig.id;
     try {
       await deleteSsmParameter(`/${id}/${block}/${args.key}`)
-    } catch (error) {
+    } catch {
       this.log(chalk.red("Could not delete ssm parameter, does the key exist?"))
       return;
     }
