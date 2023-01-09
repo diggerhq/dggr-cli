@@ -47,7 +47,7 @@ export default class Generate extends BaseCommand<typeof Generate> {
       diggerConfig: currentDiggerJson,
       combinedJson,
     });
-    console.log(combinedJson)
+
     const response = await axios.post(getTrowelUrl(), combinedJson);
 
     // write response to file
