@@ -1,5 +1,4 @@
 import { Flags } from '@oclif/core'
-import { profile } from 'node:console'
 import { createBlock, importBlock } from '../../utils/helpers'
 import { trackEvent } from '../../utils/mixpanel'
 import { BaseCommand } from '../base'
