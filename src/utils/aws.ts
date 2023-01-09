@@ -154,3 +154,30 @@ export const createSsmParameter = async function(key:string, value:string, awsPr
     })
   });
 }
+
+// eslint-disable-next-line unicorn/no-useless-undefined
+export const deleteSsmParameter = async function(key:string, awsProfile=undefined): Promise<void> {
+  // eslint-disable-next-line no-async-promise-executor
+  return new Promise(async (resolve, reject) => {
+    const diggerConfig = diggerJson();
+    const { awsLogin, awsPassword } = await getAwsCreds(
+      awsProfile
+    );
+    const params = {
+      Name: key,
+    };
+    const client = new AWS.SSM({
+      region: diggerConfig.region,
+      credentials: { accessKeyId: awsLogin, secretAccessKey: awsPassword },
+      });
+    
+
+    client.deleteParameter(params, function(err:any, _data:any) {
+      if (err) {
+        reject(err)
+      }
+
+      resolve()
+    })
+  });
+}
