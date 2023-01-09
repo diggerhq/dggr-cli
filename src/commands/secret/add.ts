@@ -48,7 +48,7 @@ export default class Add extends BaseCommand<typeof Add> {
     }
 
     if (!key || !value) {
-      console.log(chalk.red("Missing parameter: key and value"))
+      this.log(chalk.red("Missing parameter: key and value"))
     }
     
     const diggerConfig = diggerJson();
@@ -59,7 +59,7 @@ export default class Add extends BaseCommand<typeof Add> {
       result = await createSsmParameter(`/${id}/${block}/${key}`, value)
       valueSsmArn = result.arn
     } catch (error) {
-      console.log(chalk.red("Could not create ssm parameter, does the key already exist?"))
+      this.log(chalk.red("Could not create ssm parameter, does the key already exist?"))
       throw error;
     }
 
@@ -68,7 +68,6 @@ export default class Add extends BaseCommand<typeof Add> {
       `${process.cwd()}/dgctl.secrets.ini`,
       "utf8"
     );
-    console.log(iniFile);
     parser.parse(iniFile);
     if (!parser.isHaveSection(block)) {
       parser.addSection(block);
@@ -80,5 +79,7 @@ export default class Add extends BaseCommand<typeof Add> {
       `${process.cwd()}/dgctl.secrets.ini`,
       parser.stringify("\n")
     );
+
+    this.log("Secret added successfully")
   }
 }

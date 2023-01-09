@@ -145,7 +145,7 @@ export const createSsmParameter = async function(key:string, value:string, awsPr
       });
     
 
-    client.putParameter(params, function(err:any, _data) {
+    client.putParameter(params, function(err:any, _data:any) {
       if (err) {
         reject(err)
       }
