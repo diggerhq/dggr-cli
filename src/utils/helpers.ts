@@ -25,6 +25,11 @@ export const importBlock = (blockName: string, id: string, service: string, prof
   const tfFileName = "terraform.tf"
   const tfFileLocation = `${process.cwd()}/${blockName}/${tfFileName}`
   execSync(`npx former2 generate --output-terraform ${tfFileLocation} --search-filter ${id} --services ${service} --profile ${profile}`)
+
+  const tfFileContent = fs.readFileSync(tfFileLocation, "utf8")
+  const tfFileContentWithoutHeader = tfFileContent.split("\n").slice(13).join("\n")
+  fs.writeFileSync(tfFileLocation, tfFileContentWithoutHeader)
+
   updateDiggerJson({
     ...currentDiggerJson,
     blocks: [
