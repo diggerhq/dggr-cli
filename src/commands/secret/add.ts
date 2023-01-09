@@ -14,7 +14,6 @@ export default class Add extends BaseCommand<typeof Add> {
 
   static flags = {
     block: Flags.string({ char: "b", description: "name of the block" }),
-    force: Flags.boolean({ char: "f" }),
   };
 
   static args = [
