@@ -49,12 +49,12 @@ export const createBlock = (
   });
 
   fs.mkdirSync(`${process.cwd()}/${blockName}`);
-  fs.mkdirSync(`${process.cwd()}/${blockName}/overrides`);
 
   fs.writeFileSync(
     `${process.cwd()}/${blockName}/config.json`,
     JSON.stringify(defaults, null, 4)
   );
-  fs.writeFileSync(`${process.cwd()}/${blockName}/.dgctlsecrets`, "");
-  fs.writeFileSync(`${process.cwd()}/${blockName}/.dgctlvariables`, "");
+  fs.writeFileSync(`${process.cwd()}/${blockName}/dgctl.secrets.ini`, "");
+  fs.writeFileSync(`${process.cwd()}/${blockName}/dgctl.variables.ini`, "");
+  fs.writeFileSync(`${process.cwd()}/${blockName}/dgctl.overrides.tf`, "");
 };

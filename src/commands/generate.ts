@@ -32,7 +32,18 @@ export default class Generate extends BaseCommand<typeof Generate> {
       // TODO: read override.tf, base64 encode it and add as one item list in "custom_terraform" parameter to the block's json"
 
       const config = JSON.parse(configRaw);
-      return { ...block, ...config };
+
+      const tfBase64 = fs.readFileSync(
+        `${process.cwd()}/${block.name}/dgctl.overrides.tf`,
+        { encoding: "base64" }
+      );
+
+      return {
+        ...block,
+        ...config,
+        // eslint-disable-next-line camelcase
+        custom_terraform: tfBase64,
+      };
     });
 
     const combinedJson = { ...currentDiggerJson, blocks: mergedBlocks };
