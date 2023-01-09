@@ -6,7 +6,7 @@ import path = require("node:path");
 import { trackEvent } from "../utils/mixpanel";
 import { BaseCommand } from "./base";
 import { getTrowelUrl } from "../config";
-import { getVarsFromIniFile } from "../utils/io";
+import { getSecretsFromIniFile, getVarsFromIniFile } from "../utils/io";
 
 export default class Generate extends BaseCommand<typeof Generate> {
   static description = "Generates terraform based on the Digger infra bundle";
@@ -31,22 +31,23 @@ export default class Generate extends BaseCommand<typeof Generate> {
       );
       const config = JSON.parse(configRaw);
       // eslint-disable-next-line camelcase
-      block.environment_variables = getVarsFromIniFile("dgctl.variables.init", block.name)
-      block.secrets = getVarsFromIniFile("dgctl.secrets.init", block.name)
+      block.environment_variables = getVarsFromIniFile("dgctl.variables.ini", block.name)
+      block.secrets = getSecretsFromIniFile("dgctl.secrets.ini", block.name)
       return { ...block, ...config };
     });
 
     const combinedJson = { 
       ...currentDiggerJson, 
       // eslint-disable-next-line camelcase
-      environment_variables: getVarsFromIniFile("dgctl.variables.init", "_bundle_"),
-      secrets: getVarsFromIniFile("dgctl.secrets.init", "_bundle_"),
+      environment_variables: getVarsFromIniFile("dgctl.variables.ini", "_bundle_"),
+      secrets: getSecretsFromIniFile("dgctl.secrets.ini", "_bundle_"),
       blocks: mergedBlocks 
     };
     trackEvent("generate called", {
       diggerConfig: currentDiggerJson,
       combinedJson,
     });
+    console.log(combinedJson)
     const response = await axios.post(getTrowelUrl(), combinedJson);
 
     // write response to file

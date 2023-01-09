@@ -17,6 +17,30 @@ export const getHomeDir = (): string => {
 
 export const getVarsFromIniFile = (iniFilePath:string, sectionName:string) : object => {
   if (!fs.existsSync(iniFilePath)) {
+    return [];
+  }
+
+  const iniFile = fs.readFileSync(
+    iniFilePath,
+    "utf8"
+  );
+  const parser = new ConfigIniParser();
+  parser.parse(iniFile);
+  if (!parser.isHaveSection(sectionName)) {
+    return []
+  }
+
+  return parser.items(sectionName).map((item) => {
+    return {
+      key: item[0],
+      value: item[1]
+    }
+  });
+
+}
+
+export const getSecretsFromIniFile = (iniFilePath:string, sectionName:string) : object => {
+  if (!fs.existsSync(iniFilePath)) {
     return {};
   }
 
@@ -27,14 +51,18 @@ export const getVarsFromIniFile = (iniFilePath:string, sectionName:string) : obj
   const parser = new ConfigIniParser();
   parser.parse(iniFile);
   if (!parser.isHaveSection(sectionName)) {
-    return {}
+    return {};
   }
 
-  return parser.items(sectionName).map((item) => {
-    return {
-      key: item[0],
-      value: item[1]
-    }
-  });
+   
+  // eslint-disable-next-line prefer-const
+  let result: { [key: string]: string } = {};
+  const items = parser.items(sectionName);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  for (const [index, item] of items.entries()) {
+    result[item[0]] = item[1];
+  }
+
+  return result;
 
 }

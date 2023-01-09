@@ -8,5 +8,5 @@ export function getTrowelUrl(): string {
     return "https://sggo2t6ck5bpznc64hpmwf2h7q0egvwr.lambda-url.us-east-1.on.aws/"
   }
 
-  return "https://nzo5lri7z2zdkzgtca5bkdpgom0jpjui.lambda-url.us-east-1.on.aws/"
+  return "https://tka5vjilzptmyfrvcolqbz4veq0upobc.lambda-url.us-east-1.on.aws/"
 }
