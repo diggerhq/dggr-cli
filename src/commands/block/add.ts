@@ -3,6 +3,7 @@ import { profile } from 'node:console'
 import { createBlock, importBlock } from '../../utils/helpers'
 import { trackEvent } from '../../utils/mixpanel'
 import { BaseCommand } from '../base'
+import * as crypto from 'node:crypto'
 
 export default class Add extends BaseCommand<typeof Add>  {
   static description = 'Adds a block to the project'

@@ -1,6 +1,5 @@
 import { Flags } from "@oclif/core";
 import * as fs from "node:fs";
-// import * as AWS from "@aws-sdk/client-s3";
 import { diggerJson } from "../utils/helpers";
 // eslint-disable-next-line unicorn/import-style
 import * as chalk from "chalk";
@@ -47,14 +46,6 @@ export default class Provision extends BaseCommand<typeof Provision> {
       flags.profile
     );
     this.log(`[INFO] Using profile from aws credentials file: ${awsProfile}`);
-
-    // const client = new AWS.S3({
-    //   region: diggerConfig.region,
-    //   credentials: { accessKeyId: awsLogin, secretAccessKey: awsPassword },
-    // });
-
-    // const s3Enabled = flags["s3-state"];
-    // const bucketName = flags.bucket ?? diggerConfig.id;
 
     try {
       process.env.AWS_ACCESS_KEY_ID = awsLogin;
