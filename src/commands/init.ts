@@ -42,19 +42,19 @@ export default class Init extends BaseCommand<typeof Init> {
           : defContent;
         updateDiggerJson(content);
 
-        try {
+        // if advanced, don't bother creating other files - just the json
+        if (!flags.advanced) {
           createBlock("vpc", "default_network", {});
           this.log(
             "Successfully added default network block to the Digger project"
           );
-        } catch (error: any) {
-          this.error(error);
+
+          // fs.mkdirSync(`${process.cwd()}/overrides`); Re-enable when we start using it
+          fs.writeFileSync(`${process.cwd()}/dgctl.secrets.ini`, "");
+          fs.writeFileSync(`${process.cwd()}/dgctl.variables.ini`, "");
         }
 
-        // fs.mkdirSync(`${process.cwd()}/overrides`); Re-enable when we start using it
         fs.writeFileSync(`${process.cwd()}/.gitignore`, gitIgnore);
-        fs.writeFileSync(`${process.cwd()}/dgctl.secrets.ini`, "");
-        fs.writeFileSync(`${process.cwd()}/dgctl.variables.ini`, "");
         this.log("Successfully initiated a Digger project");
       }
     } catch (error: any) {
