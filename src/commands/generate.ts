@@ -31,11 +31,9 @@ export default class Generate extends BaseCommand<typeof Generate> {
       const config = JSON.parse(configRaw);
       console.log(config)
       if (block.type === "imported") {
+        const tfFileLocation = `${process.cwd()}/${block.name}/${config.terraform_file}`;
         // eslint-disable-next-line camelcase
-        config.custom_terraform = config.terraform_files.map((tfFileName: string) => {
-          const tfFileLocation = `${process.cwd()}/${block.name}/${tfFileName}`;
-          return fs.readFileSync(`${tfFileLocation}`, "base64");
-        })
+        config.custom_terraform = fs.readFileSync(`${tfFileLocation}`, "base64");
         delete config.terraform_files;
       }
 

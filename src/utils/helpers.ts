@@ -1,7 +1,7 @@
+/* eslint-disable camelcase */
 import * as fs from "node:fs";
 import * as blocks from "../utils/block-defaults";
 import * as crypto from "node:crypto";
-import { execSync } from 'node:child_process'
 
 export const diggerJsonPath = `${process.cwd()}/dgctl.json`;
 
@@ -18,17 +18,32 @@ export const updateDiggerJson = (obj: unknown) => {
   fs.writeFileSync(diggerJsonPath, JSON.stringify(obj, null, 4));
 };
 
-export const importBlock = (blockName: string, id: string, service: string, profile: string) => {
+const stubbedTerraformContent = (blockName: string, aws_app_identifier: string) => {
+  return `resource "random_id" "id" {
+    byte_length = 4
+  }
+
+  variable "${blockName}" {
+    type = string
+    default = "${aws_app_identifier}"
+  }
+
+  output "${blockName}" {
+    value = var.${blockName}
+  }
+
+  output "random_id" {
+    value = random_id.id.hex
+  }
+`;}
+
+export const importBlock = (blockName: string, id: string) => {
   const currentDiggerJson = diggerJson();
   const awsIdentifier = `${blockName}-${crypto.randomBytes(4).toString("hex")}`;
   fs.mkdirSync(`${process.cwd()}/${blockName}`);
   const tfFileName = "terraform.tf"
   const tfFileLocation = `${process.cwd()}/${blockName}/${tfFileName}`
-  execSync(`npx former2 generate --output-terraform ${tfFileLocation} --search-filter ${id} --services ${service} --profile ${profile}`)
-
-  const tfFileContent = fs.readFileSync(tfFileLocation, "utf8")
-  const tfFileContentWithoutHeader = tfFileContent.split("\n").slice(13).join("\n")
-  fs.writeFileSync(tfFileLocation, tfFileContentWithoutHeader)
+  fs.writeFileSync(tfFileLocation, stubbedTerraformContent(blockName, awsIdentifier));
 
   updateDiggerJson({
     ...currentDiggerJson,
@@ -49,7 +64,7 @@ export const importBlock = (blockName: string, id: string, service: string, prof
       // eslint-disable-next-line camelcase
       imported_id: id,
       // eslint-disable-next-line camelcase
-      terraform_files: [tfFileName],
+      terraform_file: tfFileName,
     }, null, 4)
   );
 }
