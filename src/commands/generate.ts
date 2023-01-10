@@ -48,7 +48,12 @@ export default class Generate extends BaseCommand<typeof Generate> {
       combinedJson,
     });
 
-    
+    // before call, create the generated json. Will be overwritten fully every time.
+    fs.writeFileSync(
+      `${process.cwd()}/dgctl.generated.json`,
+      JSON.stringify(combinedJson, null, 4)
+    );
+
     const response = await axios.post(getTrowelUrl(), combinedJson);
 
     // write response to file
