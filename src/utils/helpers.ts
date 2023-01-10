@@ -18,7 +18,7 @@ export const updateDiggerJson = (obj: unknown) => {
   fs.writeFileSync(diggerJsonPath, JSON.stringify(obj, null, 4));
 };
 
-const stubbedTerraformContent = (blockName: string, aws_app_identifier: string) => {
+const stubbedTerraformContent = (blockName: string, aws_app_identifier: string, aws_service: string) => {
   return `resource "random_id" "id" {
     byte_length = 4
   }
@@ -32,18 +32,22 @@ const stubbedTerraformContent = (blockName: string, aws_app_identifier: string) 
     value = var.${blockName}
   }
 
+  output "aws_service" {
+    value = "${aws_service}"
+  }
+
   output "random_id" {
     value = random_id.id.hex
   }
 `;}
 
-export const importBlock = (blockName: string, id: string) => {
+export const importBlock = (blockName: string, id: string, awsService: string) => {
   const currentDiggerJson = diggerJson();
   const awsIdentifier = `${blockName}-${crypto.randomBytes(4).toString("hex")}`;
   fs.mkdirSync(`${process.cwd()}/${blockName}`);
   const tfFileName = "terraform.tf"
   const tfFileLocation = `${process.cwd()}/${blockName}/${tfFileName}`
-  fs.writeFileSync(tfFileLocation, stubbedTerraformContent(blockName, awsIdentifier));
+  fs.writeFileSync(tfFileLocation, stubbedTerraformContent(blockName, awsIdentifier, awsService));
 
   updateDiggerJson({
     ...currentDiggerJson,

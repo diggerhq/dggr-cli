@@ -42,7 +42,6 @@ export default class Generate extends BaseCommand<typeof Generate> {
     });
 
     const combinedJson = { ...currentDiggerJson, blocks: mergedBlocks };
-    console.log(combinedJson)
     trackEvent("generate called", {
       diggerConfig: currentDiggerJson,
       combinedJson,
