@@ -18,10 +18,10 @@ jobs:
       - name: Install dependencies and build 🔧
         run: yarn install --frozen-lockfile && yarn build
       - name: Publish package on NPM 📦
-        run:
-          - yarn config set version-tag-prefix "v"
-          - echo "RELEASE_VERSION: $RELEASE_VERSION"
-          - yarn version --new-version $RELEASE_VERSION
-          - yarn publish
+        run: |
+          yarn config set version-tag-prefix "v"
+          echo "RELEASE_VERSION: $RELEASE_VERSION"
+          yarn version --new-version $RELEASE_VERSION
+          yarn publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
