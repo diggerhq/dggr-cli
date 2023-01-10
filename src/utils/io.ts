@@ -54,12 +54,9 @@ export const getSecretsFromIniFile = (iniFilePath:string, sectionName:string|nul
     return {};
   }
 
-   
-  // eslint-disable-next-line prefer-const
-  let result: { [key: string]: string } = {};
+  const result: { [key: string]: string } = {};
   const items = parser.items(sectionName);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  for (const [index, item] of items.entries()) {
+  for (const [, item] of items) {
     result[item[0]] = item[1];
   }
 
