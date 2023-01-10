@@ -5,9 +5,19 @@ on:
     types: [released]
 
 jobs:
-  npm:
-    uses: oclif/github-workflows/.github/workflows/npmPublish.yml@main
-    with:
-      tag: latest
-      githubTag: ${{ github.event.release.tag_name || inputs.tag }}
-    secrets: inherit
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install dependencies and build 🔧
+        run: yarn install --frozen-lockfile && yarn build
+      - name: Publish package on NPM 📦
+        run: yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
