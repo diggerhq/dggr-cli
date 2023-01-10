@@ -23,25 +23,32 @@ export default class Generate extends BaseCommand<typeof Generate> {
     }
 
     const currentDiggerJson = diggerJson();
-    const mergedBlocks = currentDiggerJson.blocks.map((block: any) => {
-      const configRaw = fs.readFileSync(
-        `${process.cwd()}/${block.name}/config.json`,
-        "utf8"
-      );
-      const config = JSON.parse(configRaw);
-      return { ...block, ...config };
-    });
+    let combinedJson;
 
-    const combinedJson = { ...currentDiggerJson, blocks: mergedBlocks };
-    trackEvent("generate called", {
-      diggerConfig: currentDiggerJson,
-      combinedJson,
-    });
-    // before call, create the generated json. Will be overwritten fully every time.
-    fs.writeFileSync(
-      `${process.cwd()}/dgctl.generated.json`,
-      JSON.stringify(combinedJson, null, 4)
-    );
+    if (currentDiggerJson.advanced) {
+      // advanced mode, just take the digger json directly
+      combinedJson = currentDiggerJson;
+    } else {
+      const mergedBlocks = currentDiggerJson.blocks.map((block: any) => {
+        const configRaw = fs.readFileSync(
+          `${process.cwd()}/${block.name}/config.json`,
+          "utf8"
+        );
+        const config = JSON.parse(configRaw);
+        return { ...block, ...config };
+      });
+
+      combinedJson = { ...currentDiggerJson, blocks: mergedBlocks };
+      trackEvent("generate called", {
+        diggerConfig: currentDiggerJson,
+        combinedJson,
+      });
+      // before call, create the generated json. Will be overwritten fully every time.
+      fs.writeFileSync(
+        `${process.cwd()}/dgctl.generated.json`,
+        JSON.stringify(combinedJson, null, 4)
+      );
+    }
 
     const response = await axios.post(getTrowelUrl(), combinedJson);
 
