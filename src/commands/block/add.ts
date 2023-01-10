@@ -64,7 +64,7 @@ export default class Add extends BaseCommand<typeof Add>  {
           return;
         }
 
-        importBlock(blockName, flags.id, service);
+        importBlock(blockName, flags.id);
         this.log("Successfully added a block to the Digger project");
       } else {
         createBlock(type, blockName, {});
