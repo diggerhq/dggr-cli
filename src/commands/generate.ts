@@ -29,7 +29,6 @@ export default class Generate extends BaseCommand<typeof Generate> {
         "utf8"
       );
       const config = JSON.parse(configRaw);
-      console.log(config)
       if (block.type === "imported") {
         const tfFileLocation = `${process.cwd()}/${block.name}/${config.terraform_file}`;
         // eslint-disable-next-line camelcase
@@ -37,7 +36,6 @@ export default class Generate extends BaseCommand<typeof Generate> {
         delete config.terraform_files;
       }
 
-      console.log(config)
       return { ...block, ...config };
     });
 
