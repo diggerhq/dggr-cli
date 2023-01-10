@@ -29,7 +29,7 @@ export default class Generate extends BaseCommand<typeof Generate> {
         "utf8"
       );
 
-      // TODO: read override.tf, base64 encode it and add as one item list in "custom_terraform" parameter to the block's json"
+      // read override.tf, base64 encode it and add as one item list in "custom_terraform" parameter to the block's json"
 
       const config = JSON.parse(configRaw);
 
