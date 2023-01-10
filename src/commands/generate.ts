@@ -39,8 +39,8 @@ export default class Generate extends BaseCommand<typeof Generate> {
     const combinedJson = { 
       ...currentDiggerJson, 
       // eslint-disable-next-line camelcase
-      environment_variables: getVarsFromIniFile("dgctl.variables.ini", "_bundle_"),
-      secrets: getSecretsFromIniFile("dgctl.secrets.ini", "_bundle_"),
+      environment_variables: getVarsFromIniFile("dgctl.variables.ini", null),
+      secrets: getSecretsFromIniFile("dgctl.secrets.ini", null),
       blocks: mergedBlocks 
     };
     trackEvent("generate called", {
@@ -48,6 +48,7 @@ export default class Generate extends BaseCommand<typeof Generate> {
       combinedJson,
     });
 
+    
     const response = await axios.post(getTrowelUrl(), combinedJson);
 
     // write response to file

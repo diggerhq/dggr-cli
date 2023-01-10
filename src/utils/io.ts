@@ -15,7 +15,7 @@ export const getHomeDir = (): string => {
 };
 
 
-export const getVarsFromIniFile = (iniFilePath:string, sectionName:string) : object => {
+export const getVarsFromIniFile = (iniFilePath:string, sectionName:string|null) : object => {
   if (!fs.existsSync(iniFilePath)) {
     return [];
   }
@@ -26,7 +26,7 @@ export const getVarsFromIniFile = (iniFilePath:string, sectionName:string) : obj
   );
   const parser = new ConfigIniParser();
   parser.parse(iniFile);
-  if (!parser.isHaveSection(sectionName)) {
+  if (sectionName && !parser.isHaveSection(sectionName)) {
     return []
   }
 
@@ -39,7 +39,7 @@ export const getVarsFromIniFile = (iniFilePath:string, sectionName:string) : obj
 
 }
 
-export const getSecretsFromIniFile = (iniFilePath:string, sectionName:string) : object => {
+export const getSecretsFromIniFile = (iniFilePath:string, sectionName:string|null) : object => {
   if (!fs.existsSync(iniFilePath)) {
     return {};
   }
@@ -50,7 +50,7 @@ export const getSecretsFromIniFile = (iniFilePath:string, sectionName:string) : 
   );
   const parser = new ConfigIniParser();
   parser.parse(iniFile);
-  if (!parser.isHaveSection(sectionName)) {
+  if (sectionName && !parser.isHaveSection(sectionName)) {
     return {};
   }
 
