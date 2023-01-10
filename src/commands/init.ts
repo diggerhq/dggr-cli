@@ -4,6 +4,7 @@ import {
   createBlock,
   diggerJson,
   diggerJsonExists,
+  gitIgnore,
   updateDiggerJson,
 } from "../utils/helpers";
 import { trackEvent } from "../utils/mixpanel";
@@ -45,7 +46,7 @@ export default class Init extends BaseCommand<typeof Init> {
         }
 
         // fs.mkdirSync(`${process.cwd()}/overrides`); Re-enable when we start using it
-        fs.writeFileSync(`${process.cwd()}/.gitignore`, ".archive\ngenerated/\n");
+        fs.writeFileSync(`${process.cwd()}/.gitignore`, gitIgnore);
         fs.writeFileSync(`${process.cwd()}/dgctl.secrets.ini`, "");
         fs.writeFileSync(`${process.cwd()}/dgctl.variables.ini`, "");
         this.log("Successfully initiated a Digger project");
