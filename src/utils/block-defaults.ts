@@ -56,4 +56,5 @@ export const redis = {
   ...sharedDefaults,
   target: "diggerhq/target-redis-module@dev",
   resource_type: "redis",
+  redis_engine_version: "6.2"
 };
