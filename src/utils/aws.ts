@@ -155,7 +155,7 @@ export const createSsmParameter = async function(key:string, value:string, awsPr
   });
 }
 
-export const deleteSsmParameter = async function(key:string, awsProfile: string | undefined): Promise<void> {
+export const deleteSsmParameter = async function(key:string, awsProfile=null): Promise<void> {
   // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve, reject) => {
     const diggerConfig = diggerJson();
