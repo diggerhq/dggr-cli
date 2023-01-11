@@ -1,4 +1,4 @@
-import { BaseCommand } from "./base";
+import { BaseCommand } from "../base";
 import { writeDiggerApiKey } from "../utils/helpers";
 
 export default class Login extends BaseCommand<typeof Login> {
