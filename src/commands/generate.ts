@@ -37,15 +37,21 @@ export default class Generate extends BaseCommand<typeof Generate> {
           "utf8"
         );
 
+        // read override.tf, base64 encode it and add as one item list in "custom_terraform" parameter to the block's json"
+
         const config = JSON.parse(configRaw);
-                
         if (block.type === "imported") {
-          const tfFileLocation = `${process.cwd()}/${block.name}/${config.terraform_file}`;
+          const tfFileLocation = `${process.cwd()}/${block.name}/${
+            config.terraform_file
+          }`;
           // eslint-disable-next-line camelcase
-          config.custom_terraform = fs.readFileSync(`${tfFileLocation}`, "base64");
+          config.custom_terraform = fs.readFileSync(
+            `${tfFileLocation}`,
+            "base64"
+          );
           delete config.terraform_files;
         }
-        
+
         // eslint-disable-next-line camelcase
         block.environment_variables = getVarsFromIniFile(
           "dgctl.variables.ini",
@@ -53,7 +59,17 @@ export default class Generate extends BaseCommand<typeof Generate> {
         );
         block.secrets = getSecretsFromIniFile("dgctl.secrets.ini", block.name);
 
-        return { ...block, ...config };
+        const tfBase64 = fs.readFileSync(
+          `${process.cwd()}/${block.name}/dgctl.overrides.tf`,
+          { encoding: "base64" }
+        );
+
+        return {
+          ...block,
+          ...config,
+          // eslint-disable-next-line camelcase
+          custom_terraform: tfBase64,
+        };
       });
 
       combinedJson = {
