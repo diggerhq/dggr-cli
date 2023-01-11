@@ -25,6 +25,10 @@ export default class Add extends BaseCommand<typeof Add>  {
       char: "s",
       description: "aws service name to search",
     }),
+    profile: Flags.string({
+      char: "p",
+      description: "aws profile to use",
+    }),
   }
 
   static args = [{name: 'name', description: "new name for the block"}]
@@ -47,6 +51,7 @@ export default class Add extends BaseCommand<typeof Add>  {
       args.name ?? `${flags.type}_${crypto.randomUUID().slice(0, 5)}`;
     const type = flags.type;
     const service = flags.service;
+    const profile = flags.profile;
 
     try {
       if (type === "imported") {
@@ -64,7 +69,14 @@ export default class Add extends BaseCommand<typeof Add>  {
           return;
         }
 
-        importBlock(blockName, flags.id);
+        if (!profile) {
+          this.log(
+            "No profile provided for the imported block. Example: dgctl block add -t=imported -p=<profile> <name>"
+          );
+          return;
+        }
+
+        importBlock(blockName, flags.id, service, profile);
         this.log("Successfully added a block to the Digger project");
       } else {
         createBlock(type, blockName, {});
