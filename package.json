@@ -88,6 +88,9 @@
       },
       "variable": {
         "description": "Commands to manage variables"
+      },
+      "login": {
+        "description": "Commands to login using Digger API key"
       }
     }
   },

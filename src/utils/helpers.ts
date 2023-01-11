@@ -4,6 +4,7 @@ import * as blocks from "../utils/block-defaults";
 import * as crypto from "node:crypto";
 
 export const diggerJsonPath = `${process.cwd()}/dgctl.json`;
+export const diggerAPIKeyPath = `${process.cwd()}/.dgctl`;
 
 export const diggerJsonExists = () => {
   return fs.existsSync(diggerJsonPath);
@@ -18,7 +19,18 @@ export const updateDiggerJson = (obj: unknown) => {
   fs.writeFileSync(diggerJsonPath, JSON.stringify(obj, null, 4));
 };
 
-const stubbedTerraformContent = (blockName: string, aws_app_identifier: string) => {
+export const diggerAPIKey = () => {
+  return fs.readFileSync(diggerAPIKeyPath, "utf8");
+};
+
+export const writeDiggerApiKey = (key: string) => {
+  fs.writeFileSync(diggerAPIKeyPath, key);
+};
+
+const stubbedTerraformContent = (
+  blockName: string,
+  aws_app_identifier: string
+) => {
   return `resource "aws_db_instance" "${blockName}" {
     identifier = "database"
     allocated_storage = 100
@@ -59,22 +71,25 @@ resource "aws_db_subnet_group" "RDSDBSubnetGroup" {
 output "database_endpoint" {
     value = aws_db_instance.${blockName}.endpoint
 }
-`;}
+`;
+};
 
 export const importBlock = (blockName: string, id: string) => {
   const currentDiggerJson = diggerJson();
   const awsIdentifier = `${blockName}-${crypto.randomBytes(4).toString("hex")}`;
   fs.mkdirSync(`${process.cwd()}/${blockName}`);
-  const tfFileName = "terraform.tf"
-  const tfFileLocation = `${process.cwd()}/${blockName}/${tfFileName}`
-  fs.writeFileSync(tfFileLocation, stubbedTerraformContent(blockName, awsIdentifier));
+  const tfFileName = "terraform.tf";
+  const tfFileLocation = `${process.cwd()}/${blockName}/${tfFileName}`;
+  fs.writeFileSync(
+    tfFileLocation,
+    stubbedTerraformContent(blockName, awsIdentifier)
+  );
 
   updateDiggerJson({
     ...currentDiggerJson,
     blocks: [
       ...(currentDiggerJson.blocks ?? []),
       {
-        // eslint-disable-next-line camelcase
         aws_app_identifier: awsIdentifier,
         name: blockName,
         // Better logic to determine type based on top-level type since for resources it differs
@@ -84,14 +99,16 @@ export const importBlock = (blockName: string, id: string) => {
   });
   fs.writeFileSync(
     `${process.cwd()}/${blockName}/config.json`,
-    JSON.stringify({
-      // eslint-disable-next-line camelcase
-      imported_id: id,
-      // eslint-disable-next-line camelcase
-      terraform_file: tfFileName,
-    }, null, 4)
+    JSON.stringify(
+      {
+        imported_id: id,
+        terraform_file: tfFileName,
+      },
+      null,
+      4
+    )
   );
-}
+};
 
 export const createBlock = (
   blockType: string,
@@ -111,7 +128,6 @@ export const createBlock = (
     blocks: [
       ...(currentDiggerJson.blocks ?? []),
       {
-        // eslint-disable-next-line camelcase
         aws_app_identifier: awsIdentifier,
         name: blockName,
         // Better logic to determine type based on top-level type since for resources it differs
@@ -139,4 +155,5 @@ export const gitIgnore = [
   ".archive",
   "generated/",
   "dgctl.generated.json",
+  ".dgctl",
 ].join("\n");
