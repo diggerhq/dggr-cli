@@ -58,18 +58,27 @@ export default class Generate extends BaseCommand<typeof Generate> {
           block.name
         );
         block.secrets = getSecretsFromIniFile("dgctl.secrets.ini", block.name);
-
-        const tfBase64 = fs.readFileSync(
-          `${process.cwd()}/${block.name}/dgctl.overrides.tf`,
-          { encoding: "base64" }
-        );
+          
+        const overridesPath = `${process.cwd()}/${block.name}/dgctl.overrides.tf`;
+        if (fs.existsSync(overridesPath)) {
+          const tfBase64 = fs.readFileSync(
+            overridesPath,
+            { encoding: "base64" }
+          );
+          return {
+            ...block,
+            ...config,
+            // eslint-disable-next-line camelcase
+            custom_terraform: tfBase64,
+          };
+        }
 
         return {
           ...block,
           ...config,
-          // eslint-disable-next-line camelcase
-          custom_terraform: tfBase64,
         };
+      
+
       });
 
       combinedJson = {

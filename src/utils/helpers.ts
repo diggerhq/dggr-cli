@@ -74,7 +74,6 @@ export const importBlock = (blockName: string, id: string) => {
     blocks: [
       ...(currentDiggerJson.blocks ?? []),
       {
-        // eslint-disable-next-line camelcase
         aws_app_identifier: awsIdentifier,
         name: blockName,
         // Better logic to determine type based on top-level type since for resources it differs
@@ -85,9 +84,7 @@ export const importBlock = (blockName: string, id: string) => {
   fs.writeFileSync(
     `${process.cwd()}/${blockName}/config.json`,
     JSON.stringify({
-      // eslint-disable-next-line camelcase
       imported_id: id,
-      // eslint-disable-next-line camelcase
       terraform_file: tfFileName,
     }, null, 4)
   );
@@ -111,7 +108,6 @@ export const createBlock = (
     blocks: [
       ...(currentDiggerJson.blocks ?? []),
       {
-        // eslint-disable-next-line camelcase
         aws_app_identifier: awsIdentifier,
         name: blockName,
         // Better logic to determine type based on top-level type since for resources it differs
