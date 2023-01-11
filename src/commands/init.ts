@@ -19,6 +19,7 @@ export default class Init extends BaseCommand<typeof Init> {
   static flags = {
     // flag with no value (-f, --force)
     force: Flags.boolean({ char: "f" }),
+    advanced: Flags.boolean({ char: "a", hidden: true, default: false }),
   };
 
   public async run(): Promise<void> {
@@ -33,22 +34,27 @@ export default class Init extends BaseCommand<typeof Init> {
 
         this.log("Successfully updated a Digger project");
       } else {
-        const content = defaultContent(version);
+        const defContent = defaultContent(version);
+
+        // make sure to only add advanced if the hidden flag is used
+        const content = flags.advanced
+          ? { ...defContent, advanced: true }
+          : defContent;
         updateDiggerJson(content);
 
-        try {
+        // if advanced, don't bother creating other files - just the json
+        if (!flags.advanced) {
           createBlock("vpc", "default_network", {});
           this.log(
             "Successfully added default network block to the Digger project"
           );
-        } catch (error: any) {
-          this.error(error);
+
+          // fs.mkdirSync(`${process.cwd()}/overrides`); Re-enable when we start using it
+          fs.writeFileSync(`${process.cwd()}/dgctl.secrets.ini`, "");
+          fs.writeFileSync(`${process.cwd()}/dgctl.variables.ini`, "");
         }
 
-        // fs.mkdirSync(`${process.cwd()}/overrides`); Re-enable when we start using it
         fs.writeFileSync(`${process.cwd()}/.gitignore`, gitIgnore);
-        fs.writeFileSync(`${process.cwd()}/dgctl.secrets.ini`, "");
-        fs.writeFileSync(`${process.cwd()}/dgctl.variables.ini`, "");
         this.log("Successfully initiated a Digger project");
       }
     } catch (error: any) {
