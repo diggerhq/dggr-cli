@@ -3,7 +3,6 @@ import { BaseCommand }  from "../base";
 import { deleteSsmParameter } from "../../utils/aws";
 import { ConfigIniParser } from "config-ini-parser";
 import fs from "node:fs";
-// eslint-disable-next-line unicorn/import-style
 import chalk from "chalk";
 import { diggerJson } from "../../utils/helpers";
 
@@ -21,15 +20,11 @@ export default class Delete extends BaseCommand<typeof Delete> {
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Delete);
 
-    let block:string;
-    if (flags.block) {
-      block = flags.block;
-    } else {
-      this.warn(
-        "No block provided for the variable. Global secret will be deleted"
-      );
-      block = "_bundle_";
+    if (!flags.block) {
+      this.warn("No block provided for the variable. Global secret will be deleted");
     }
+
+    const block = flags.block ?? "_bundle_";
 
     if (!args.key) {
       this.log(
