@@ -23,16 +23,6 @@ export default class Add extends BaseCommand<typeof Add> {
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Add);
 
-    let block:string;
-    if (flags.block) {
-      block = flags.block;
-    } else {
-      this.warn(
-        "No block provided for the variable. Secret will be stored as a global parameter"
-      );
-      block = "_bundle_";
-    }
-
     if (!args.kv) {
       this.log(
         "No key or value provided. Example command: dgctl variable add -b=myapp <key=value>"
@@ -40,7 +30,8 @@ export default class Add extends BaseCommand<typeof Add> {
       return;
     }
 
-    const [key, value] = args.kv.split("=")
+    const block = flags.block;
+    const [key, value] = args.kv.split("=");
 
     if (!fs.existsSync("dgctl.secrets.ini")) {
       fs.writeFileSync("dgctl.secrets.ini", "");
@@ -55,7 +46,8 @@ export default class Add extends BaseCommand<typeof Add> {
     let result;
     let valueSsmArn;
     try {
-      result = await createSsmParameter(`/${id}/${block}/${key}`, value)
+      const paramName = block ? `/${id}/${block}/${key}` : `/${id}/${key}`
+      result = await createSsmParameter(paramName, value)
       valueSsmArn = result.arn
     } catch (error) {
       this.log(chalk.red("Could not create ssm parameter, does the key already exist?"))
@@ -68,12 +60,19 @@ export default class Add extends BaseCommand<typeof Add> {
       "utf8"
     );
     parser.parse(iniFile);
-    if (!parser.isHaveSection(block)) {
+    if (block && !parser.isHaveSection(block)) {
       parser.addSection(block);
     }
 
-    parser.set(block, key, valueSsmArn);
-
+    if (block) {
+      parser.set(block, key, valueSsmArn);
+    } else {
+      this.warn(
+        "No block provided for the variable. Secret will be stored as a global parameter"
+      );
+      parser.setOptionInDefaultSection(key, valueSsmArn);      
+    }
+    
     fs.writeFileSync(
       `${process.cwd()}/dgctl.secrets.ini`,
       parser.stringify("\n")

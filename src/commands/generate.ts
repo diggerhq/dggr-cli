@@ -6,6 +6,7 @@ import path = require("node:path");
 import { trackEvent } from "../utils/mixpanel";
 import { BaseCommand } from "./base";
 import { getTrowelUrl } from "../config";
+import { getSecretsFromIniFile, getVarsFromIniFile } from "../utils/io";
 
 export default class Generate extends BaseCommand<typeof Generate> {
   static description = "Generates terraform based on the Digger infra bundle";
@@ -35,14 +36,21 @@ export default class Generate extends BaseCommand<typeof Generate> {
           "utf8"
         );
         const config = JSON.parse(configRaw);
-        return { ...block, ...config };
+        // eslint-disable-next-line camelcase
+      block.environment_variables = getVarsFromIniFile("dgctl.variables.ini", block.name)
+      block.secrets = getSecretsFromIniFile("dgctl.secrets.ini", block.name)return { ...block, ...config };
       });
 
-      combinedJson = { ...currentDiggerJson, blocks: mergedBlocks };
-      trackEvent("generate called", {
+      combinedJson = {
+      ...currentDiggerJson,
+      // eslint-disable-next-line camelcase
+      environment_variables: getVarsFromIniFile("dgctl.variables.ini", null),
+      secrets: getSecretsFromIniFile("dgctl.secrets.ini", null),
+      blocks: mergedBlocks
+      };trackEvent("generate called", {
         diggerConfig: currentDiggerJson,
-        combinedJson,
-      });
+        combinedJson,});
+
       // before call, create the generated json. Will be overwritten fully every time.
       fs.writeFileSync(
         `${process.cwd()}/dgctl.generated.json`,

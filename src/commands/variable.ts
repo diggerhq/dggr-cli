@@ -23,6 +23,11 @@ export default class Variable extends BaseCommand<typeof Variable> {
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Variable);
     const parser = new ConfigIniParser();
+
+    if (!fs.existsSync("dgctl.variables.ini")) {
+      fs.writeFileSync("dgctl.variables.ini", "");
+    }
+
     const iniFile = fs.readFileSync(
       `${process.cwd()}/dgctl.variables.ini`,
       "utf8"
