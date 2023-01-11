@@ -58,3 +58,9 @@ export const createBlock = (
   fs.writeFileSync(`${process.cwd()}/${blockName}/dgctl.variables.ini`, "");
   fs.writeFileSync(`${process.cwd()}/${blockName}/dgctl.overrides.tf`, "");
 };
+
+export const gitIgnore = [
+  ".archive",
+  "generated/",
+  "dgctl.generated.json",
+].join("\n");

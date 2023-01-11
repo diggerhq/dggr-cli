@@ -6,6 +6,7 @@ import path = require("node:path");
 import { trackEvent } from "../utils/mixpanel";
 import { BaseCommand } from "./base";
 import { getTrowelUrl } from "../config";
+import { getSecretsFromIniFile, getVarsFromIniFile } from "../utils/io";
 
 export default class Generate extends BaseCommand<typeof Generate> {
   static description = "Generates terraform based on the Digger infra bundle";
@@ -23,7 +24,12 @@ export default class Generate extends BaseCommand<typeof Generate> {
     }
 
     const currentDiggerJson = diggerJson();
-    const mergedBlocks = currentDiggerJson.blocks.map((block: any) => {
+    let combinedJson;
+
+    if (currentDiggerJson.advanced) {
+      // advanced mode, just take the digger json directly
+      combinedJson = currentDiggerJson;
+    } else {const mergedBlocks = currentDiggerJson.blocks.map((block: any) => {
       const configRaw = fs.readFileSync(
         `${process.cwd()}/${block.name}/config.json`,
         "utf8"
@@ -31,7 +37,12 @@ export default class Generate extends BaseCommand<typeof Generate> {
 
       // read override.tf, base64 encode it and add as one item list in "custom_terraform" parameter to the block's json"
 
-      const config = JSON.parse(configRaw);
+      const config = JSON.parse(configRaw);// eslint-disable-next-line camelcase
+        block.environment_variables = getVarsFromIniFile(
+          "dgctl.variables.ini",
+          block.name
+        );
+        block.secrets = getSecretsFromIniFile("dgctl.secrets.ini", block.name);
 
       const tfBase64 = fs.readFileSync(
         `${process.cwd()}/${block.name}/dgctl.overrides.tf`,
@@ -46,11 +57,25 @@ export default class Generate extends BaseCommand<typeof Generate> {
       };
     });
 
-    const combinedJson = { ...currentDiggerJson, blocks: mergedBlocks };
-    trackEvent("generate called", {
-      diggerConfig: currentDiggerJson,
-      combinedJson,
-    });
+      combinedJson = {
+        ...currentDiggerJson,
+        // eslint-disable-next-line camelcase
+        environment_variables: getVarsFromIniFile("dgctl.variables.ini", null),
+        secrets: getSecretsFromIniFile("dgctl.secrets.ini", null),
+        blocks: mergedBlocks,
+      };
+      trackEvent("generate called", {
+        diggerConfig: currentDiggerJson,
+        combinedJson,
+      });
+
+      // before call, create the generated json. Will be overwritten fully every time.
+      fs.writeFileSync(
+        `${process.cwd()}/dgctl.generated.json`,
+        JSON.stringify(combinedJson, null, 4)
+      );
+    }
+
     const response = await axios.post(getTrowelUrl(), combinedJson);
 
     // write response to file

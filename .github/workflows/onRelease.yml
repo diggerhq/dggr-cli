@@ -3,17 +3,26 @@ name: publish
 on:
   release:
     types: [released]
-  # support manual release in case something goes wrong and needs to be repeated or tested
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: tag that needs to publish
-        type: string
-        required: true
+
 jobs:
-  npm:
-    uses: oclif/github-workflows/.github/workflows/npmPublish.yml@main
-    with:
-      tag: latest
-      githubTag: ${{ github.event.release.tag_name || inputs.tag }}
-    secrets: inherit
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install dependencies and build 🔧
+        run: yarn install --frozen-lockfile && yarn build
+      - name: Publish package on NPM 📦
+        run: |
+          yarn config set version-tag-prefix "v"
+          yarn config set version-git-tag false
+          echo "RELEASE_VERSION: ${{ github.event.release.tag_name }}"
+          yarn version --new-version ${{ github.event.release.tag_name }}
+          yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
