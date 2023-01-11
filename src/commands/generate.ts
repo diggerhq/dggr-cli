@@ -24,44 +24,56 @@ export default class Generate extends BaseCommand<typeof Generate> {
     }
 
     const currentDiggerJson = diggerJson();
-    const mergedBlocks = currentDiggerJson.blocks.map((block: any) => {
-      const configRaw = fs.readFileSync(
-        `${process.cwd()}/${block.name}/config.json`,
-        "utf8"
-      );
-      const config = JSON.parse(configRaw);
 
-      if (block.type === "imported") {
-        const tfFileLocation = `${process.cwd()}/${block.name}/${config.terraform_file}`;
+    let combinedJson;
+
+    if (currentDiggerJson.advanced) {
+      // advanced mode, just take the digger json directly
+      combinedJson = currentDiggerJson;
+    } else {
+      const mergedBlocks = currentDiggerJson.blocks.map((block: any) => {
+        const configRaw = fs.readFileSync(
+          `${process.cwd()}/${block.name}/config.json`,
+          "utf8"
+        );
+
+        const config = JSON.parse(configRaw);
+                
+        if (block.type === "imported") {
+          const tfFileLocation = `${process.cwd()}/${block.name}/${config.terraform_file}`;
+          // eslint-disable-next-line camelcase
+          config.custom_terraform = fs.readFileSync(`${tfFileLocation}`, "base64");
+          delete config.terraform_files;
+        }
+        
         // eslint-disable-next-line camelcase
-        config.custom_terraform = fs.readFileSync(`${tfFileLocation}`, "base64");
-        delete config.terraform_files;
-      }
+        block.environment_variables = getVarsFromIniFile(
+          "dgctl.variables.ini",
+          block.name
+        );
+        block.secrets = getSecretsFromIniFile("dgctl.secrets.ini", block.name);
 
-      // eslint-disable-next-line camelcase
-      block.environment_variables = getVarsFromIniFile("dgctl.variables.ini", block.name)
-      block.secrets = getSecretsFromIniFile("dgctl.secrets.ini", block.name)
+        return { ...block, ...config };
+      });
 
-      return { ...block, ...config };
-    });
+      combinedJson = {
+        ...currentDiggerJson,
+        // eslint-disable-next-line camelcase
+        environment_variables: getVarsFromIniFile("dgctl.variables.ini", null),
+        secrets: getSecretsFromIniFile("dgctl.secrets.ini", null),
+        blocks: mergedBlocks,
+      };
+      trackEvent("generate called", {
+        diggerConfig: currentDiggerJson,
+        combinedJson,
+      });
 
-    const combinedJson = { 
-      ...currentDiggerJson, 
-      // eslint-disable-next-line camelcase
-      environment_variables: getVarsFromIniFile("dgctl.variables.ini", null),
-      secrets: getSecretsFromIniFile("dgctl.secrets.ini", null),
-      blocks: mergedBlocks 
-    };
-    trackEvent("generate called", {
-      diggerConfig: currentDiggerJson,
-      combinedJson,
-    });
-
-    // before call, create the generated json. Will be overwritten fully every time.
-    fs.writeFileSync(
-      `${process.cwd()}/dgctl.generated.json`,
-      JSON.stringify(combinedJson, null, 4)
-    );
+      // before call, create the generated json. Will be overwritten fully every time.
+      fs.writeFileSync(
+        `${process.cwd()}/dgctl.generated.json`,
+        JSON.stringify(combinedJson, null, 4)
+      );
+    }
 
     const response = await axios.post(getTrowelUrl(), combinedJson);
 
