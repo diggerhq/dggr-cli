@@ -24,6 +24,7 @@ export default class Generate extends BaseCommand<typeof Generate> {
     }
 
     const currentDiggerJson = diggerJson();
+
     let combinedJson;
 
     if (currentDiggerJson.advanced) {
@@ -37,7 +38,14 @@ export default class Generate extends BaseCommand<typeof Generate> {
 
       // read override.tf, base64 encode it and add as one item list in "custom_terraform" parameter to the block's json"
 
-      const config = JSON.parse(configRaw);// eslint-disable-next-line camelcase
+      const config = JSON.parse(configRaw);if (block.type === "imported") {
+          const tfFileLocation = `${process.cwd()}/${block.name}/${config.terraform_file}`;
+          // eslint-disable-next-line camelcase
+          config.custom_terraform = fs.readFileSync(`${tfFileLocation}`, "base64");
+          delete config.terraform_files;
+        }
+
+        // eslint-disable-next-line camelcase
         block.environment_variables = getVarsFromIniFile(
           "dgctl.variables.ini",
           block.name
