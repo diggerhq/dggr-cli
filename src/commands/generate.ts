@@ -6,6 +6,7 @@ import path = require("node:path");
 import { trackEvent } from "../utils/mixpanel";
 import { BaseCommand } from "./base";
 import { getTrowelUrl } from "../config";
+import { getSecretsFromIniFile, getVarsFromIniFile } from "../utils/io";
 
 export default class Generate extends BaseCommand<typeof Generate> {
   static description = "Generates terraform based on the Digger infra bundle";
@@ -29,6 +30,7 @@ export default class Generate extends BaseCommand<typeof Generate> {
         "utf8"
       );
       const config = JSON.parse(configRaw);
+
       if (block.type === "imported") {
         const tfFileLocation = `${process.cwd()}/${block.name}/${config.terraform_file}`;
         // eslint-disable-next-line camelcase
@@ -36,14 +38,31 @@ export default class Generate extends BaseCommand<typeof Generate> {
         delete config.terraform_files;
       }
 
+      // eslint-disable-next-line camelcase
+      block.environment_variables = getVarsFromIniFile("dgctl.variables.ini", block.name)
+      block.secrets = getSecretsFromIniFile("dgctl.secrets.ini", block.name)
+
       return { ...block, ...config };
     });
 
-    const combinedJson = { ...currentDiggerJson, blocks: mergedBlocks };
+    const combinedJson = { 
+      ...currentDiggerJson, 
+      // eslint-disable-next-line camelcase
+      environment_variables: getVarsFromIniFile("dgctl.variables.ini", null),
+      secrets: getSecretsFromIniFile("dgctl.secrets.ini", null),
+      blocks: mergedBlocks 
+    };
     trackEvent("generate called", {
       diggerConfig: currentDiggerJson,
       combinedJson,
     });
+
+    // before call, create the generated json. Will be overwritten fully every time.
+    fs.writeFileSync(
+      `${process.cwd()}/dgctl.generated.json`,
+      JSON.stringify(combinedJson, null, 4)
+    );
+
     const response = await axios.post(getTrowelUrl(), combinedJson);
 
     // write response to file

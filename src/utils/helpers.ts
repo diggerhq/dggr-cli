@@ -134,3 +134,9 @@ export const createBlock = (
   fs.writeFileSync(`${process.cwd()}/${blockName}/.dgctlsecrets`, "");
   fs.writeFileSync(`${process.cwd()}/${blockName}/.dgctlvariables`, "");
 };
+
+export const gitIgnore = [
+  ".archive",
+  "generated/",
+  "dgctl.generated.json",
+].join("\n");
