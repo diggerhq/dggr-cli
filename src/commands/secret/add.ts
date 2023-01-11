@@ -1,5 +1,5 @@
 import { Flags } from "@oclif/core";
-import {BaseCommand}  from "../base";
+import {BaseCommand}  from "../../base";
 import {createSsmParameter} from "../../utils/aws";
 import { ConfigIniParser } from "config-ini-parser";
 import fs from "node:fs";
@@ -40,7 +40,7 @@ export default class Add extends BaseCommand<typeof Add> {
     if (!key || !value) {
       this.log(chalk.red("Missing parameter: key and value"))
     }
-    
+
     const diggerConfig = diggerJson();
     const id = diggerConfig.id;
     let result;
@@ -70,9 +70,9 @@ export default class Add extends BaseCommand<typeof Add> {
       this.warn(
         "No block provided for the variable. Secret will be stored as a global parameter"
       );
-      parser.setOptionInDefaultSection(key, valueSsmArn);      
+      parser.setOptionInDefaultSection(key, valueSsmArn);
     }
-    
+
     fs.writeFileSync(
       `${process.cwd()}/dgctl.secrets.ini`,
       parser.stringify("\n")

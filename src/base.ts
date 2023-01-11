@@ -1,8 +1,8 @@
 // src/baseCommand.ts
 import { Command, Flags, Interfaces } from "@oclif/core";
-import { trackEvent } from "../utils/mixpanel";
+import { trackEvent } from "./utils/mixpanel";
 import * as Sentry from "@sentry/node";
-import { SENTRY_DSN } from "../config";
+import { SENTRY_DSN } from "./config";
 
 export type Flags<T extends typeof Command> = Interfaces.InferredFlags<
   typeof BaseCommand["globalFlags"] & T["flags"]

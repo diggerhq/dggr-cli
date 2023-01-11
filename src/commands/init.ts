@@ -8,7 +8,7 @@ import {
   updateDiggerJson,
 } from "../utils/helpers";
 import { trackEvent } from "../utils/mixpanel";
-import { BaseCommand } from "./base";
+import { BaseCommand } from "../base";
 import { defaultContent } from "../utils/digger-settings";
 
 export default class Init extends BaseCommand<typeof Init> {

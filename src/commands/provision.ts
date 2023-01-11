@@ -6,7 +6,7 @@ import * as chalk from "chalk";
 import { callTF } from "../utils/terraform";
 import { getAwsCreds } from "../utils/aws";
 import { trackEvent } from "../utils/mixpanel";
-import { BaseCommand } from "./base";
+import { BaseCommand } from "../base";
 
 export default class Provision extends BaseCommand<typeof Provision> {
   static description = "describe the command here";
