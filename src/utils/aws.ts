@@ -48,7 +48,7 @@ const setProfile = (id: string, profileName: string) => {
 };
 
 export const getAwsCreds = async (
-  profileToUse: string | null | undefined
+  profileToUse?: string
 ): Promise<{ awsLogin: string; awsPassword: string; awsProfile: string }> => {
   const projectId: string = diggerJson().id;
   const awsCredsFilePath = path.join(getHomeDir(), ".aws/credentials");
@@ -93,13 +93,14 @@ export const getAwsCreds = async (
   return { awsLogin, awsPassword, awsProfile: selectedProfile };
 };
 
-export const getSsmParameterArn = async function(key:string, awsProfile: string | undefined): Promise<{arn:string}> {
+export const getSsmParameterArn = async function (
+  key: string,
+  awsProfile?: string
+): Promise<{ arn: string }> {
   // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve, reject) => {
     const diggerConfig = diggerJson();
-    const { awsLogin, awsPassword } = await getAwsCreds(
-      awsProfile
-    );
+    const { awsLogin, awsPassword } = await getAwsCreds(awsProfile);
     const params = {
       Name: key,
       WithDecruption: false,
@@ -107,61 +108,58 @@ export const getSsmParameterArn = async function(key:string, awsProfile: string 
     const client = new AWS.SSM({
       region: diggerConfig.region,
       credentials: { accessKeyId: awsLogin, secretAccessKey: awsPassword },
-      });
-    
+    });
 
-    client.getParameter(params, function(err:any, data:any) {
+    client.getParameter(params, function (err: any, data: any) {
       if (err) {
-        reject(err)
+        reject(err);
       }
 
       resolve({
-        arn: data.Parameter.ARN
-      })
-
+        arn: data.Parameter.ARN,
+      });
     });
-
   });
-}
+};
 
-// eslint-disable-next-line unicorn/no-useless-undefined
-export const createSsmParameter = async function(key:string, value:string, awsProfile=undefined): Promise<{arn:string}> {
+export const createSsmParameter = async (
+  key: string,
+  value: string,
+  awsProfile?: string
+): Promise<{ arn: string }> => {
   // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve, reject) => {
     const diggerConfig = diggerJson();
-    const { awsLogin, awsPassword } = await getAwsCreds(
-      awsProfile
-    );
+    const { awsLogin, awsPassword } = await getAwsCreds(awsProfile);
     const params = {
       Name: key,
       Value: value,
       Type: "SecureString",
       Overwrite: true,
-
     };
     const client = new AWS.SSM({
       region: diggerConfig.region,
       credentials: { accessKeyId: awsLogin, secretAccessKey: awsPassword },
-      });
-    
+    });
 
-    client.putParameter(params, function(err:any, _data:any) {
+    client.putParameter(params, function (err: any, _data: any) {
       if (err) {
-        reject(err)
+        reject(err);
       }
 
-      resolve(getSsmParameterArn(key, awsProfile))
-    })
+      resolve(getSsmParameterArn(key, awsProfile));
+    });
   });
-}
+};
 
-export const deleteSsmParameter = async function(key:string, awsProfile=null): Promise<void> {
+export const deleteSsmParameter = async (
+  key: string,
+  awsProfile?: string
+): Promise<void> => {
   // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve, reject) => {
     const diggerConfig = diggerJson();
-    const { awsLogin, awsPassword } = await getAwsCreds(
-      awsProfile
-    );
+    const { awsLogin, awsPassword } = await getAwsCreds(awsProfile);
     const params = {
       Name: key,
     };
@@ -169,8 +167,9 @@ export const deleteSsmParameter = async function(key:string, awsProfile=null): P
       region: diggerConfig.region,
       credentials: { accessKeyId: awsLogin, secretAccessKey: awsPassword },
     });
-    
 
-    client.deleteParameter(params, (err: any) => (err ? reject(err) : resolve()))
+    client.deleteParameter(params, (err: any) =>
+      err ? reject(err) : resolve()
+    );
   });
-}
+};
