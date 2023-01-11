@@ -4,17 +4,17 @@ import * as Mixpanel from "mixpanel";
 import { getHomeDir } from "./io";
 import * as crypto from "node:crypto";
 import { MIXPANEL_TOKEN } from "../config";
+import { diggerAPIKey, diggerAPIKeyExists } from "./helpers";
 
 const mixpanel = initialiseMixpanel();
 
 function initialiseMixpanel(): Mixpanel.Mixpanel | null {
   if (process.env.NODE_ENV === "production") {
-    const mixpanel = Mixpanel.init(MIXPANEL_TOKEN, {
+    return Mixpanel.init(MIXPANEL_TOKEN, {
       debug: process.env.DEBUG || false,
     });
-    return mixpanel;
   }
-  
+
   return null;
 }
 
@@ -35,9 +35,13 @@ const getSessionId = () => {
 };
 
 export const trackEvent = (eventName: string, extraData: object) => {
-  const sessionId = getSessionId();
+  const sessionId = diggerAPIKeyExists() ? diggerAPIKey() : getSessionId();
+
   if (mixpanel) {
-  // eslint-disable-next-line camelcase
-    mixpanel.track(eventName, { distinct_id: sessionId, ...extraData });
+    mixpanel.track(eventName, {
+      // eslint-disable-next-line camelcase
+      distinct_id: sessionId,
+      ...extraData,
+    });
   }
 };

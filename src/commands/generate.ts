@@ -1,4 +1,9 @@
-import { diggerJson, diggerJsonExists } from "../utils/helpers";
+import {
+  diggerAPIKey,
+  diggerAPIKeyExists,
+  diggerJson,
+  diggerJsonExists,
+} from "../utils/helpers";
 import * as fs from "node:fs";
 import axios from "axios";
 import extract = require("extract-zip");
@@ -91,7 +96,15 @@ export default class Generate extends BaseCommand<typeof Generate> {
       );
     }
 
-    const response = await axios.post(getTrowelUrl(), combinedJson);
+    const headers = diggerAPIKeyExists()
+      ? {
+          "X-Digger-Api-Key": diggerAPIKey(),
+        }
+      : undefined;
+
+    const response = await axios.post(getTrowelUrl(), combinedJson, {
+      headers,
+    });
 
     // write response to file
     fs.writeFileSync("tmp.zip", Buffer.from(response.data, "base64"));

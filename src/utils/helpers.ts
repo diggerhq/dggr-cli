@@ -19,6 +19,10 @@ export const updateDiggerJson = (obj: unknown) => {
   fs.writeFileSync(diggerJsonPath, JSON.stringify(obj, null, 4));
 };
 
+export const diggerAPIKeyExists = () => {
+  return fs.existsSync(diggerAPIKeyPath);
+};
+
 export const diggerAPIKey = () => {
   return fs.readFileSync(diggerAPIKeyPath, "utf8");
 };
