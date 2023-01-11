@@ -30,18 +30,25 @@ export default class Generate extends BaseCommand<typeof Generate> {
     if (currentDiggerJson.advanced) {
       // advanced mode, just take the digger json directly
       combinedJson = currentDiggerJson;
-    } else {const mergedBlocks = currentDiggerJson.blocks.map((block: any) => {
-      const configRaw = fs.readFileSync(
-        `${process.cwd()}/${block.name}/config.json`,
-        "utf8"
-      );
+    } else {
+      const mergedBlocks = currentDiggerJson.blocks.map((block: any) => {
+        const configRaw = fs.readFileSync(
+          `${process.cwd()}/${block.name}/config.json`,
+          "utf8"
+        );
 
-      // read override.tf, base64 encode it and add as one item list in "custom_terraform" parameter to the block's json"
+        // read override.tf, base64 encode it and add as one item list in "custom_terraform" parameter to the block's json"
 
-      const config = JSON.parse(configRaw);if (block.type === "imported") {
-          const tfFileLocation = `${process.cwd()}/${block.name}/${config.terraform_file}`;
+        const config = JSON.parse(configRaw);
+        if (block.type === "imported") {
+          const tfFileLocation = `${process.cwd()}/${block.name}/${
+            config.terraform_file
+          }`;
           // eslint-disable-next-line camelcase
-          config.custom_terraform = fs.readFileSync(`${tfFileLocation}`, "base64");
+          config.custom_terraform = fs.readFileSync(
+            `${tfFileLocation}`,
+            "base64"
+          );
           delete config.terraform_files;
         }
 
@@ -52,18 +59,18 @@ export default class Generate extends BaseCommand<typeof Generate> {
         );
         block.secrets = getSecretsFromIniFile("dgctl.secrets.ini", block.name);
 
-      const tfBase64 = fs.readFileSync(
-        `${process.cwd()}/${block.name}/dgctl.overrides.tf`,
-        { encoding: "base64" }
-      );
+        const tfBase64 = fs.readFileSync(
+          `${process.cwd()}/${block.name}/dgctl.overrides.tf`,
+          { encoding: "base64" }
+        );
 
-      return {
-        ...block,
-        ...config,
-        // eslint-disable-next-line camelcase
-        custom_terraform: tfBase64,
-      };
-    });
+        return {
+          ...block,
+          ...config,
+          // eslint-disable-next-line camelcase
+          custom_terraform: tfBase64,
+        };
+      });
 
       combinedJson = {
         ...currentDiggerJson,
