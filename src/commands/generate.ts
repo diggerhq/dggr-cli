@@ -37,19 +37,26 @@ export default class Generate extends BaseCommand<typeof Generate> {
         );
         const config = JSON.parse(configRaw);
         // eslint-disable-next-line camelcase
-      block.environment_variables = getVarsFromIniFile("dgctl.variables.ini", block.name)
-      block.secrets = getSecretsFromIniFile("dgctl.secrets.ini", block.name)return { ...block, ...config };
+        block.environment_variables = getVarsFromIniFile(
+          "dgctl.variables.ini",
+          block.name
+        );
+        block.secrets = getSecretsFromIniFile("dgctl.secrets.ini", block.name);
+
+        return { ...block, ...config };
       });
 
       combinedJson = {
-      ...currentDiggerJson,
-      // eslint-disable-next-line camelcase
-      environment_variables: getVarsFromIniFile("dgctl.variables.ini", null),
-      secrets: getSecretsFromIniFile("dgctl.secrets.ini", null),
-      blocks: mergedBlocks
-      };trackEvent("generate called", {
+        ...currentDiggerJson,
+        // eslint-disable-next-line camelcase
+        environment_variables: getVarsFromIniFile("dgctl.variables.ini", null),
+        secrets: getSecretsFromIniFile("dgctl.secrets.ini", null),
+        blocks: mergedBlocks,
+      };
+      trackEvent("generate called", {
         diggerConfig: currentDiggerJson,
-        combinedJson,});
+        combinedJson,
+      });
 
       // before call, create the generated json. Will be overwritten fully every time.
       fs.writeFileSync(
