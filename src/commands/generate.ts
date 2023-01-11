@@ -9,7 +9,7 @@ import axios from "axios";
 import extract = require("extract-zip");
 import path = require("node:path");
 import { trackEvent } from "../utils/mixpanel";
-import { BaseCommand } from "./base";
+import { BaseCommand } from "../base";
 import { getTrowelUrl } from "../config";
 import { getSecretsFromIniFile, getVarsFromIniFile } from "../utils/io";
 

@@ -1,5 +1,5 @@
 import { Flags } from "@oclif/core";
-import { BaseCommand }  from "../base";
+import { BaseCommand }  from "../../base";
 import { deleteSsmParameter } from "../../utils/aws";
 import { ConfigIniParser } from "config-ini-parser";
 import fs from "node:fs";
@@ -41,7 +41,7 @@ export default class Delete extends BaseCommand<typeof Delete> {
     if (!args.key) {
       this.log(chalk.red("Missing parameter: key"))
     }
-    
+
     const diggerConfig = diggerJson();
     const id = diggerConfig.id;
     try {
