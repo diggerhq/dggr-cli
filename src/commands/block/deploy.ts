@@ -104,7 +104,7 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
       this.log(
         chalk.blueBright(`[INFO] Building docker image at ${codeDirectory}`)
       );
-      execSync(`docker build -t ${ecrRepoUrl} .`, {
+      execSync(`docker build  --platform=linux/amd64 -t ${ecrRepoUrl} .`, {
         stdio: [process.stdin, process.stdout, process.stderr],
         cwd: codeDirectory,
       });
