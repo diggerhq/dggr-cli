@@ -1,15 +1,15 @@
-import { CliUx, Flags } from '@oclif/core'
-import chalk = require('chalk')
-import { execSync } from 'node:child_process'
-import { lookpath } from 'lookpath'
-import { getAwsCreds } from '../../utils/aws'
-import { diggerJson } from '../../utils/helpers'
-import { trackEvent } from '../../utils/mixpanel'
-import { tfOutput } from '../../utils/terraform'
-import { BaseCommand } from '../../base'
+import { CliUx, Flags } from "@oclif/core";
+import chalk = require("chalk");
+import { execSync } from "node:child_process";
+import { lookpath } from "lookpath";
+import { getAwsCreds } from "../../utils/aws";
+import { diggerJson } from "../../utils/helpers";
+import { trackEvent } from "../../utils/mixpanel";
+import { tfOutput } from "../../utils/terraform";
+import { BaseCommand } from "../../base";
 
-export default class Deploy extends BaseCommand<typeof Deploy>  {
-  static description = 'Deploy application to AWS'
+export default class Deploy extends BaseCommand<typeof Deploy> {
+  static description = "Deploy application to AWS";
 
   static flags = {
     context: Flags.string({
@@ -27,18 +27,16 @@ export default class Deploy extends BaseCommand<typeof Deploy>  {
       description: "AWS profile to use",
       default: undefined,
     }),
-  }
+  };
 
-  static args = [{name: 'name'}]
+  static args = [{ name: "name" }];
 
   public async run(): Promise<void> {
-    const {args, flags} = await this.parse(Deploy)
+    const { args, flags } = await this.parse(Deploy);
 
     trackEvent("block deploy called", { flags, args });
-    // const terraform = (await lookpath("terraform")) ?? "terraform";
 
     const awsExists = await lookpath("aws");
-    this.log(awsExists);
     if (!awsExists) {
       this.log("aws cli installation not found.");
       return;
@@ -65,10 +63,8 @@ export default class Deploy extends BaseCommand<typeof Deploy>  {
     const region = diggerConfig.aws_region;
     const terraformOutputs = await tfOutput(infraDirectory);
     const url = terraformOutputs[args.name].value.lb_dns;
-    const ecrRepoUrl =
-      terraformOutputs[args.name].value.docker_registry_url;
-    const ecsClusterName =
-      terraformOutputs[args.name].value.ecs_cluster_name;
+    const ecrRepoUrl = terraformOutputs[args.name].value.docker_registry_url;
+    const ecsClusterName = terraformOutputs[args.name].value.ecs_cluster_name;
     const awsProfile = "default";
 
     if (flags.displayOnly) {
@@ -79,7 +75,9 @@ export default class Deploy extends BaseCommand<typeof Deploy>  {
         chalk.green(`aws ecr get-login-password --region ${region} --profile ${awsProfile} | 
       docker login --username AWS --password-stdin ${ecrRepoUrl}`)
       );
-      this.log(chalk.green(`docker build -t ${ecrRepoUrl} .`));
+      this.log(
+        chalk.green(`docker build --platform=linux/amd64 -t ${ecrRepoUrl} .`)
+      );
       this.log(chalk.green(`docker push ${ecrRepoUrl}:latest`));
       this.log(
         chalk.green(
@@ -90,9 +88,7 @@ export default class Deploy extends BaseCommand<typeof Deploy>  {
       this.log(`The block is accessible in this url: ${url}`);
     } else {
       const { awsProfile } = await getAwsCreds(flags.profile);
-      this.log(
-        `[INFO] Using profile from aws credentials file: ${awsProfile}`
-      );
+      this.log(`[INFO] Using profile from aws credentials file: ${awsProfile}`);
 
       this.log(
         chalk.blueBright(`[INFO] Logging to ECR registry ${ecrRepoUrl}`)
@@ -130,9 +126,7 @@ export default class Deploy extends BaseCommand<typeof Deploy>  {
         }
       );
 
-      this.log(
-        chalk.greenBright(`Success! Your app is deployed at ${url}`)
-      );
+      this.log(chalk.greenBright(`Success! Your app is deployed at ${url}`));
     }
 
     trackEvent("block deploy successful", { flags, args, diggerConfig });
