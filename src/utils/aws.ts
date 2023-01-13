@@ -93,6 +93,39 @@ export const getAwsCreds = async (
   return { awsLogin, awsPassword, awsProfile: selectedProfile };
 };
 
+export const setNewAwsProfile = async () => {
+  const projectId: string = diggerJson().id;
+  const awsCredsFilePath = path.join(getHomeDir(), ".aws/credentials");
+
+  if (fs.existsSync(awsCredsFilePath)) {
+    const awsIniFile = ini.parse(fs.readFileSync(awsCredsFilePath, "utf8"));
+    const profiles = Object.keys(awsIniFile);
+    const selectedProfile = await promptForProfile(profiles);
+    const awsLogin = awsIniFile[selectedProfile].aws_access_key_id;
+    const awsPassword = awsIniFile[selectedProfile].aws_secret_access_key;
+    setProfile(projectId, selectedProfile);
+
+    return { awsLogin, awsPassword, awsProfile: selectedProfile };
+  }
+
+  fs.mkdirSync(path.join(getHomeDir(), ".aws/"));
+  const { awsLogin, awsPassword } = await promptForAwsCredentials();
+  const selectedProfile = "digger_profile";
+  const contents = ini.stringify({
+    // eslint-disable-next-line camelcase
+    digger_profile: {
+      // eslint-disable-next-line camelcase
+      aws_access_key_id: awsLogin,
+      // eslint-disable-next-line camelcase
+      aws_secret_access_key: awsPassword,
+    },
+  });
+  fs.writeFileSync(awsCredsFilePath, contents);
+  setProfile(projectId, selectedProfile);
+
+  return { awsLogin, awsPassword, awsProfile: selectedProfile };
+};
+
 export const getSsmParameterArn = async function (
   key: string,
   awsProfile?: string
