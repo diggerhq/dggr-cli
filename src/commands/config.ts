@@ -1,6 +1,7 @@
 import { BaseCommand } from "../base";
-import { createNewAwsProfile, resetAwsProfile } from "../utils/aws";
+import { createNewAwsProfile, getProfile, resetAwsProfile } from "../utils/aws";
 import { Flags } from "@oclif/core";
+import { diggerJson } from "../utils/helpers";
 
 export default class Config extends BaseCommand<typeof Config> {
   static description = "Allows changing dgctl configuration";
@@ -26,6 +27,8 @@ export default class Config extends BaseCommand<typeof Config> {
 
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Config);
+    const currentProfile = await getProfile(diggerJson().id);
+    this.log(`Current active profile: ${currentProfile ?? "No set profile"}`);
 
     if (flags.create) {
       const profile = await createNewAwsProfile();

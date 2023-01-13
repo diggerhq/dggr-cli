@@ -35,7 +35,7 @@ const promptForProfile = (profiles: Array<string>): Promise<string> => {
   });
 };
 
-const getProfile = (id: string) => {
+export const getProfile = (id: string) => {
   const config = getDiggerConfig();
   return config[id] ? config[id].aws_profile : null;
 };
