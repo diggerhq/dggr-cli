@@ -75,25 +75,10 @@ export const getAwsCreds = async (
     return { awsLogin, awsPassword, awsProfile: selectedProfile };
   }
 
-  fs.mkdirSync(path.join(getHomeDir(), ".aws/"));
-  const { awsLogin, awsPassword } = await promptForAwsCredentials();
-  const selectedProfile = "digger_profile";
-  const contents = ini.stringify({
-    // eslint-disable-next-line camelcase
-    digger_profile: {
-      // eslint-disable-next-line camelcase
-      aws_access_key_id: awsLogin,
-      // eslint-disable-next-line camelcase
-      aws_secret_access_key: awsPassword,
-    },
-  });
-  fs.writeFileSync(awsCredsFilePath, contents);
-  setProfile(projectId, selectedProfile);
-
-  return { awsLogin, awsPassword, awsProfile: selectedProfile };
+  return createNewAwsProfile();
 };
 
-export const setNewAwsProfile = async () => {
+export const resetAwsProfile = async () => {
   const projectId: string = diggerJson().id;
   const awsCredsFilePath = path.join(getHomeDir(), ".aws/credentials");
 
@@ -108,7 +93,17 @@ export const setNewAwsProfile = async () => {
     return { awsLogin, awsPassword, awsProfile: selectedProfile };
   }
 
-  fs.mkdirSync(path.join(getHomeDir(), ".aws/"));
+  return createNewAwsProfile();
+};
+
+export const createNewAwsProfile = async () => {
+  const projectId: string = diggerJson().id;
+  const awsCredsFilePath = path.join(getHomeDir(), ".aws/credentials");
+
+  if (!fs.existsSync(awsCredsFilePath)) {
+    fs.mkdirSync(path.join(getHomeDir(), ".aws/"));
+  }
+
   const { awsLogin, awsPassword } = await promptForAwsCredentials();
   const selectedProfile = "digger_profile";
   const contents = ini.stringify({
