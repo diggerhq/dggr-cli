@@ -28,7 +28,7 @@
     "@oclif/plugin-update": "^3.0.12",
     "@oclif/plugin-warn-if-update-available": "^2.0.18",
     "@sentry/node": "^7.29.0",
-    "@sentry/tracing": "^7.29.0",
+    "@sentry/tracing": "^7.30.0",
     "axios": "^1.2.2",
     "chalk": "^4.1.2",
     "config-ini-parser": "^1.6.1",
