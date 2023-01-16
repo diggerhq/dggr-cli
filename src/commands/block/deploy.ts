@@ -65,6 +65,7 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
     const url = terraformOutputs[args.name].value.lb_dns;
     const ecrRepoUrl = terraformOutputs[args.name].value.docker_registry_url;
     const ecsClusterName = terraformOutputs[args.name].value.ecs_cluster_name;
+    const ecsServiceName = terraformOutputs[args.name].value.ecs_service_name;
     const awsProfile = "default";
 
     if (flags.displayOnly) {
@@ -81,7 +82,7 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
       this.log(chalk.green(`docker push ${ecrRepoUrl}:latest`));
       this.log(
         chalk.green(
-          `aws ecs update-service --cluster ${ecsClusterName} --service ${ecsClusterName} --profile ${awsProfile} --force-new-deployment`
+          `aws ecs update-service --cluster ${ecsClusterName} --service ${ecsServiceName} --profile ${awsProfile} --force-new-deployment`
         )
       );
 
@@ -117,7 +118,7 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
       execSync(
         `aws ecs update-service \
                   --cluster ${ecsClusterName} \
-                  --service ${ecsClusterName}\
+                  --service ${ecsServiceName}\
                   --profile ${awsProfile} \
                   --region ${region} \
                   --force-new-deployment`,
@@ -127,6 +128,18 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
       );
 
       this.log(chalk.greenBright(`Success! Your app is deployed at ${url}`));
+      const streamLogs = await CliUx.ux.confirm("Do you want to follow logs?");
+
+      if (streamLogs) {
+        execSync(
+          `aws logs tail --follow --profile ${awsProfile} /ecs/service/${ecsServiceName} --color auto`,
+          {
+            stdio: [process.stdin, process.stdout, process.stderr],
+            cwd: codeDirectory,
+          }
+        );
+      }
+
     }
 
     trackEvent("block deploy successful", { flags, args, diggerConfig });
