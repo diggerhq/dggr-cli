@@ -56,10 +56,9 @@ export const getSecretsFromIniFile = (iniFilePath:string, sectionName:string|nul
 
   const result: { [key: string]: string } = {};
   const items = parser.items(sectionName);
-  for (const [, item] of items) {
-    result[item[0]] = item[1];
+  for (const [key, item] of items) {
+    result[key] = item;
   }
 
   return result;
-
 }
