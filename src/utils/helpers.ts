@@ -2,6 +2,7 @@
 import * as fs from "node:fs";
 import * as blocks from "../utils/block-defaults";
 import * as crypto from "node:crypto";
+import { ConfigIniParser } from "config-ini-parser";
 
 export const diggerJsonPath = `${process.cwd()}/dgctl.json`;
 export const diggerAPIKeyPath = `${process.cwd()}/.dgctl`;
@@ -157,12 +158,21 @@ export const createBlock = (
 
 export const recreateBlockFromJson = (blockName: string) => {
   const currentDiggerJson = diggerJson();
-  const currentBlock = currentDiggerJson.filter(
+  const currentBlock = currentDiggerJson.blocks.find(
     ({ name }: { name: string }) => blockName === name
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { type, custom_terraform, aws_app_identifier, name, ...rest } = currentBlock;
+  const {
+    type,
+    custom_terraform,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    aws_app_identifier,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    name,
+    environment_variables,
+    secrets,
+    ...rest
+  } = currentBlock;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const defaults = blocks[type];
@@ -170,14 +180,68 @@ export const recreateBlockFromJson = (blockName: string) => {
 
   fs.writeFileSync(
     `${process.cwd()}/${blockName}/config.json`,
-    JSON.stringify({...defaults, ...rest}, null, 4)
+    JSON.stringify({ ...defaults, ...rest }, null, 4)
   );
   fs.writeFileSync(`${process.cwd()}/${blockName}/dgctl.secrets.ini`, "");
   fs.writeFileSync(`${process.cwd()}/${blockName}/dgctl.variables.ini`, "");
+
+  if (environment_variables) {
+    writeEnvVars(environment_variables, blockName);
+  }
+
+  if (secrets) {
+    writeSecrets(secrets, blockName);
+  }
+
+  if (custom_terraform) {
+    fs.writeFileSync(
+      `${process.cwd()}/${blockName}/dgctl.overrides.tf`,
+      custom_terraform,
+      "base64"
+    );
+  } else {
+    fs.writeFileSync(`${process.cwd()}/${blockName}/dgctl.overrides.tf`, "");
+  }
+};
+
+const writeEnvVars = (envVars: [], blockName: string) => {
+  const parser = new ConfigIniParser();
+  const iniFile = fs.readFileSync(
+    `${process.cwd()}/dgctl.variables.ini`,
+    "utf8"
+  );
+  parser.parse(iniFile);
+
+  if (blockName && !parser.isHaveSection(blockName)) {
+    parser.addSection(blockName);
+  }
+
+  envVars.map(({ key, value }: any) => {
+    return parser.set(blockName, key, value);
+  });
+
   fs.writeFileSync(
-    `${process.cwd()}/${blockName}/dgctl.overrides.tf`,
-    custom_terraform,
-    "base64"
+    `${process.cwd()}/dgctl.variables.ini`,
+    parser.stringify("\n")
+  );
+};
+
+const writeSecrets = (secrets: object, blockName: string) => {
+  const parser = new ConfigIniParser();
+  const iniFile = fs.readFileSync(`${process.cwd()}/dgctl.secrets.ini`, "utf8");
+  parser.parse(iniFile);
+
+  if (blockName && !parser.isHaveSection(blockName)) {
+    parser.addSection(blockName);
+  }
+
+  Object.entries(secrets).map(([key, value]: any) => {
+    return parser.set(blockName, key, value);
+  });
+
+  fs.writeFileSync(
+    `${process.cwd()}/dgctl.secrets.ini`,
+    parser.stringify("\n")
   );
 };
 

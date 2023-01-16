@@ -1,12 +1,14 @@
-import { Command, Flags } from "@oclif/core";
 import {
   diggerJson,
   diggerJsonExists,
   recreateBlockFromJson,
   updateDiggerJson,
 } from "../utils/helpers";
+import { BaseCommand } from "../base";
+import { Flags } from "@oclif/core";
+import fs from "node:fs";
 
-export default class Eject extends Command {
+export default class Eject extends BaseCommand<typeof Eject> {
   static description = "describe the command here";
 
   static examples = ["<%= config.bin %> <%= command.id %>"];
@@ -29,6 +31,9 @@ export default class Eject extends Command {
     if (!json.advanced && !flags.force) {
       this.log("dgctl.json is not in advanced mode, cannot be ejected.");
     }
+
+    fs.writeFileSync(`${process.cwd()}/dgctl.secrets.ini`, "");
+    fs.writeFileSync(`${process.cwd()}/dgctl.variables.ini`, "");
 
     json.blocks.map(({ name }: any) => {
       return recreateBlockFromJson(name);
