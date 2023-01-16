@@ -1,5 +1,10 @@
 import { Command, Flags } from "@oclif/core";
-import { createBlock, diggerJson, diggerJsonExists } from "../utils/helpers";
+import {
+  createBlock,
+  diggerJson,
+  diggerJsonExists,
+  updateDiggerJson,
+} from "../utils/helpers";
 
 export default class Eject extends Command {
   static description = "describe the command here";
@@ -28,5 +33,10 @@ export default class Eject extends Command {
     json.blocks.map(({ type, blockName }: any) => {
       return createBlock(type, blockName);
     });
+
+    const { advanced, ...rest } = json;
+    this.log(`Setting advanced to ${!advanced}`);
+
+    updateDiggerJson(rest);
   }
 }
