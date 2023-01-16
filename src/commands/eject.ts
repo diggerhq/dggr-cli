@@ -1,8 +1,8 @@
 import { Command, Flags } from "@oclif/core";
 import {
-  createBlock,
   diggerJson,
   diggerJsonExists,
+  recreateBlockFromJson,
   updateDiggerJson,
 } from "../utils/helpers";
 
@@ -30,8 +30,8 @@ export default class Eject extends Command {
       this.log("dgctl.json is not in advanced mode, cannot be ejected.");
     }
 
-    json.blocks.map(({ type, blockName }: any) => {
-      return createBlock(type, blockName);
+    json.blocks.map(({ name }: any) => {
+      return recreateBlockFromJson(name);
     });
 
     const { advanced, ...rest } = json;

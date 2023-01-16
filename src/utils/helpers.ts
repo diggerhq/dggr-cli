@@ -155,6 +155,32 @@ export const createBlock = (
   fs.writeFileSync(`${process.cwd()}/${blockName}/dgctl.overrides.tf`, "");
 };
 
+export const recreateBlockFromJson = (blockName: string) => {
+  const currentDiggerJson = diggerJson();
+  const currentBlock = currentDiggerJson.filter(
+    ({ name }: { name: string }) => blockName === name
+  );
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { type, custom_terraform, aws_app_identifier, name, ...rest } = currentBlock;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const defaults = blocks[type];
+  fs.mkdirSync(`${process.cwd()}/${blockName}`);
+
+  fs.writeFileSync(
+    `${process.cwd()}/${blockName}/config.json`,
+    JSON.stringify({...defaults, ...rest}, null, 4)
+  );
+  fs.writeFileSync(`${process.cwd()}/${blockName}/dgctl.secrets.ini`, "");
+  fs.writeFileSync(`${process.cwd()}/${blockName}/dgctl.variables.ini`, "");
+  fs.writeFileSync(
+    `${process.cwd()}/${blockName}/dgctl.overrides.tf`,
+    custom_terraform,
+    "base64"
+  );
+};
+
 export const gitIgnore = [
   ".archive",
   "generated/",
