@@ -27,6 +27,11 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
       description: "AWS profile to use",
       default: undefined,
     }),
+    'no-input': Flags.boolean({
+      char: "n",
+      description: "Skip prompts",
+      default: false,
+    }),
   };
 
   static args = [{ name: "name" }];
@@ -52,6 +57,11 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
 
     if (!args.name) {
       this.log("No application name provided");
+      return;
+    }
+
+    if (!flags.context && flags["no-input"]) {
+      this.log("No application context provided");
       return;
     }
 
@@ -128,14 +138,16 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
       );
 
       this.log(chalk.greenBright(`Success! Your app is deployed at ${url}`));
-      const streamLogs = await CliUx.ux.confirm("Do you want to follow logs?");
-
-      if (streamLogs) {
+      if (!flags["no-input"] && await CliUx.ux.confirm("Do you want to follow logs?")) {
+        this.log(
+          chalk.blueBright(
+            `[INFO] Streaming logs from ECS service ${ecsServiceName}`
+          )
+        );
         execSync(
           `aws logs tail --follow --profile ${awsProfile} /ecs/service/${ecsServiceName} --color auto`,
           {
-            stdio: [process.stdin, process.stdout, process.stderr],
-            cwd: codeDirectory,
+            stdio: [process.stdin, process.stdout, process.stderr]
           }
         );
       }
