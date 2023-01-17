@@ -75,9 +75,7 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
         chalk.green(`aws ecr get-login-password --region ${region} --profile ${awsProfile} | 
       docker login --username AWS --password-stdin ${ecrRepoUrl}`)
       );
-      this.log(
-        chalk.green(`docker build --platform=linux/amd64 -t ${ecrRepoUrl} .`)
-      );
+      this.log(chalk.green(`docker build -t ${ecrRepoUrl} .`));
       this.log(chalk.green(`docker push ${ecrRepoUrl}:latest`));
       this.log(
         chalk.green(
@@ -104,7 +102,7 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
       this.log(
         chalk.blueBright(`[INFO] Building docker image at ${codeDirectory}`)
       );
-      execSync(`docker build  --platform=linux/amd64 -t ${ecrRepoUrl} .`, {
+      execSync(`docker build -t ${ecrRepoUrl} .`, {
         stdio: [process.stdin, process.stdout, process.stderr],
         cwd: codeDirectory,
       });
