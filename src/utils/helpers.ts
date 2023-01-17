@@ -156,6 +156,27 @@ export const createBlock = (
   fs.writeFileSync(`${process.cwd()}/${blockName}/dgctl.overrides.tf`, "");
 };
 
+export const registerBlock = (blockType: string, blockName: string) => {
+  const currentDiggerJson = diggerJson();
+  const awsIdentifier = `${blockName}-${crypto.randomBytes(4).toString("hex")}`;
+
+  updateDiggerJson({
+    ...currentDiggerJson,
+    blocks: [
+      ...(currentDiggerJson.blocks ?? []),
+      {
+        aws_app_identifier: awsIdentifier,
+        name: blockName,
+        // Better logic to determine type based on top-level type since for resources it differs
+        type:
+          blockType === "container" || blockType === "vpc"
+            ? blockType
+            : "resource",
+      },
+    ],
+  });
+};
+
 export const recreateBlockFromJson = (blockName: string) => {
   const currentDiggerJson = diggerJson();
   const currentBlock = currentDiggerJson.blocks.find(
