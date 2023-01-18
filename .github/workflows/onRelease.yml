@@ -27,16 +27,6 @@ jobs:
           yarn oclif pack tarballs -t darwin-arm64
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: Create release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: true
-          prerelease: true
       - id: short-sha
         run: |
           short_sha=$(echo ${{github.sha}} | head -c 7)
@@ -47,7 +37,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          upload_url: ${{ github.event.release.outputs.upload_url }}
           asset_path: './dist/dgctl-v${{ github.event.release.tag_name }}-${{ steps.short-sha.outputs.short_sha }}-darwin-arm64.tar.gz'
           asset_name: dgctl-v${{ github.event.release.tag_name }}-${{ steps.short-sha.outputs.short_sha }}-darwin-arm64.tar.gz
           asset_content_type: application/zip
