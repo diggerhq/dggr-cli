@@ -21,9 +21,9 @@ jobs:
         run: |
           yarn config set version-tag-prefix "v"
           yarn config set version-git-tag false
-          echo "RELEASE_VERSION: ${{ github.event.release.tag_name }}"
-          yarn version --new-version ${{ github.event.release.tag_name }}
-          yarn publish
+          # echo "RELEASE_VERSION: ${{ github.event.release.tag_name }}"
+          # yarn version --new-version ${{ github.event.release.tag_name }}
+          # yarn publish
           yarn oclif pack tarballs -t darwin-arm64
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -44,6 +44,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: './dist/dgctl-v${{ github.event.release.tag_name }}-${{GITHUB_SHA::7}}-darwin-arm64.tar.gz'
-          asset_name: dgctl-v${{ github.event.release.tag_name }}-${{GITHUB_SHA::7}}-darwin-arm64.tar.gz
+          asset_path: './dist/dgctl-v${{ github.event.release.tag_name }}-${{env.GITHUB_SHA::7}}-darwin-arm64.tar.gz'
+          asset_name: dgctl-v${{ github.event.release.tag_name }}-${{env.GITHUB_SHA::7}}-darwin-arm64.tar.gz
           asset_content_type: application/zip
