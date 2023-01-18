@@ -11,4 +11,4 @@ export function getTrowelUrl(): string {
   return "https://tka5vjilzptmyfrvcolqbz4veq0upobc.lambda-url.us-east-1.on.aws/";
 }
 
-export const PRESET_URL = "https://raw.githubusercontent.com/diggerhq/dgctl-preset/main/";
+export const PRESET_URL = "https://raw.githubusercontent.com/diggerhq/dgctl-preset/main";

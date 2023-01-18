@@ -17,21 +17,27 @@ export default class Preset extends BaseCommand<typeof Preset> {
 
   static flags = {
     advanced: Flags.boolean({ char: "a" }),
+    path: Flags.string({
+      char: "p",
+      description: "Full path to a json file that contains dgctl configuration",
+    }),
   };
 
-  static args = [{ name: "preset", required: true }];
+  static args = [{ name: "preset" }];
 
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Preset);
     const { preset } = args;
 
-    const presetUrl = `${PRESET_URL}/${preset}/dgctl.json`;
+    const presetUrl = flags.path ?? `${PRESET_URL}/${preset}/dgctl.json`;
 
     this.log(chalk.green`Downloading ${chalk.greenBright`${preset}`} preset`);
     const response = await axios.get(presetUrl);
 
     this.log(
-      chalk.green`Saving ${chalk.greenBright`${preset}`} as ${chalk.greenBright`dgctl.json`}`
+      chalk.green`Saving ${
+        chalk.greenBright`${flags.path}` ?? chalk.greenBright`${preset}`
+      } as ${chalk.greenBright`dgctl.json`}`
     );
     fs.writeFileSync("dgctl.json", JSON.stringify(response.data, null, 4));
 
