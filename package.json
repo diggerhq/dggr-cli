@@ -93,6 +93,12 @@
       },
       "login": {
         "description": "Commands to login using Digger API key"
+      },
+      "eject": {
+        "description": "Commands to eject advanced mode dgctl.json into a full project"
+      },
+      "preset": {
+        "description": "Commands to initialise a project based on a preset"
       }
     }
   },
