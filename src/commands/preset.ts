@@ -31,7 +31,11 @@ export default class Preset extends BaseCommand<typeof Preset> {
 
     const presetUrl = flags.path ?? `${PRESET_URL}/${preset}/dgctl.json`;
 
-    this.log(chalk.green`Downloading ${chalk.greenBright`${preset}`} preset`);
+    this.log(
+      chalk.green`Downloading ${
+        chalk.greenBright`${flags.path}` ?? chalk.greenBright`${preset}`
+      } preset`
+    );
     const response = await axios.get(presetUrl);
 
     this.log(
