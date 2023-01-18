@@ -1,6 +1,6 @@
 {
   "name": "dgctl",
-  "version": "0.0.8",
+  "version": "0.0.12",
   "description": "Digger CLI",
   "author": "Digger",
   "bin": {

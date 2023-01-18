@@ -18,7 +18,7 @@ $ npm install -g dgctl
 $ dgctl COMMAND
 running command...
 $ dgctl (--version)
-dgctl/0.0.8 darwin-arm64 node-v16.14.0
+dgctl/0.0.12 darwin-arm64 node-v16.15.1
 $ dgctl --help [COMMAND]
 USAGE
   $ dgctl COMMAND
@@ -28,12 +28,21 @@ USAGE
 # Commands
 <!-- commands -->
 * [`dgctl autocomplete [SHELL]`](#dgctl-autocomplete-shell)
-* [`dgctl base`](#dgctl-base)
-* [`dgctl block [COMMAND] [NAME]`](#dgctl-block-command-name)
-* [`dgctl generate [ENVIRONMENT]`](#dgctl-generate-environment)
+* [`dgctl block`](#dgctl-block)
+* [`dgctl block add [NAME]`](#dgctl-block-add-name)
+* [`dgctl block deploy [NAME]`](#dgctl-block-deploy-name)
+* [`dgctl block list`](#dgctl-block-list)
+* [`dgctl block logs [NAME]`](#dgctl-block-logs-name)
+* [`dgctl block register [NAME]`](#dgctl-block-register-name)
+* [`dgctl block remove [NAME]`](#dgctl-block-remove-name)
+* [`dgctl block rename [NAME]`](#dgctl-block-rename-name)
+* [`dgctl config NAME`](#dgctl-config-name)
+* [`dgctl eject`](#dgctl-eject)
+* [`dgctl generate`](#dgctl-generate)
 * [`dgctl help [COMMAND]`](#dgctl-help-command)
 * [`dgctl infra [ACTION]`](#dgctl-infra-action)
 * [`dgctl init`](#dgctl-init)
+* [`dgctl login [KEY]`](#dgctl-login-key)
 * [`dgctl plugins`](#dgctl-plugins)
 * [`dgctl plugins:install PLUGIN...`](#dgctl-pluginsinstall-plugin)
 * [`dgctl plugins:inspect PLUGIN...`](#dgctl-pluginsinspect-plugin)
@@ -44,9 +53,11 @@ USAGE
 * [`dgctl plugins:uninstall PLUGIN...`](#dgctl-pluginsuninstall-plugin-2)
 * [`dgctl plugins update`](#dgctl-plugins-update)
 * [`dgctl provision [FILE]`](#dgctl-provision-file)
-* [`dgctl secret [FILE]`](#dgctl-secret-file)
+* [`dgctl secret`](#dgctl-secret)
+* [`dgctl secret add [KV]`](#dgctl-secret-add-kv)
+* [`dgctl secret delete [KEY]`](#dgctl-secret-delete-key)
 * [`dgctl update [CHANNEL]`](#dgctl-update-channel)
-* [`dgctl variable [FILE]`](#dgctl-variable-file)
+* [`dgctl variable [COMMAND] [KV]`](#dgctl-variable-command-kv)
 
 ## `dgctl autocomplete [SHELL]`
 
@@ -75,56 +86,199 @@ EXAMPLES
   $ dgctl autocomplete --refresh-cache
 ```
 
-_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v1.3.7/src/commands/autocomplete/index.ts)_
+_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v1.3.10/src/commands/autocomplete/index.ts)_
 
-## `dgctl base`
-
-```
-USAGE
-  $ dgctl base
-```
-
-_See code: [dist/commands/base.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.8/dist/commands/base.ts)_
-
-## `dgctl block [COMMAND] [NAME]`
+## `dgctl block`
 
 Adds a infra block to a Digger infra bundle
 
 ```
 USAGE
-  $ dgctl block [COMMAND] [NAME] [-t container|mysql|postgres|docdb|redis] [-n <value>] [-c <value>] [-d]
-    [-p <value>]
-
-FLAGS
-  -c, --context=<value>  The code context for block deployment
-  -d, --display_only     Only display commands, do not run them for block deployment
-  -n, --name=<value>     new name for the block
-  -p, --profile=<value>  AWS profile to use
-  -t, --type=<option>    type of block
-                         <options: container|mysql|postgres|docdb|redis>
+  $ dgctl block
 
 DESCRIPTION
   Adds a infra block to a Digger infra bundle
-
-EXAMPLES
-  $ dgctl block
 ```
 
-_See code: [dist/commands/block/index.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.8/dist/commands/block/index.ts)_
+_See code: [dist/commands/block/index.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.12/dist/commands/block/index.ts)_
 
-## `dgctl generate [ENVIRONMENT]`
+## `dgctl block add [NAME]`
+
+Adds a block to the project
+
+```
+USAGE
+  $ dgctl block add [NAME] [-t container|mysql|postgres|docdb|redis|imported] [-n <value>] [-i <value>] [-s
+    <value>]
+
+ARGUMENTS
+  NAME  new name for the block
+
+FLAGS
+  -i, --id=<value>       id of the resource to import
+  -n, --name=<value>     new name for the block
+  -s, --service=<value>  aws service name to search
+  -t, --type=<option>    type of block
+                         <options: container|mysql|postgres|docdb|redis|imported>
+
+DESCRIPTION
+  Adds a block to the project
+```
+
+## `dgctl block deploy [NAME]`
+
+Deploy application to AWS
+
+```
+USAGE
+  $ dgctl block deploy [NAME] [-c <value>] [-d] [-p <value>] [-n]
+
+FLAGS
+  -c, --context=<value>  The code context for block deployment
+  -d, --displayOnly      Only display commands, do not run them for block deployment
+  -n, --no-input         Skip prompts
+  -p, --profile=<value>  AWS profile to use
+
+DESCRIPTION
+  Deploy application to AWS
+```
+
+## `dgctl block list`
+
+list all blocks in the project
+
+```
+USAGE
+  $ dgctl block list
+
+DESCRIPTION
+  list all blocks in the project
+
+EXAMPLES
+  $ dgctl block list
+```
+
+## `dgctl block logs [NAME]`
+
+Show application logs from AWS
+
+```
+USAGE
+  $ dgctl block logs [NAME] [-p <value>] [-f]
+
+FLAGS
+  -f, --follow           Follow logs
+  -p, --profile=<value>  AWS profile to use
+
+DESCRIPTION
+  Show application logs from AWS
+```
+
+## `dgctl block register [NAME]`
+
+Registers an existing dgctl block folder as a block to the project by adding it to dgctl.json
+
+```
+USAGE
+  $ dgctl block register [NAME] [-t container|mysql|postgres|docdb|redis|imported]
+
+ARGUMENTS
+  NAME  new name for the block
+
+FLAGS
+  -t, --type=<option>  type of block
+                       <options: container|mysql|postgres|docdb|redis|imported>
+
+DESCRIPTION
+  Registers an existing dgctl block folder as a block to the project by adding it to dgctl.json
+```
+
+## `dgctl block remove [NAME]`
+
+removes a block from the project
+
+```
+USAGE
+  $ dgctl block remove [NAME]
+
+DESCRIPTION
+  removes a block from the project
+```
+
+## `dgctl block rename [NAME]`
+
+rename a block in the project
+
+```
+USAGE
+  $ dgctl block rename [NAME] [-n <value>]
+
+FLAGS
+  -n, --name=<value>  new name to rename to
+
+DESCRIPTION
+  rename a block in the project
+
+EXAMPLES
+  $ dgctl block rename
+```
+
+## `dgctl config NAME`
+
+Allows changing dgctl configuration
+
+```
+USAGE
+  $ dgctl config [NAME] [-c]
+
+ARGUMENTS
+  NAME  (aws) name for the config to change. Example `dgctl config <name>`
+
+FLAGS
+  -c, --create  force creation of a new profile
+
+DESCRIPTION
+  Allows changing dgctl configuration
+
+EXAMPLES
+  $ dgctl config
+```
+
+_See code: [dist/commands/config.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.12/dist/commands/config.ts)_
+
+## `dgctl eject`
+
+describe the command here
+
+```
+USAGE
+  $ dgctl eject [-f]
+
+FLAGS
+  -f, --force
+
+DESCRIPTION
+  describe the command here
+
+EXAMPLES
+  $ dgctl eject
+```
+
+_See code: [dist/commands/eject.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.12/dist/commands/eject.ts)_
+
+## `dgctl generate`
 
 Generates terraform based on the Digger infra bundle
 
 ```
 USAGE
-  $ dgctl generate [ENVIRONMENT]
+  $ dgctl generate
 
 DESCRIPTION
   Generates terraform based on the Digger infra bundle
 ```
 
-_See code: [dist/commands/generate.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.8/dist/commands/generate.ts)_
+_See code: [dist/commands/generate.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.12/dist/commands/generate.ts)_
 
 ## `dgctl help [COMMAND]`
 
@@ -144,7 +298,7 @@ DESCRIPTION
   Display help for dgctl.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.20/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.23/src/commands/help.ts)_
 
 ## `dgctl infra [ACTION]`
 
@@ -165,7 +319,7 @@ EXAMPLES
   $ dgctl infra
 ```
 
-_See code: [dist/commands/infra.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.8/dist/commands/infra.ts)_
+_See code: [dist/commands/infra.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.12/dist/commands/infra.ts)_
 
 ## `dgctl init`
 
@@ -185,7 +339,24 @@ EXAMPLES
   $ dgctl init
 ```
 
-_See code: [dist/commands/init.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.8/dist/commands/init.ts)_
+_See code: [dist/commands/init.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.12/dist/commands/init.ts)_
+
+## `dgctl login [KEY]`
+
+Login with Digger key
+
+```
+USAGE
+  $ dgctl login [KEY]
+
+DESCRIPTION
+  Login with Digger key
+
+EXAMPLES
+  $ dgctl login
+```
+
+_See code: [dist/commands/login.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.12/dist/commands/login.ts)_
 
 ## `dgctl plugins`
 
@@ -205,7 +376,7 @@ EXAMPLES
   $ dgctl plugins
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v2.1.8/src/commands/plugins/index.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v2.1.12/src/commands/plugins/index.ts)_
 
 ## `dgctl plugins:install PLUGIN...`
 
@@ -437,28 +608,54 @@ EXAMPLES
   $ dgctl provision
 ```
 
-_See code: [dist/commands/provision.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.8/dist/commands/provision.ts)_
+_See code: [dist/commands/provision.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.12/dist/commands/provision.ts)_
 
-## `dgctl secret [FILE]`
+## `dgctl secret`
+
+Perform secret management actions
+
+```
+USAGE
+  $ dgctl secret
+
+DESCRIPTION
+  Perform secret management actions
+```
+
+_See code: [dist/commands/secret/index.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.12/dist/commands/secret/index.ts)_
+
+## `dgctl secret add [KV]`
 
 describe the command here
 
 ```
 USAGE
-  $ dgctl secret [FILE] [-n <value>] [-f]
+  $ dgctl secret add [KV] [-b <value>]
 
 FLAGS
-  -f, --force
-  -n, --name=<value>  name to print
+  -b, --block=<value>  name of the block
 
 DESCRIPTION
   describe the command here
 
 EXAMPLES
-  $ dgctl secret
+  $ dgctl secret add
 ```
 
-_See code: [dist/commands/secret.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.8/dist/commands/secret.ts)_
+## `dgctl secret delete [KEY]`
+
+Delete secret
+
+```
+USAGE
+  $ dgctl secret delete [KEY] [-b <value>]
+
+FLAGS
+  -b, --block=<value>  name of the block
+
+DESCRIPTION
+  Delete secret
+```
 
 ## `dgctl update [CHANNEL]`
 
@@ -495,26 +692,25 @@ EXAMPLES
     $ dgctl update --available
 ```
 
-_See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v3.0.8/src/commands/update.ts)_
+_See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v3.0.12/src/commands/update.ts)_
 
-## `dgctl variable [FILE]`
+## `dgctl variable [COMMAND] [KV]`
 
-describe the command here
+Manage environment variables for your infrastructure
 
 ```
 USAGE
-  $ dgctl variable [FILE] [-n <value>] [-f]
+  $ dgctl variable [COMMAND] [KV] [-b <value>]
 
 FLAGS
-  -f, --force
-  -n, --name=<value>  name to print
+  -b, --block=<value>  name of the block
 
 DESCRIPTION
-  describe the command here
+  Manage environment variables for your infrastructure
 
 EXAMPLES
   $ dgctl variable
 ```
 
-_See code: [dist/commands/variable.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.8/dist/commands/variable.ts)_
+_See code: [dist/commands/variable.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.12/dist/commands/variable.ts)_
 <!-- commandsstop -->
