@@ -21,9 +21,9 @@ jobs:
         run: |
           yarn config set version-tag-prefix "v"
           yarn config set version-git-tag false
-          # echo "RELEASE_VERSION: ${{ github.event.release.tag_name }}"
-          # yarn version --new-version ${{ github.event.release.tag_name }}
-          # yarn publish
+          echo "RELEASE_VERSION: ${{ github.event.release.tag_name }}"
+          yarn version --new-version ${{ github.event.release.tag_name }}
+          yarn publish
           yarn oclif pack tarballs -t darwin-arm64
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
