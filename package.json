@@ -71,6 +71,11 @@
       "@oclif/plugin-update",
       "@oclif/plugin-warn-if-update-available"
     ],
+    "update": {
+      "s3": {
+        "bucket": "dgctl-releases"
+      }
+    },
     "topicSeparator": " ",
     "topics": {
       "init": {
