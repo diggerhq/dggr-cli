@@ -51,8 +51,12 @@ else
     exit 1
 fi
 
-curl -sL $url -o dgctl.tar.gz | tar -xz -C /usr/local
+echo "Downloading dgctl.tar.gz from $url"
+curl -sL $url -o dgctl.tar.gz
 
-sudo chmod +x /usr/local/dgctl/dgctl
-
-sudo ln -s /usr/local/bin/dgctl /usr/local/dgctl/dgctl
+echo "Extracting dgctl.tar.gz into /usr/local. You may be asked for your password."
+tar xzf dgctl.tar.gz
+rm dgctl.tar.gz
+sudo mv dgctl /usr/local/dgctl
+sudo chmod a+x /usr/local/dgctl/bin/dgctl
+sudo ln -s /usr/local/dgctl/bin/dgctl /usr/local/bin/dgctl 
