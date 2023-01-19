@@ -32,7 +32,7 @@ jobs:
           short_sha=$(echo ${{github.sha}} | head -c 7)
           echo "::set-output name=short_sha::$short_sha"
       - name: Publish darwin-arm64 tarball to github
-        id: upload-release-asset 
+        id: upload-release-asset-darwin-arm64
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -42,7 +42,7 @@ jobs:
           asset_name: dgctl-v${{ github.event.release.tag_name }}-${{ steps.short-sha.outputs.short_sha }}-darwin-arm64.tar.gz
           asset_content_type: application/zip
       - name: Publish darwin-x64 tarball to github
-        id: upload-release-asset 
+        id: upload-release-asset-darwin-x64 
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -52,7 +52,7 @@ jobs:
           asset_name: dgctl-v${{ github.event.release.tag_name }}-${{ steps.short-sha.outputs.short_sha }}-darwin-x64.tar.gz
           asset_content_type: application/zip
       - name: Publish linux-arm tarball to github
-        id: upload-release-asset 
+        id: upload-release-asset-linux-arm
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -62,7 +62,7 @@ jobs:
           asset_name: dgctl-v${{ github.event.release.tag_name }}-${{ steps.short-sha.outputs.short_sha }}-linux-arm.tar.gz
           asset_content_type: application/zip
       - name: Publish linux-x64 tarball to github
-        id: upload-release-asset 
+        id: upload-release-asset-linux-x64
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
