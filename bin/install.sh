@@ -59,4 +59,4 @@ tar xzf dgctl.tar.gz
 rm dgctl.tar.gz
 sudo mv dgctl /usr/local/dgctl
 sudo chmod a+x /usr/local/dgctl/bin/dgctl
-sudo ln -s /usr/local/dgctl/bin/dgctl /usr/local/bin/dgctl 
+sudo ln -sf /usr/local/dgctl/bin/dgctl /usr/local/bin/dgctl 
