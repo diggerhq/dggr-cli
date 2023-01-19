@@ -51,6 +51,7 @@ USAGE
 * [`dgctl plugins:uninstall PLUGIN...`](#dgctl-pluginsuninstall-plugin-1)
 * [`dgctl plugins:uninstall PLUGIN...`](#dgctl-pluginsuninstall-plugin-2)
 * [`dgctl plugins update`](#dgctl-plugins-update)
+* [`dgctl preset [PRESET]`](#dgctl-preset-preset)
 * [`dgctl provision [FILE]`](#dgctl-provision-file)
 * [`dgctl secret`](#dgctl-secret)
 * [`dgctl secret add [KV]`](#dgctl-secret-add-kv)
@@ -586,6 +587,27 @@ FLAGS
 DESCRIPTION
   Update installed plugins.
 ```
+
+## `dgctl preset [PRESET]`
+
+Initialise project based on preset
+
+```
+USAGE
+  $ dgctl preset [PRESET] [-a] [-p <value>]
+
+FLAGS
+  -a, --advanced
+  -p, --path=<value>  Full path to a json file that contains dgctl configuration
+
+DESCRIPTION
+  Initialise project based on preset
+
+EXAMPLES
+  $ dgctl preset
+```
+
+_See code: [dist/commands/preset.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.12/dist/commands/preset.ts)_
 
 ## `dgctl provision [FILE]`
 
