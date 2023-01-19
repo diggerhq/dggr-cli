@@ -24,7 +24,7 @@ jobs:
           echo "RELEASE_VERSION: ${{ github.event.release.tag_name }}"
           yarn version --new-version ${{ github.event.release.tag_name }}
           yarn publish
-          yarn oclif pack tarballs -t darwin-arm64
+          yarn oclif pack tarballs -t darwin-arm64,darwin-x64,linux-x64,linux-arm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - id: short-sha
@@ -37,7 +37,38 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ github.event.release.outputs.upload_url }}
+          upload_url: ${{ github.event.release.upload_url }}
           asset_path: './dist/dgctl-v${{ github.event.release.tag_name }}-${{ steps.short-sha.outputs.short_sha }}-darwin-arm64.tar.gz'
           asset_name: dgctl-v${{ github.event.release.tag_name }}-${{ steps.short-sha.outputs.short_sha }}-darwin-arm64.tar.gz
           asset_content_type: application/zip
+      - name: Publish darwin-x64 tarball to github
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: './dist/dgctl-v${{ github.event.release.tag_name }}-${{ steps.short-sha.outputs.short_sha }}-darwin-x64.tar.gz'
+          asset_name: dgctl-v${{ github.event.release.tag_name }}-${{ steps.short-sha.outputs.short_sha }}-darwin-x64.tar.gz
+          asset_content_type: application/zip
+      - name: Publish linux-arm tarball to github
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: './dist/dgctl-v${{ github.event.release.tag_name }}-${{ steps.short-sha.outputs.short_sha }}-linux-arm.tar.gz'
+          asset_name: dgctl-v${{ github.event.release.tag_name }}-${{ steps.short-sha.outputs.short_sha }}-linux-arm.tar.gz
+          asset_content_type: application/zip
+      - name: Publish linux-x64 tarball to github
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: './dist/dgctl-v${{ github.event.release.tag_name }}-${{ steps.short-sha.outputs.short_sha }}-linux-x64.tar.gz'
+          asset_name: dgctl-v${{ github.event.release.tag_name }}-${{ steps.short-sha.outputs.short_sha }}-linux-x64.tar.gz
+          asset_content_type: application/zip
+      
