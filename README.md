@@ -2,10 +2,9 @@ Digger dgctl CLI
 =================
 
 [![dgctl](https://img.shields.io/badge/cli-dgctl-brightgreen.svg)](https://digger.dev)
-[![Version](https://img.shields.io/npm/v/oclif-hello-world.svg)](https://npmjs.org/package/oclif-hello-world)
-[![CircleCI](https://circleci.com/gh/oclif/hello-world/tree/main.svg?style=shield)](https://circleci.com/gh/oclif/hello-world/tree/main)
-[![Downloads/week](https://img.shields.io/npm/dw/oclif-hello-world.svg)](https://npmjs.org/package/oclif-hello-world)
-[![License](https://img.shields.io/npm/l/oclif-hello-world.svg)](https://github.com/oclif/hello-world/blob/main/package.json)
+[![Version](https://img.shields.io/npm/v/dgctl.svg)](https://npmjs.org/package/dgctl)
+[![Downloads/week](https://img.shields.io/npm/dw/dgctl.svg)](https://npmjs.org/package/dgctl)
+[![License](https://img.shields.io/npm/l/dgctl.svg)](https://github.com/diggerhq/dgctl/blob/main/package.json)
 
 <!-- toc -->
 * [Usage](#usage)
