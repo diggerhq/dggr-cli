@@ -30,7 +30,7 @@ jobs:
           yarn publish
           yarn oclif pack tarballs -t darwin-arm64,darwin-x64,linux-x64,linux-arm
           yarn oclif upload tarballs -t darwin-arm64,darwin-x64,linux-x64,linux-arm
-          yarn oclif promote tarballs -t darwin-arm64,darwin-x64,linux-x64,linux-arm --version ${{ github.event.release.tag_name }} --sha ${{ steps.short-sha.outputs.short_sha }}
+          yarn oclif promote -t darwin-arm64,darwin-x64,linux-x64,linux-arm --version ${{ github.event.release.tag_name }} --sha ${{ steps.short-sha.outputs.short_sha }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
