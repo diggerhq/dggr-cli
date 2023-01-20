@@ -126,6 +126,4 @@ jobs:
       - name: Build and publish docker
         id: build-and-upload-docker-image
         run: |
-          docker buildx build --platform=linux/amd64,linux/arm64,linux/arm  -t dockerdiggerorg/dgctl:${{ github.event.release.tag_name }} -t dockerdiggerorg/dgctl:latest .
-          docker push dockerdiggerorg/dgctl:${{ github.event.release.tag_name }}
-          docker push dockerdiggerorg/dgctl:latest
+          docker buildx build --platform=linux/amd64,linux/arm64,linux/arm  -t dockerdiggerorg/dgctl:${{ github.event.release.tag_name }} -t dockerdiggerorg/dgctl:latest --push .
