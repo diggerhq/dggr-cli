@@ -124,6 +124,6 @@ jobs:
       - name: Build and publish docker
         id: build-and-upload-docker-image
         run: |
-          docker build -t dgctl:${{ github.event.release.tag_name }} -t dgctl:latest .
+          docker build -t dockerdiggerorg/dgctl:${{ github.event.release.tag_name }} -t dockerdiggerorg/dgctl:latest .
           docker push dockerdiggerorg/dgctl:${{ github.event.release.tag_name }}
           docker push dockerdiggerorg/dgctl:latest
