@@ -1301,10 +1301,10 @@
     supports-color "^8.1.1"
     tslib "^2"
 
-"@oclif/core@^1.20.4", "@oclif/core@^1.23.0", "@oclif/core@^1.23.1", "@oclif/core@^1.24.0":
-  version "1.24.0"
-  resolved "https://registry.yarnpkg.com/@oclif/core/-/core-1.24.0.tgz#e94e2f3a1259ebb3cc867d04b12c5bfc31c21f50"
-  integrity sha512-J41suyV4fLfLcRRySZdtgFYSjIlpYqD90SY01Fm4+ZJUMcfDh/eQAD4sogyYOsIT0bfEzYOyYCjmfHmgcoX5aA==
+"@oclif/core@^1.20.4", "@oclif/core@^1.23.0", "@oclif/core@^1.23.1", "@oclif/core@^1.24.0", "@oclif/core@^1.25.0":
+  version "1.25.0"
+  resolved "https://registry.yarnpkg.com/@oclif/core/-/core-1.25.0.tgz#a3891f903bf211ce1f3c8a05419b686f02c5bbd6"
+  integrity sha512-vS8L5Uqc5Wuq3zmKVvX5LLcyxhfH2X2q+LG1P6czzkh6k09uLeDaZfwaYPXD7ItM4Vfy+KEctfKiWePeLDnOpg==
   dependencies:
     "@oclif/linewrap" "^1.0.0"
     "@oclif/screen" "^3.0.4"
@@ -1357,13 +1357,13 @@
   dependencies:
     "@oclif/core" "^1.24.0"
 
-"@oclif/plugin-not-found@^2.3.15", "@oclif/plugin-not-found@^2.3.7":
-  version "2.3.15"
-  resolved "https://registry.yarnpkg.com/@oclif/plugin-not-found/-/plugin-not-found-2.3.15.tgz#2748116f91776321d6cb6e88c508b512f845fa34"
-  integrity sha512-HA1TvXyWp8IXYGl5zygKv+94UznvGGMwSU1CZmUh0OQxkvlLcR7Yrmp409hnBoQoKjPlKTgrOuZFNHDHuStetw==
+"@oclif/plugin-not-found@^2.3.16", "@oclif/plugin-not-found@^2.3.7":
+  version "2.3.16"
+  resolved "https://registry.yarnpkg.com/@oclif/plugin-not-found/-/plugin-not-found-2.3.16.tgz#3505cc1c34413d50750b05bd889e93d35f50bde9"
+  integrity sha512-MKKRVMoSHbcw9WPDQ47XIsQKRzPklrMRt6uTEVwOFSHXtQ7uopCyf52riMxy0pI7Jq9zma3XuyB56JxmRhYCEw==
   dependencies:
     "@oclif/color" "^1.0.3"
-    "@oclif/core" "^1.24.0"
+    "@oclif/core" "^1.25.0"
     fast-levenshtein "^3.0.0"
     lodash "^4.17.21"
 
