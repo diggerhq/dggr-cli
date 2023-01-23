@@ -3,6 +3,7 @@ import * as fs from "node:fs";
 import * as blocks from "../utils/block-defaults";
 import * as crypto from "node:crypto";
 import { ConfigIniParser } from "config-ini-parser";
+import { getSecretsFromIniFile, getVarsFromIniFile } from "./io";
 
 export const diggerJsonPath = `${process.cwd()}/dgctl.json`;
 export const diggerAPIKeyPath = `${process.cwd()}/.dgctl`;
@@ -115,18 +116,24 @@ export const importBlock = (blockName: string, id: string) => {
   );
 };
 
-export const createBlock = (
-  blockType: string,
-  blockName: string,
-  extraOptions = {}
-) => {
+export const createBlock = ({
+  type,
+  name,
+  extraOptions,
+  blockDefault,
+}: {
+  type: string;
+  name: string;
+  extraOptions?: any;
+  blockDefault?: any;
+}) => {
   const currentDiggerJson = diggerJson();
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const defaults = blocks[blockType];
+  const defaults = blockDefault ?? blocks[type];
 
-  const awsIdentifier = `${blockName}-${crypto.randomBytes(4).toString("hex")}`;
+  const awsIdentifier = `${name}-${crypto.randomBytes(4).toString("hex")}`;
 
   updateDiggerJson({
     ...currentDiggerJson,
@@ -134,26 +141,23 @@ export const createBlock = (
       ...(currentDiggerJson.blocks ?? []),
       {
         aws_app_identifier: awsIdentifier,
-        name: blockName,
+        name: name,
         // Better logic to determine type based on top-level type since for resources it differs
-        type:
-          blockType === "container" || blockType === "vpc"
-            ? blockType
-            : "resource",
+        type: type === "container" || type === "vpc" ? type : "resource",
         ...extraOptions,
       },
     ],
   });
 
-  fs.mkdirSync(`${process.cwd()}/${blockName}`);
+  fs.mkdirSync(`${process.cwd()}/${name}`);
 
   fs.writeFileSync(
-    `${process.cwd()}/${blockName}/config.json`,
+    `${process.cwd()}/${name}/config.json`,
     JSON.stringify(defaults, null, 4)
   );
-  fs.writeFileSync(`${process.cwd()}/${blockName}/dgctl.secrets.ini`, "");
-  fs.writeFileSync(`${process.cwd()}/${blockName}/dgctl.variables.ini`, "");
-  fs.writeFileSync(`${process.cwd()}/${blockName}/dgctl.overrides.tf`, "");
+  fs.writeFileSync(`${process.cwd()}/${name}/dgctl.secrets.ini`, "");
+  fs.writeFileSync(`${process.cwd()}/${name}/dgctl.variables.ini`, "");
+  fs.writeFileSync(`${process.cwd()}/${name}/dgctl.overrides.tf`, "");
 };
 
 export const registerBlock = (blockType: string, blockName: string) => {
@@ -264,6 +268,45 @@ const writeSecrets = (secrets: object, blockName: string) => {
     `${process.cwd()}/dgctl.secrets.ini`,
     parser.stringify("\n")
   );
+};
+
+export const prepareBlockJson = (block: any) => {
+  const configRaw = fs.readFileSync(
+    `${process.cwd()}/${block.name}/config.json`,
+    "utf8"
+  );
+
+  // read override.tf, base64 encode it and add as one item list in "custom_terraform" parameter to the block's json"
+
+  const config = JSON.parse(configRaw);
+  if (block.type === "imported") {
+    const tfFileLocation = `${process.cwd()}/${block.name}/${
+      config.terraform_file
+    }`;
+    config.custom_terraform = fs.readFileSync(`${tfFileLocation}`, "base64");
+    delete config.terraform_files;
+  }
+
+  block.environment_variables = getVarsFromIniFile(
+    "dgctl.variables.ini",
+    block.name
+  );
+  block.secrets = getSecretsFromIniFile("dgctl.secrets.ini", block.name);
+
+  const overridesPath = `${process.cwd()}/${block.name}/dgctl.overrides.tf`;
+  if (fs.existsSync(overridesPath)) {
+    const tfBase64 = fs.readFileSync(overridesPath, { encoding: "base64" });
+    return {
+      ...block,
+      ...config,
+      custom_terraform: tfBase64,
+    };
+  }
+
+  return {
+    ...block,
+    ...config,
+  };
 };
 
 export const gitIgnore = [

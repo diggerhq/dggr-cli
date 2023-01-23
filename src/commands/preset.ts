@@ -29,7 +29,7 @@ export default class Preset extends BaseCommand<typeof Preset> {
     const { args, flags } = await this.parse(Preset);
     const { preset } = args;
 
-    const presetUrl = flags.path ?? `${PRESET_URL}/${preset}/dgctl.json`;
+    const presetUrl = flags.path ?? `${PRESET_URL}/presets/${preset}/dgctl.json`;
 
     this.log(
       chalk.green`Downloading ${

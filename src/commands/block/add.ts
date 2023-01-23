@@ -1,11 +1,11 @@
-import { Flags } from '@oclif/core'
-import { createBlock, importBlock } from '../../utils/helpers'
-import { trackEvent } from '../../utils/mixpanel'
-import { BaseCommand } from '../../base'
-import * as crypto from 'node:crypto'
+import { Flags } from "@oclif/core";
+import { createBlock, importBlock } from "../../utils/helpers";
+import { trackEvent } from "../../utils/mixpanel";
+import { BaseCommand } from "../../base";
+import * as crypto from "node:crypto";
 
-export default class Add extends BaseCommand<typeof Add>  {
-  static description = 'Adds a block to the project'
+export default class Add extends BaseCommand<typeof Add> {
+  static description = "Adds a block to the project";
 
   static flags = {
     type: Flags.string({
@@ -25,12 +25,12 @@ export default class Add extends BaseCommand<typeof Add>  {
       char: "s",
       description: "aws service name to search",
     }),
-  }
+  };
 
-  static args = [{name: 'name', description: "new name for the block"}]
+  static args = [{ name: "name", description: "new name for the block" }];
 
   public async run(): Promise<void> {
-    const {args, flags} = await this.parse(Add)
+    const { args, flags } = await this.parse(Add);
     trackEvent("block add called", { flags, args });
     if (!flags.type) {
       this.log(
@@ -67,7 +67,7 @@ export default class Add extends BaseCommand<typeof Add>  {
         importBlock(blockName, flags.id);
         this.log("Successfully added a block to the Digger project");
       } else {
-        createBlock(type, blockName, {});
+        createBlock({ type, name: blockName });
         this.log("Successfully added a block to the Digger project");
       }
     } catch (error: any) {
