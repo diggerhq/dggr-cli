@@ -1,6 +1,7 @@
 # Use an official Node.js image as the base image
 FROM node:16
 
+RUN apt-get update && apt-get -y install groff less
 # Set environment variables for the version numbers
 ARG TERRAFORM_VERSION=1.3.7
 ARG DGCTL_VERSION=latest
@@ -18,7 +19,7 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
         && unzip terraform_${TERRAFORM_VERSION}_linux_arm.zip \
         && mv terraform /usr/local/bin/ \
         && rm terraform_${TERRAFORM_VERSION}_linux_arm.zip; \
-    elif ["$TARGETARCH" = "arm64"]; then \
+    elif [ "$TARGETARCH" = "arm64" ]; then \
         wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_arm64.zip \
         && unzip terraform_${TERRAFORM_VERSION}_linux_arm64.zip \
         && mv terraform /usr/local/bin/ \
@@ -29,7 +30,7 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
         && unzip awscliv2.zip \
         && ./aws/install; \
-    elif [ "$TARGETARCH" = "arm" || "$TARGETARCH" = "arm64" ]; then \
+    elif [ "$TARGETARCH" = "arm"] || [ "$TARGETARCH" = "arm64" ]; then \
         curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip" \
         && unzip awscliv2.zip \
         && ./aws/install; \
