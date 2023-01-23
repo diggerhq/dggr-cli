@@ -46,7 +46,7 @@ export default class Unpack extends BaseCommand<typeof Unpack> {
       flags.url ?? `${PRESET_URL}/blocks/${flags.name}/config.packed.json`;
 
     this.log(
-      chalk.green`Downloading ${chalk.greenBright`${flags.name}`} preset`
+      chalk.green`Downloading ${chalk.greenBright`${flags.name}`} block`
     );
 
     const response = await axios.get(blockUrl);
@@ -62,7 +62,7 @@ export default class Unpack extends BaseCommand<typeof Unpack> {
     createBlock({ type, name: blockName, blockDefault: blockData });
 
     try {
-      this.log("Successfully packed a block to the Digger project");
+      this.log("Successfully unpacked a block to the Digger project");
     } catch (error: any) {
       this.error(error);
     }
