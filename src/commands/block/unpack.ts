@@ -59,7 +59,7 @@ export default class Unpack extends BaseCommand<typeof Unpack> {
       chalk.green`Saving ${chalk.greenBright`${flags.name}`} as ${chalk.greenBright`${blockName}/`}`
     );
 
-    createBlock({ type, name, blockDefault: blockData });
+    createBlock({ type, name: blockName, blockDefault: blockData });
 
     try {
       this.log("Successfully packed a block to the Digger project");
