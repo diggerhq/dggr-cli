@@ -3,6 +3,7 @@ import * as fs from "node:fs";
 import * as blocks from "../utils/block-defaults";
 import * as crypto from "node:crypto";
 import { ConfigIniParser } from "config-ini-parser";
+import { getSecretsFromIniFile, getVarsFromIniFile } from "./io";
 
 export const diggerJsonPath = `${process.cwd()}/dgctl.json`;
 export const diggerAPIKeyPath = `${process.cwd()}/.dgctl`;
@@ -264,6 +265,45 @@ const writeSecrets = (secrets: object, blockName: string) => {
     `${process.cwd()}/dgctl.secrets.ini`,
     parser.stringify("\n")
   );
+};
+
+export const prepareBlockJson = (block: any) => {
+  const configRaw = fs.readFileSync(
+    `${process.cwd()}/${block.name}/config.json`,
+    "utf8"
+  );
+
+  // read override.tf, base64 encode it and add as one item list in "custom_terraform" parameter to the block's json"
+
+  const config = JSON.parse(configRaw);
+  if (block.type === "imported") {
+    const tfFileLocation = `${process.cwd()}/${block.name}/${
+      config.terraform_file
+    }`;
+    config.custom_terraform = fs.readFileSync(`${tfFileLocation}`, "base64");
+    delete config.terraform_files;
+  }
+
+  block.environment_variables = getVarsFromIniFile(
+    "dgctl.variables.ini",
+    block.name
+  );
+  block.secrets = getSecretsFromIniFile("dgctl.secrets.ini", block.name);
+
+  const overridesPath = `${process.cwd()}/${block.name}/dgctl.overrides.tf`;
+  if (fs.existsSync(overridesPath)) {
+    const tfBase64 = fs.readFileSync(overridesPath, { encoding: "base64" });
+    return {
+      ...block,
+      ...config,
+      custom_terraform: tfBase64,
+    };
+  }
+
+  return {
+    ...block,
+    ...config,
+  };
 };
 
 export const gitIgnore = [

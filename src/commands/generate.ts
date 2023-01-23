@@ -3,6 +3,7 @@ import {
   diggerAPIKeyExists,
   diggerJson,
   diggerJsonExists,
+  prepareBlockJson,
 } from "../utils/helpers";
 import * as fs from "node:fs";
 import axios from "axios";
@@ -37,53 +38,7 @@ export default class Generate extends BaseCommand<typeof Generate> {
       combinedJson = currentDiggerJson;
     } else {
       const mergedBlocks = currentDiggerJson.blocks.map((block: any) => {
-        const configRaw = fs.readFileSync(
-          `${process.cwd()}/${block.name}/config.json`,
-          "utf8"
-        );
-
-        // read override.tf, base64 encode it and add as one item list in "custom_terraform" parameter to the block's json"
-
-        const config = JSON.parse(configRaw);
-        if (block.type === "imported") {
-          const tfFileLocation = `${process.cwd()}/${block.name}/${
-            config.terraform_file
-          }`;
-          // eslint-disable-next-line camelcase
-          config.custom_terraform = fs.readFileSync(
-            `${tfFileLocation}`,
-            "base64"
-          );
-          delete config.terraform_files;
-        }
-
-        // eslint-disable-next-line camelcase
-        block.environment_variables = getVarsFromIniFile(
-          "dgctl.variables.ini",
-          block.name
-        );
-        block.secrets = getSecretsFromIniFile("dgctl.secrets.ini", block.name);
-          
-        const overridesPath = `${process.cwd()}/${block.name}/dgctl.overrides.tf`;
-        if (fs.existsSync(overridesPath)) {
-          const tfBase64 = fs.readFileSync(
-            overridesPath,
-            { encoding: "base64" }
-          );
-          return {
-            ...block,
-            ...config,
-            // eslint-disable-next-line camelcase
-            custom_terraform: tfBase64,
-          };
-        }
-
-        return {
-          ...block,
-          ...config,
-        };
-      
-
+        return prepareBlockJson(block);
       });
 
       combinedJson = {
