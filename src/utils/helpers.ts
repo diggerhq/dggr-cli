@@ -116,18 +116,24 @@ export const importBlock = (blockName: string, id: string) => {
   );
 };
 
-export const createBlock = (
-  blockType: string,
-  blockName: string,
-  extraOptions = {}
-) => {
+export const createBlock = ({
+  type,
+  name,
+  extraOptions,
+  blockDefault,
+}: {
+  type: string;
+  name: string;
+  extraOptions?: any;
+  blockDefault?: any;
+}) => {
   const currentDiggerJson = diggerJson();
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const defaults = blocks[blockType];
+  const defaults = blockDefault ?? blocks[type];
 
-  const awsIdentifier = `${blockName}-${crypto.randomBytes(4).toString("hex")}`;
+  const awsIdentifier = `${name}-${crypto.randomBytes(4).toString("hex")}`;
 
   updateDiggerJson({
     ...currentDiggerJson,
@@ -135,26 +141,23 @@ export const createBlock = (
       ...(currentDiggerJson.blocks ?? []),
       {
         aws_app_identifier: awsIdentifier,
-        name: blockName,
+        name: name,
         // Better logic to determine type based on top-level type since for resources it differs
-        type:
-          blockType === "container" || blockType === "vpc"
-            ? blockType
-            : "resource",
+        type: type === "container" || type === "vpc" ? type : "resource",
         ...extraOptions,
       },
     ],
   });
 
-  fs.mkdirSync(`${process.cwd()}/${blockName}`);
+  fs.mkdirSync(`${process.cwd()}/${name}`);
 
   fs.writeFileSync(
-    `${process.cwd()}/${blockName}/config.json`,
+    `${process.cwd()}/${name}/config.json`,
     JSON.stringify(defaults, null, 4)
   );
-  fs.writeFileSync(`${process.cwd()}/${blockName}/dgctl.secrets.ini`, "");
-  fs.writeFileSync(`${process.cwd()}/${blockName}/dgctl.variables.ini`, "");
-  fs.writeFileSync(`${process.cwd()}/${blockName}/dgctl.overrides.tf`, "");
+  fs.writeFileSync(`${process.cwd()}/${name}/dgctl.secrets.ini`, "");
+  fs.writeFileSync(`${process.cwd()}/${name}/dgctl.variables.ini`, "");
+  fs.writeFileSync(`${process.cwd()}/${name}/dgctl.overrides.tf`, "");
 };
 
 export const registerBlock = (blockType: string, blockName: string) => {

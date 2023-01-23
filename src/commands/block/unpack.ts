@@ -1,6 +1,10 @@
 import { trackEvent } from "../../utils/mixpanel";
 import { BaseCommand } from "../../base";
 import { Flags } from "@oclif/core";
+import { PRESET_URL } from "../../config";
+import chalk from "chalk";
+import axios from "axios";
+import { createBlock } from "../../utils/helpers";
 
 export default class Unpack extends BaseCommand<typeof Unpack> {
   static description =
@@ -8,7 +12,7 @@ export default class Unpack extends BaseCommand<typeof Unpack> {
 
   static flags = {
     name: Flags.string({
-      char: "p",
+      char: "n",
       description: "Name of the block preset from dgctl block repository",
     }),
     url: Flags.string({
@@ -31,7 +35,31 @@ export default class Unpack extends BaseCommand<typeof Unpack> {
       return;
     }
 
-    const blockName = args.name;
+    if (!flags.url && !flags.name) {
+      this.log(
+        "No block name or url provided. Example: dgctl block unpack -n example_container <new_name>"
+      );
+      return;
+    }
+
+    const blockUrl =
+      flags.url ?? `${PRESET_URL}/blocks/${flags.name}/config.packed.json`;
+
+    this.log(
+      chalk.green`Downloading ${chalk.greenBright`${flags.name}`} preset`
+    );
+
+    const response = await axios.get(blockUrl);
+
+    const { type, name, ...blockData } = response.data;
+
+    const blockName = args.name ?? name;
+
+    this.log(
+      chalk.green`Saving ${chalk.greenBright`${flags.name}`} as ${chalk.greenBright`${blockName}/`}`
+    );
+
+    createBlock({ type, name, blockDefault: blockData });
 
     try {
       this.log("Successfully packed a block to the Digger project");

@@ -44,7 +44,7 @@ export default class Init extends BaseCommand<typeof Init> {
 
         // if advanced, don't bother creating other files - just the json
         if (!flags.advanced) {
-          createBlock("vpc", "default_network", {});
+          createBlock({ type: "vpc", name: "default_network" });
           this.log(
             "Successfully added default network block to the Digger project"
           );

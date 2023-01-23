@@ -1,6 +1,7 @@
 import { trackEvent } from "../../utils/mixpanel";
 import { BaseCommand } from "../../base";
 import { diggerJson, prepareBlockJson } from "../../utils/helpers";
+import fs from "node:fs";
 
 export default class Pack extends BaseCommand<typeof Pack> {
   static description =
@@ -24,8 +25,14 @@ export default class Pack extends BaseCommand<typeof Pack> {
     const blockToPack = currentDiggerJson.blocks.find(
       ({ name }: { name: string }) => name === blockName
     );
+
     const packedBlock = prepareBlockJson(blockToPack);
-    console.log(packedBlock)
+    delete packedBlock.aws_app_identifier;
+
+    fs.writeFileSync(
+      `${process.cwd()}/${blockName}/config.packed.json`,
+      JSON.stringify(packedBlock, null, 4)
+    );
 
     try {
       this.log("Successfully packed a block to the Digger project");
