@@ -35,11 +35,15 @@ export default class Genpipeline extends BaseCommand<typeof Genpipeline>  {
     const terraformOutputs = await tfOutput(infraDirectory);
     const ecrRepoUrl =
       terraformOutputs[args.name].value.docker_registry_url;
-
+    const clusterName = terraformOutputs[args.name].value.ecs_cluster_name;
+    const serviceName = terraformOutputs[args.name].value.ecs_service_name;
+  
     if (flags.provider === "gitlab") {
         const pipeline = 
-        `build_docker_image:\n`+
-        `  stage: build_docker_image\n`+
+        `stages:\n`+
+        `  - deploy\n\n`+
+        `deploy:\n`+
+        `  stage: deploy\n`+
         `  image: docker:latest\n`+
         `  before_script:\n`+
         `    - apk add --no-cache python3 py3-pip git aws-cli\n`+
@@ -56,8 +60,9 @@ export default class Genpipeline extends BaseCommand<typeof Genpipeline>  {
         `    - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com\n`+
         `    - docker build -t ${ecrRepoUrl} .\n`+
         `    - docker push ${ecrRepoUrl}:latest\n`+
+        `    - aws ecs update-service --cluster ${clusterName} --service ${serviceName} --force-new-deployment\n`+
         `  only:\n`+
-        `    - master`
+        `    - main`
         
             this.log(pipeline)
     } else {
