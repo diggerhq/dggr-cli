@@ -3,6 +3,7 @@ import { createBlock, importBlock } from "../../utils/helpers";
 import { trackEvent } from "../../utils/mixpanel";
 import { BaseCommand } from "../../base";
 import * as crypto from "node:crypto";
+import { blockOptions } from "../../utils/digger-settings";
 
 export default class Add extends BaseCommand<typeof Add> {
   static description = "Adds a block to the project";
@@ -11,7 +12,7 @@ export default class Add extends BaseCommand<typeof Add> {
     type: Flags.string({
       char: "t",
       description: "type of block",
-      options: ["container", "mysql", "postgres", "docdb", "redis", "imported"],
+      options: blockOptions,
     }),
     name: Flags.string({
       char: "n",
