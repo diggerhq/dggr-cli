@@ -3,7 +3,6 @@ import { diggerJson } from '../../utils/helpers'
 import { trackEvent } from '../../utils/mixpanel'
 import { tfOutput } from '../../utils/terraform'
 import { BaseCommand } from '../../base'
-import { flattenDiagnosticMessageText } from 'typescript'
 
 export default class Genpipeline extends BaseCommand<typeof Genpipeline>  {
   static description = 'Generate pipeline for your block'
