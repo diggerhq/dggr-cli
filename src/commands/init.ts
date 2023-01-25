@@ -19,6 +19,7 @@ export default class Init extends BaseCommand<typeof Init> {
   static flags = {
     // flag with no value (-f, --force)
     force: Flags.boolean({ char: "f" }),
+    region: Flags.string({ char: "r", default: "us-east-1" }),
     advanced: Flags.boolean({ char: "a", hidden: true, default: false }),
   };
 
@@ -44,7 +45,7 @@ export default class Init extends BaseCommand<typeof Init> {
 
         // if advanced, don't bother creating other files - just the json
         if (!flags.advanced) {
-          createBlock({ type: "vpc", name: "default_network" });
+          createBlock({ type: "vpc", name: "default_network", region: flags.region });
           this.log(
             "Successfully added default network block to the Digger project"
           );

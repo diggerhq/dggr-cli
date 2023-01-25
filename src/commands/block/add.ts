@@ -25,6 +25,11 @@ export default class Add extends BaseCommand<typeof Add> {
       char: "s",
       description: "aws service name to search",
     }),
+    region: Flags.string({
+      char: "r",
+      description: "aws region to add to",
+      default: "us-east-1",
+    }),
   };
 
   static args = [{ name: "name", description: "new name for the block" }];
@@ -67,7 +72,7 @@ export default class Add extends BaseCommand<typeof Add> {
         importBlock(blockName, flags.id);
         this.log("Successfully added a block to the Digger project");
       } else {
-        createBlock({ type, name: blockName });
+        createBlock({ type, name: blockName, region: flags.region });
         this.log("Successfully added a block to the Digger project");
       }
     } catch (error: any) {

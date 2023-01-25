@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import * as fs from "node:fs";
-import * as blocks from "../utils/block-defaults";
+import * as block_defaults from "../utils/block-defaults";
 import * as crypto from "node:crypto";
 import { ConfigIniParser } from "config-ini-parser";
 import { getSecretsFromIniFile, getVarsFromIniFile } from "./io";
@@ -119,19 +119,40 @@ export const importBlock = (blockName: string, id: string) => {
 export const createBlock = ({
   type,
   name,
+  region,
   extraOptions,
   blockDefault,
 }: {
   type: string;
   name: string;
+  region: string;
   extraOptions?: any;
   blockDefault?: any;
 }) => {
   const currentDiggerJson = diggerJson();
 
+  const existingRegionBlock = currentDiggerJson.blocks?.find(
+    (block: any) => block.name === name && block.region === region
+  );
+  
+  if (existingRegionBlock) {
+    throw new Error(
+      `Block with name ${name} and region ${region} already exists.`
+    );
+  }
+
+  if (type === "resource" || type === "container") {
+    const vpcBlockForRegion = currentDiggerJson.blocks?.filter(
+      (block: any) => block.type === "vpc" && block.region === region
+    ) ?? [];
+    if (vpcBlockForRegion.length === 0) {
+      createBlock({ type: "vpc", name: "default_network", region });
+    }
+  }
+
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const defaults = blockDefault ?? blocks[type];
+  const defaults = blockDefault ?? block_defaults[type];
 
   const awsIdentifier = `${name}-${crypto.randomBytes(4).toString("hex")}`;
 
@@ -144,20 +165,21 @@ export const createBlock = ({
         name: name,
         // Better logic to determine type based on top-level type since for resources it differs
         type: type === "container" || type === "vpc" ? type : "resource",
+        region: region,
         ...extraOptions,
       },
     ],
   });
 
-  fs.mkdirSync(`${process.cwd()}/${name}`);
+  fs.mkdirSync(`${process.cwd()}/${name}/${region}`, { recursive: true });
 
   fs.writeFileSync(
-    `${process.cwd()}/${name}/config.json`,
+    `${process.cwd()}/${name}/${region}/config.json`,
     JSON.stringify(defaults, null, 4)
   );
-  fs.writeFileSync(`${process.cwd()}/${name}/dgctl.secrets.ini`, "");
-  fs.writeFileSync(`${process.cwd()}/${name}/dgctl.variables.ini`, "");
-  fs.writeFileSync(`${process.cwd()}/${name}/dgctl.overrides.tf`, "");
+  fs.writeFileSync(`${process.cwd()}/${name}/${region}/dgctl.secrets.ini`, "");
+  fs.writeFileSync(`${process.cwd()}/${name}/${region}/dgctl.variables.ini`, "");
+  fs.writeFileSync(`${process.cwd()}/${name}/${region}/dgctl.overrides.tf`, "");
 };
 
 export const registerBlock = (blockType: string, blockName: string) => {
@@ -200,7 +222,7 @@ export const recreateBlockFromJson = (blockName: string) => {
   } = currentBlock;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const defaults = blocks[type];
+  const defaults = block_defaults[type];
   fs.mkdirSync(`${process.cwd()}/${blockName}`);
 
   fs.writeFileSync(
