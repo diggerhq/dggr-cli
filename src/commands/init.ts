@@ -13,6 +13,7 @@ import { blockOptions, defaultContent } from "../utils/digger-settings";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import * as inquirer from "inquirer-shortcuts";
+import chalk from "chalk";
 
 export default class Init extends BaseCommand<typeof Init> {
   static description = "Creates a Digger infra bundle project";
@@ -36,7 +37,15 @@ export default class Init extends BaseCommand<typeof Init> {
     trackEvent("init called", { flags });
 
     if (flags.block) {
-      this.log("Initialising a standalone Digger project block");
+      if (!args.name) {
+        this.log(
+          chalk.green`Block name is missing. Try something like this: ${chalk.greenBright`dgctl init -b <name>`}`
+        );
+
+        return;
+      }
+
+      this.log(chalk.green`Initialising a standalone Digger project block`);
       const { type } = await inquirer.prompt([
         {
           type: "list",
@@ -47,6 +56,10 @@ export default class Init extends BaseCommand<typeof Init> {
       ]);
 
       createBlock({ type, name: args.name, blockOnly: true });
+
+      this.log(
+        chalk.green`Successfully created a standalone block. Access it in ${chalk.greenBright`${args.name}`} directory`
+      );
 
       return;
     }
