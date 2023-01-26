@@ -43,5 +43,6 @@ export const defaultContent = (version: any) => ({
   version,
   id: crypto.randomUUID(),
   blocks: [],
+  addons: [],
   created: Date.now(),
 })

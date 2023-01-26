@@ -294,7 +294,7 @@ const writeSecrets = (secrets: object, blockName: string) => {
 
 export const prepareBlockJson = (block: any) => {
   const configRaw = fs.readFileSync(
-    `${process.cwd()}/${block.name}/config.json`,
+    `${process.cwd()}/${block.name}/${block.region}/config.json`,
     "utf8"
   );
 
@@ -302,7 +302,7 @@ export const prepareBlockJson = (block: any) => {
 
   const config = JSON.parse(configRaw);
   if (block.type === "imported") {
-    const tfFileLocation = `${process.cwd()}/${block.name}/${
+    const tfFileLocation = `${process.cwd()}/${block.name}/${block.region}/${
       config.terraform_file
     }`;
     config.custom_terraform = fs.readFileSync(`${tfFileLocation}`, "base64");
@@ -315,7 +315,7 @@ export const prepareBlockJson = (block: any) => {
   );
   block.secrets = getSecretsFromIniFile("dgctl.secrets.ini", block.name);
 
-  const overridesPath = `${process.cwd()}/${block.name}/dgctl.overrides.tf`;
+  const overridesPath = `${process.cwd()}/${block.name}/${block.region}/dgctl.overrides.tf`;
   if (fs.existsSync(overridesPath)) {
     const tfBase64 = fs.readFileSync(overridesPath, { encoding: "base64" });
     return {
