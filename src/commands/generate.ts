@@ -3,6 +3,7 @@ import {
   diggerAPIKeyExists,
   diggerJson,
   diggerJsonExists,
+  prepareAddonJson,
   prepareBlockJson,
 } from "../utils/helpers";
 import * as fs from "node:fs";
@@ -41,12 +42,17 @@ export default class Generate extends BaseCommand<typeof Generate> {
         return prepareBlockJson(block);
       });
 
+      const mergedAddons = currentDiggerJson.addons.map((addon: any) => {
+        return prepareAddonJson(addon);
+      })
+
       combinedJson = {
         ...currentDiggerJson,
         // eslint-disable-next-line camelcase
         environment_variables: getVarsFromIniFile("dgctl.variables.ini", null),
         secrets: getSecretsFromIniFile("dgctl.secrets.ini", null),
         blocks: mergedBlocks,
+        addons: mergedAddons,
       };
       trackEvent("generate called", {
         diggerConfig: currentDiggerJson,

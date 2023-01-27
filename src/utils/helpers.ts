@@ -141,15 +141,6 @@ export const createBlock = ({
     );
   }
 
-  if (type === "resource" || type === "container") {
-    const vpcBlockForRegion = currentDiggerJson.blocks?.filter(
-      (block: any) => block.type === "vpc" && block.region === region
-    ) ?? [];
-    if (vpcBlockForRegion.length === 0) {
-      createBlock({ type: "vpc", name: "default_network", region });
-    }
-  }
-
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const defaults = blockDefault ?? block_defaults[type];
@@ -180,7 +171,54 @@ export const createBlock = ({
   fs.writeFileSync(`${process.cwd()}/${name}/${region}/dgctl.secrets.ini`, "");
   fs.writeFileSync(`${process.cwd()}/${name}/${region}/dgctl.variables.ini`, "");
   fs.writeFileSync(`${process.cwd()}/${name}/${region}/dgctl.overrides.tf`, "");
+
+
+  if (type === "container" || type === "resource") {
+    const vpcBlockForRegion = currentDiggerJson.blocks?.filter(
+      (block: any) => block.type === "vpc" && block.region === region
+    ) ?? [];
+    if (vpcBlockForRegion.length === 0) {
+      createBlock({ type: "vpc", name: "default_network", region: region });
+    }
+  }
 };
+
+
+export const createAddon = ({
+  type,
+  blockName,
+  options
+}: {
+  type: string;
+  blockName: string;
+  options: any;
+}) => {
+  const currentDiggerJson = diggerJson();
+  
+  const addons = currentDiggerJson.addons ?? [];
+
+  const existingAddon = addons.find((addon: any) => addon.block_name === blockName && addon.type === type);
+  if (existingAddon) {
+    addons.splice(addons.indexOf(existingAddon), 1);
+  }
+
+
+  updateDiggerJson({
+    ...currentDiggerJson,
+    addons: [
+      ...(currentDiggerJson.addons ?? []),
+      {
+        block_name: blockName,
+        type: type,
+      },
+    ],
+  });
+  fs.writeFileSync(
+    `${process.cwd()}/${blockName}/${type}.json`,
+    JSON.stringify(options, null, 4)
+  );
+};
+
 
 export const registerBlock = (blockType: string, blockName: string) => {
   const currentDiggerJson = diggerJson();
@@ -330,6 +368,20 @@ export const prepareBlockJson = (block: any) => {
     ...config,
   };
 };
+
+
+export const prepareAddonJson = (addon: any) => {
+  const configRaw = fs.readFileSync(
+    `${process.cwd()}/${addon.block_name}/${addon.type}.json`,
+    "utf8"
+  );
+  const config = JSON.parse(configRaw);
+  return {
+    ...addon,
+    ...config,
+  };
+};
+
 
 export const gitIgnore = [
   ".archive",

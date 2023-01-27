@@ -32,6 +32,10 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
       description: "Skip prompts",
       default: false,
     }),
+    region: Flags.string({
+      char: "r",
+      description: "AWS region to use"
+    }),
   };
 
   static args = [{ name: "name" }];
@@ -70,80 +74,107 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
       flags.context ??
       (await CliUx.ux.prompt("Where is your code checked out?"));
     const infraDirectory = "generated";
-    const region = diggerConfig.aws_region;
+    const region = flags.region
     const terraformOutputs = await tfOutput(infraDirectory);
-    const url = terraformOutputs[args.name].value.lb_dns;
-    const ecrRepoUrl = terraformOutputs[args.name].value.docker_registry_url;
-    const ecsClusterName = terraformOutputs[args.name].value.ecs_cluster_name;
-    const ecsServiceName = terraformOutputs[args.name].value.ecs_service_name;
+    const blockRegions = region === undefined || region === null ? diggerConfig.blocks.filter((block: any) => block.name === args.name).map((block: any) => block.region) : [region];
+
+    const configPerRegion: {[region: string]: {[key: string]: any}} = {}
+
     const awsProfile = "default";
+    for (const region of blockRegions) {
+      const moduleName = `${args.name}_${region}`;
+      const lbUrl = terraformOutputs[moduleName].value.lb_dns;
+      const ecrRepoUrl = terraformOutputs[moduleName].value.docker_registry_url;
+      const ecsClusterName = terraformOutputs[moduleName].value.ecs_cluster_name;
+      const ecsServiceName = terraformOutputs[moduleName].value.ecs_service_name;
+      configPerRegion[region] = {
+        moduleName: moduleName,
+        lbUrl: lbUrl,
+        ecrRepoUrl: ecrRepoUrl,
+        ecsClusterName: ecsClusterName,
+        ecsServiceName: ecsServiceName,
+      }
+    }
+
+    const ecrTags = Object.values(configPerRegion).map((config: any) => `-t ${config.ecrRepoUrl}`).join(" ")
+
 
     if (flags.displayOnly) {
       this.log(
         `To build this application, in the folder containing the Dockerfile run:`
       );
-      this.log(
-        chalk.green(`aws ecr get-login-password --region ${region} --profile ${awsProfile} | 
-      docker login --username AWS --password-stdin ${ecrRepoUrl}`)
-      );
-      this.log(chalk.green(`docker build -t ${ecrRepoUrl} .`));
-      this.log(chalk.green(`docker push ${ecrRepoUrl}:latest`));
-      this.log(
-        chalk.green(
-          `aws ecs update-service --cluster ${ecsClusterName} --service ${ecsServiceName} --profile ${awsProfile} --force-new-deployment`
-        )
-      );
 
-      this.log(`The block is accessible in this url: ${url}`);
+      this.log(chalk.green(`docker build ${ecrTags} .`));
+
+      for (const [region, config] of Object.entries(configPerRegion)) {
+        this.log(
+          chalk.green(`aws ecr get-login-password --region ${region} --profile ${awsProfile} | 
+        docker login --username AWS --password-stdin ${config.ecrRepoUrl}`)
+        );
+        this.log(chalk.green(`docker push ${config.ecrRepoUrl}:latest`));
+        this.log(
+          chalk.green(
+            `aws ecs update-service --region ${region} --cluster ${config.ecsClusterName} --service ${config.ecsServiceName} --profile ${awsProfile} --force-new-deployment`
+          )
+        );
+  
+        this.log(`The block is accessible in this url: ${config.lbUrl}`);
+      }
     } else {
       const { awsProfile } = await getAwsCreds(flags.profile);
       this.log(`[INFO] Using profile from aws credentials file: ${awsProfile}`);
 
       this.log(
-        chalk.blueBright(`[INFO] Logging to ECR registry ${ecrRepoUrl}`)
-      );
-      execSync(
-        `aws ecr get-login-password --region ${region} --profile ${awsProfile} | 
-                  docker login --username AWS --password-stdin ${ecrRepoUrl}`,
-        {
-          stdio: [process.stdin, process.stdout, process.stderr],
-          cwd: codeDirectory,
-        }
-      );
-      this.log(
         chalk.blueBright(`[INFO] Building docker image at ${codeDirectory}`)
       );
-      execSync(`docker build -t ${ecrRepoUrl} .`, {
+      execSync(`docker build --platform linux/amd64 ${ecrTags} .`, {
         stdio: [process.stdin, process.stdout, process.stderr],
         cwd: codeDirectory,
       });
-      this.log(chalk.blueBright(`[INFO] Pushing docker image`));
-      execSync(`docker push ${ecrRepoUrl}:latest`, {
-        stdio: [process.stdin, process.stdout, process.stderr],
-        cwd: codeDirectory,
-      });
-      this.log(chalk.blueBright(`[INFO] Triggering ECS deployment`));
-      execSync(
-        `aws ecs update-service \
-                  --cluster ${ecsClusterName} \
-                  --service ${ecsServiceName}\
-                  --profile ${awsProfile} \
-                  --region ${region} \
-                  --force-new-deployment`,
-        {
-          cwd: codeDirectory,
-        }
-      );
 
-      this.log(chalk.greenBright(`Success! Your app is deployed at ${url}`));
-      if (!flags["no-input"] && await CliUx.ux.confirm("Do you want to follow logs?")) {
+
+      for (const [region, config] of Object.entries(configPerRegion)) {
+
+        this.log(
+          chalk.blueBright(`[INFO] Logging to ECR registry ${config.ecrRepoUrl}`)
+        );
+        execSync(
+          `aws ecr get-login-password --region ${region} --profile ${awsProfile} | 
+                    docker login --username AWS --password-stdin ${config.ecrRepoUrl}`,
+          {
+            stdio: [process.stdin, process.stdout, process.stderr],
+            cwd: codeDirectory,
+          }
+        );
+        this.log(chalk.blueBright(`[INFO] Pushing docker image`));
+        execSync(`docker push ${config.ecrRepoUrl}:latest`, {
+          stdio: [process.stdin, process.stdout, process.stderr],
+          cwd: codeDirectory,
+        });
+        this.log(chalk.blueBright(`[INFO] Triggering ECS deployment`));
+        execSync(
+          `aws ecs update-service \
+                    --cluster ${config.ecsClusterName} \
+                    --service ${config.ecsServiceName}\
+                    --profile ${awsProfile} \
+                    --region ${region} \
+                    --force-new-deployment`,
+          {
+            cwd: codeDirectory,
+          }
+        );
+        this.log(chalk.greenBright(`Success! Your app is deployed at ${config.lbUrl} in region ${region}`));
+      }
+
+      if (!flags["no-input"] && blockRegions.length === 1 && await CliUx.ux.confirm("Do you want to follow logs?")) {
+        const region = blockRegions[0]; 
         this.log(
           chalk.blueBright(
-            `[INFO] Streaming logs from ECS service ${ecsServiceName}`
+            `[INFO] Streaming logs from ECS service ${configPerRegion[region].ecsServiceName}`
           )
         );
         execSync(
-          `aws logs tail --follow --profile ${awsProfile} /ecs/service/${ecsServiceName} --color auto`,
+          `aws logs tail --follow --profile ${awsProfile} /ecs/service/${configPerRegion[region].ecsServiceName} --region ${region} --color auto`,
           {
             stdio: [process.stdin, process.stdout, process.stderr]
           }
