@@ -1,6 +1,6 @@
 {
   "name": "dgctl",
-  "version": "0.0.12",
+  "version": "0.0.25",
   "description": "Digger CLI",
   "author": "Digger",
   "bin": {
@@ -38,7 +38,8 @@
     "ini": "^3.0.1",
     "inquirer-shortcuts": "^1.1.0",
     "lookpath": "^1.2.2",
-    "mixpanel": "^0.17.0"
+    "mixpanel": "^0.17.0",
+    "semver": "^7.3.8"
   },
   "devDependencies": {
     "@oclif/test": "^2.2.21",
@@ -105,6 +106,9 @@
       "preset": {
         "description": "Commands to initialise a project based on a preset"
       }
+    },
+    "hooks": {
+      "init": "./dist/hooks/init/restructure"
     }
   },
   "scripts": {
