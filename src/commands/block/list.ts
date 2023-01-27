@@ -24,6 +24,7 @@ export default class List extends BaseCommand<typeof List> {
         name: {
           minWidth: 7,
         },
+        region: {}
       },
       {
         printLine: this.log.bind(this),

@@ -220,7 +220,7 @@ export const createAddon = ({
 };
 
 
-export const registerBlock = (blockType: string, blockName: string) => {
+export const registerBlock = (blockType: string, blockName: string, region: string) => {
   const currentDiggerJson = diggerJson();
   const awsIdentifier = `${blockName}-${crypto.randomBytes(4).toString("hex")}`;
 
@@ -236,6 +236,7 @@ export const registerBlock = (blockType: string, blockName: string) => {
           blockType === "container" || blockType === "vpc"
             ? blockType
             : "resource",
+        region: region,
       },
     ],
   });
