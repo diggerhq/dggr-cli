@@ -25,6 +25,11 @@ export default class Init extends BaseCommand<typeof Init> {
     force: Flags.boolean({ char: "f" }),
     advanced: Flags.boolean({ char: "a", hidden: true, default: false }),
     block: Flags.boolean({ char: "b", default: false }),
+    type: Flags.string({
+      char: "t",
+      description: "type of block",
+      options: blockOptions,
+    }),
   };
 
   static args = [
@@ -46,14 +51,16 @@ export default class Init extends BaseCommand<typeof Init> {
       }
 
       this.log(chalk.green`Initialising a standalone Digger project block`);
-      const { type } = await inquirer.prompt([
-        {
-          type: "list",
-          name: "type",
-          message: "Select type of block?",
-          choices: blockOptions,
-        },
-      ]);
+      const { type } = flags.type
+        ? { type: flags.type }
+        : await inquirer.prompt([
+            {
+              type: "list",
+              name: "type",
+              message: "Select type of block?",
+              choices: blockOptions,
+            },
+          ]);
 
       createBlock({ type, name: args.name, blockOnly: true });
 

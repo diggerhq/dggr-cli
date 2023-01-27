@@ -157,7 +157,14 @@ export const createBlock = ({
 
   fs.writeFileSync(
     `${process.cwd()}/${name}/config.json`,
-    JSON.stringify(defaults, null, 4)
+    JSON.stringify(
+      {
+        ...defaults,
+        type,
+      },
+      null,
+      4
+    )
   );
   fs.writeFileSync(`${process.cwd()}/${name}/dgctl.secrets.ini`, "");
   fs.writeFileSync(`${process.cwd()}/${name}/dgctl.variables.ini`, "");
