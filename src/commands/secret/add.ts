@@ -3,8 +3,8 @@ import {BaseCommand}  from "../../base";
 import {createSsmParameter} from "../../utils/aws";
 import { ConfigIniParser } from "config-ini-parser";
 import fs from "node:fs";
-// eslint-disable-next-line unicorn/import-style
-import * as chalk from "chalk";
+ 
+import chalk = require("chalk");
 import { diggerJson } from "../../utils/helpers";
 
 export default class Add extends BaseCommand<typeof Add> {
