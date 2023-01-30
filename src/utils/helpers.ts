@@ -121,39 +121,50 @@ export const createBlock = ({
   name,
   extraOptions,
   blockDefault,
+  blockOnly,
 }: {
   type: string;
   name: string;
   extraOptions?: any;
   blockDefault?: any;
+  blockOnly?: boolean;
 }) => {
-  const currentDiggerJson = diggerJson();
-
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const defaults = blockDefault ?? blocks[type];
 
   const awsIdentifier = `${name}-${crypto.randomBytes(4).toString("hex")}`;
 
-  updateDiggerJson({
-    ...currentDiggerJson,
-    blocks: [
-      ...(currentDiggerJson.blocks ?? []),
-      {
-        aws_app_identifier: awsIdentifier,
-        name: name,
-        // Better logic to determine type based on top-level type since for resources it differs
-        type: type === "container" || type === "vpc" ? type : "resource",
-        ...extraOptions,
-      },
-    ],
-  });
+  if (!blockOnly) {
+    const currentDiggerJson = diggerJson();
+
+    updateDiggerJson({
+      ...currentDiggerJson,
+      blocks: [
+        ...(currentDiggerJson.blocks ?? []),
+        {
+          aws_app_identifier: awsIdentifier,
+          name: name,
+          // Better logic to determine type based on top-level type since for resources it differs
+          type: type === "container" || type === "vpc" ? type : "resource",
+          ...extraOptions,
+        },
+      ],
+    });
+  }
 
   fs.mkdirSync(`${process.cwd()}/${name}`);
 
   fs.writeFileSync(
     `${process.cwd()}/${name}/config.json`,
-    JSON.stringify(defaults, null, 4)
+    JSON.stringify(
+      {
+        ...defaults,
+        type,
+      },
+      null,
+      4
+    )
   );
   fs.writeFileSync(`${process.cwd()}/${name}/dgctl.secrets.ini`, "");
   fs.writeFileSync(`${process.cwd()}/${name}/dgctl.variables.ini`, "");

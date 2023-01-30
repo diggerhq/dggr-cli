@@ -18,21 +18,17 @@ export const promptForAwsCredentials = async () => {
   return { awsLogin, awsPassword };
 };
 
-const promptForProfile = (profiles: Array<string>): Promise<string> => {
-  return new Promise<string>((resolve) => {
-    inquirer
-      .prompt([
-        {
-          type: "list",
-          name: "profile",
-          message: "Select your aws profile?",
-          choices: profiles,
-        },
-      ])
-      .then((res: any) => {
-        resolve(res.profile);
-      });
-  });
+const promptForProfile = async (profiles: Array<string>): Promise<string> => {
+  const { profile } = await inquirer.prompt([
+    {
+      type: "list",
+      name: "profile",
+      message: "Select your aws profile?",
+      choices: profiles,
+    },
+  ]);
+
+  return profile;
 };
 
 export const getProfile = (id: string) => {

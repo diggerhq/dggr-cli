@@ -1,6 +1,6 @@
 import { trackEvent } from "../../utils/mixpanel";
 import { BaseCommand } from "../../base";
-import { diggerJson, prepareBlockJson } from "../../utils/helpers";
+import { prepareBlockJson } from "../../utils/helpers";
 import fs from "node:fs";
 
 export default class Pack extends BaseCommand<typeof Pack> {
@@ -20,13 +20,14 @@ export default class Pack extends BaseCommand<typeof Pack> {
       return;
     }
 
-    const currentDiggerJson = diggerJson();
-    const blockName = args.name;
-    const blockToPack = currentDiggerJson.blocks.find(
-      ({ name }: { name: string }) => name === blockName
+    const configRaw = fs.readFileSync(
+      `${process.cwd()}/${args.name}/config.json`,
+      "utf8"
     );
+    const config = JSON.parse(configRaw);
 
-    const packedBlock = prepareBlockJson(blockToPack);
+    const blockName = args.name;
+    const packedBlock = prepareBlockJson(config);
     delete packedBlock.aws_app_identifier;
 
     fs.writeFileSync(

@@ -9,7 +9,11 @@ import {
 } from "../utils/helpers";
 import { trackEvent } from "../utils/mixpanel";
 import { BaseCommand } from "../base";
-import { defaultContent } from "../utils/digger-settings";
+import { blockOptions, defaultContent } from "../utils/digger-settings";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import * as inquirer from "inquirer-shortcuts";
+import chalk from "chalk";
 
 export default class Init extends BaseCommand<typeof Init> {
   static description = "Creates a Digger infra bundle project";
@@ -20,12 +24,52 @@ export default class Init extends BaseCommand<typeof Init> {
     // flag with no value (-f, --force)
     force: Flags.boolean({ char: "f" }),
     advanced: Flags.boolean({ char: "a", hidden: true, default: false }),
+    block: Flags.boolean({ char: "b", default: false }),
+    type: Flags.string({
+      char: "t",
+      description: "type of block",
+      options: blockOptions,
+    }),
   };
 
+  static args = [
+    { name: "name", description: "name of the block to initialise" },
+  ];
+
   public async run(): Promise<void> {
-    const { flags } = await this.parse(Init);
+    const { flags, args } = await this.parse(Init);
     const { version } = this.config;
     trackEvent("init called", { flags });
+
+    if (flags.block) {
+      if (!args.name) {
+        this.log(
+          chalk.green`Block name is missing. Try something like this: ${chalk.greenBright`dgctl init -b <name>`}`
+        );
+
+        return;
+      }
+
+      this.log(chalk.green`Initialising a standalone Digger project block`);
+      const { type } = flags.type
+        ? { type: flags.type }
+        : await inquirer.prompt([
+            {
+              type: "list",
+              name: "type",
+              message: "Select type of block?",
+              choices: blockOptions,
+            },
+          ]);
+
+      createBlock({ type, name: args.name, blockOnly: true });
+
+      this.log(
+        chalk.green`Successfully created a standalone block. Access it in ${chalk.greenBright`${args.name}`} directory`
+      );
+
+      return;
+    }
 
     try {
       if (diggerJsonExists() && !flags.force) {

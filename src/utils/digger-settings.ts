@@ -47,3 +47,5 @@ export const defaultContent = (version: any) => ({
   blocks: [],
   created: Date.now(),
 })
+
+export const blockOptions = ["container", "mysql", "postgres", "docdb", "redis", "imported"]
