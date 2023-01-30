@@ -1,4 +1,4 @@
-import { CliUx, Flags } from "@oclif/core";
+import { Args, ux, Flags } from "@oclif/core";
 import chalk = require("chalk");
 import { execSync } from "node:child_process";
 import { lookpath } from "lookpath";
@@ -27,14 +27,14 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
       description: "AWS profile to use",
       default: undefined,
     }),
-    'no-input': Flags.boolean({
+    "no-input": Flags.boolean({
       char: "n",
       description: "Skip prompts",
       default: false,
     }),
   };
 
-  static args = [{ name: "name" }];
+  static args = { name: Args.string() };
 
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Deploy);
@@ -67,8 +67,7 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
 
     const diggerConfig = diggerJson();
     const codeDirectory =
-      flags.context ??
-      (await CliUx.ux.prompt("Where is your code checked out?"));
+      flags.context ?? (await ux.prompt("Where is your code checked out?"));
     const infraDirectory = "generated";
     const region = diggerConfig.aws_region;
     const terraformOutputs = await tfOutput(infraDirectory);
@@ -136,7 +135,10 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
       );
 
       this.log(chalk.greenBright(`Success! Your app is deployed at ${url}`));
-      if (!flags["no-input"] && await CliUx.ux.confirm("Do you want to follow logs?")) {
+      if (
+        !flags["no-input"] &&
+        (await ux.confirm("Do you want to follow logs?"))
+      ) {
         this.log(
           chalk.blueBright(
             `[INFO] Streaming logs from ECS service ${ecsServiceName}`
@@ -145,11 +147,10 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
         execSync(
           `aws logs tail --follow --profile ${awsProfile} /ecs/service/${ecsServiceName} --color auto`,
           {
-            stdio: [process.stdin, process.stdout, process.stderr]
+            stdio: [process.stdin, process.stdout, process.stderr],
           }
         );
       }
-
     }
 
     trackEvent("block deploy successful", { flags, args, diggerConfig });

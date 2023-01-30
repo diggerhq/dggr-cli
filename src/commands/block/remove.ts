@@ -1,15 +1,18 @@
-import { diggerJson, updateDiggerJson } from '../../utils/helpers'
-import { trackEvent } from '../../utils/mixpanel'
+import { diggerJson, updateDiggerJson } from "../../utils/helpers";
+import { trackEvent } from "../../utils/mixpanel";
 import * as fs from "node:fs";
-import { BaseCommand } from '../../base';
+import { BaseCommand } from "../../base";
+import { Args } from "@oclif/core";
 
-export default class Remove extends BaseCommand<typeof Remove>  {
-  static description = 'removes a block from the project'
+export default class Remove extends BaseCommand<typeof Remove> {
+  static description = "removes a block from the project";
 
-  static args = [{name: 'name'}]
+  static args = {
+    name: Args.string(),
+  };
 
   public async run(): Promise<void> {
-    const {args, flags} = await this.parse(Remove)
+    const { args, flags } = await this.parse(Remove);
     trackEvent("block remove called", { flags, args });
     if (!args.name) {
       this.log(`No block name provided. Example: dgctl block remove <name> `);

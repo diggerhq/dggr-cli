@@ -1,12 +1,15 @@
 import { BaseCommand } from "../base";
 import { writeDiggerApiKey } from "../utils/helpers";
+import { Args } from "@oclif/core";
 
 export default class Login extends BaseCommand<typeof Login> {
   static description = "Login with Digger key";
 
   static examples = ["<%= config.bin %> <%= command.id %>"];
 
-  static args = [{ name: "key" }];
+  static args = {
+    key: Args.string(),
+  };
 
   public async run(): Promise<void> {
     const { args } = await this.parse(Login);

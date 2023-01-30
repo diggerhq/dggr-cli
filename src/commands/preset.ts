@@ -8,7 +8,7 @@ import {
   recreateBlockFromJson,
   updateDiggerJson,
 } from "../utils/helpers";
-import { Flags } from "@oclif/core";
+import { Args, Flags } from "@oclif/core";
 
 export default class Preset extends BaseCommand<typeof Preset> {
   static description = "Initialise project based on preset";
@@ -23,13 +23,16 @@ export default class Preset extends BaseCommand<typeof Preset> {
     }),
   };
 
-  static args = [{ name: "preset" }];
+  static args = {
+    preset: Args.string(),
+  };
 
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Preset);
     const { preset } = args;
 
-    const presetUrl = flags.path ?? `${PRESET_URL}/presets/${preset}/dgctl.json`;
+    const presetUrl =
+      flags.path ?? `${PRESET_URL}/presets/${preset}/dgctl.json`;
 
     this.log(
       chalk.green`Downloading ${
