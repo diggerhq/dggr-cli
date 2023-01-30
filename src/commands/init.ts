@@ -1,7 +1,6 @@
 import { Flags } from "@oclif/core";
 import * as fs from "node:fs";
 import {
-  createBlock,
   diggerJson,
   diggerJsonExists,
   gitIgnore,
@@ -19,6 +18,7 @@ export default class Init extends BaseCommand<typeof Init> {
   static flags = {
     // flag with no value (-f, --force)
     force: Flags.boolean({ char: "f" }),
+    region: Flags.string({ char: "r", default: "us-east-1" }),
     advanced: Flags.boolean({ char: "a", hidden: true, default: false }),
   };
 
@@ -44,11 +44,6 @@ export default class Init extends BaseCommand<typeof Init> {
 
         // if advanced, don't bother creating other files - just the json
         if (!flags.advanced) {
-          createBlock({ type: "vpc", name: "default_network" });
-          this.log(
-            "Successfully added default network block to the Digger project"
-          );
-
           // fs.mkdirSync(`${process.cwd()}/overrides`); Re-enable when we start using it
           fs.writeFileSync(`${process.cwd()}/dgctl.secrets.ini`, "");
           fs.writeFileSync(`${process.cwd()}/dgctl.variables.ini`, "");

@@ -13,6 +13,11 @@ export default class Register extends BaseCommand<typeof Register> {
       description: "type of block",
       options: ["container", "mysql", "postgres", "docdb", "redis", "imported"],
     }),
+    region: Flags.string({
+      char: "r",
+      description: "Region of the block",
+      default: "us-east-1", 
+    }),
   };
 
   static args = [{ name: "name", description: "new name for the block" }];
@@ -38,7 +43,7 @@ export default class Register extends BaseCommand<typeof Register> {
     const type = flags.type;
 
     try {
-      registerBlock(type, blockName);
+      registerBlock(type, blockName, flags.region);
       this.log("Successfully registered a block to the Digger project");
     } catch (error: any) {
       this.error(error);

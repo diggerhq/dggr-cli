@@ -8,7 +8,7 @@ export function getTrowelUrl(): string {
     return "https://sggo2t6ck5bpznc64hpmwf2h7q0egvwr.lambda-url.us-east-1.on.aws/";
   }
 
-  return "https://tka5vjilzptmyfrvcolqbz4veq0upobc.lambda-url.us-east-1.on.aws/";
+  return "https://zryaixve4tzyzbve3dimpvxv2u0gwfav.lambda-url.us-east-1.on.aws/";
 }
 
 export const PRESET_URL = "https://raw.githubusercontent.com/diggerhq/dgctl-preset/main";
