@@ -1,12 +1,13 @@
 import { Flags } from "@oclif/core";
 import * as fs from "node:fs";
 import { diggerJson } from "../utils/helpers";
-// eslint-disable-next-line unicorn/import-style
-import * as chalk from "chalk";
+ 
+import chalk = require("chalk");
 import { callTF } from "../utils/terraform";
 import { getAwsCreds } from "../utils/aws";
 import { trackEvent } from "../utils/mixpanel";
 import { BaseCommand } from "../base";
+import {createRemoteState} from "../utils/remote-state";
 
 export default class Provision extends BaseCommand<typeof Provision> {
   static description = "describe the command here";
@@ -50,6 +51,8 @@ export default class Provision extends BaseCommand<typeof Provision> {
     try {
       process.env.AWS_ACCESS_KEY_ID = awsLogin;
       process.env.AWS_SECRET_ACCESS_KEY = awsPassword;
+
+      await createRemoteState(diggerConfig)
 
       const terraformDir = "generated";
       // Init tf
