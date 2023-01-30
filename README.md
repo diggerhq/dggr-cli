@@ -17,7 +17,7 @@ $ npm install -g dgctl
 $ dgctl COMMAND
 running command...
 $ dgctl (--version)
-dgctl/0.0.12 darwin-arm64 node-v16.15.1
+dgctl/0.0.25 darwin-arm64 node-v17.8.0
 $ dgctl --help [COMMAND]
 USAGE
   $ dgctl COMMAND
@@ -29,12 +29,15 @@ USAGE
 * [`dgctl autocomplete [SHELL]`](#dgctl-autocomplete-shell)
 * [`dgctl block`](#dgctl-block)
 * [`dgctl block add [NAME]`](#dgctl-block-add-name)
+* [`dgctl block addon`](#dgctl-block-addon)
 * [`dgctl block deploy [NAME]`](#dgctl-block-deploy-name)
 * [`dgctl block list`](#dgctl-block-list)
 * [`dgctl block logs [NAME]`](#dgctl-block-logs-name)
+* [`dgctl block pack [NAME]`](#dgctl-block-pack-name)
 * [`dgctl block register [NAME]`](#dgctl-block-register-name)
 * [`dgctl block remove [NAME]`](#dgctl-block-remove-name)
 * [`dgctl block rename [NAME]`](#dgctl-block-rename-name)
+* [`dgctl block unpack [NAME]`](#dgctl-block-unpack-name)
 * [`dgctl config NAME`](#dgctl-config-name)
 * [`dgctl eject`](#dgctl-eject)
 * [`dgctl generate`](#dgctl-generate)
@@ -100,7 +103,7 @@ DESCRIPTION
   Adds a infra block to a Digger infra bundle
 ```
 
-_See code: [dist/commands/block/index.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.12/dist/commands/block/index.ts)_
+_See code: [dist/commands/block/index.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.25/dist/commands/block/index.ts)_
 
 ## `dgctl block add [NAME]`
 
@@ -109,7 +112,7 @@ Adds a block to the project
 ```
 USAGE
   $ dgctl block add [NAME] [-t container|mysql|postgres|docdb|redis|imported] [-n <value>] [-i <value>] [-s
-    <value>]
+    <value>] [-r <value>]
 
 ARGUMENTS
   NAME  new name for the block
@@ -117,6 +120,7 @@ ARGUMENTS
 FLAGS
   -i, --id=<value>       id of the resource to import
   -n, --name=<value>     new name for the block
+  -r, --region=<value>   [default: us-east-1] aws region to add to
   -s, --service=<value>  aws service name to search
   -t, --type=<option>    type of block
                          <options: container|mysql|postgres|docdb|redis|imported>
@@ -125,19 +129,37 @@ DESCRIPTION
   Adds a block to the project
 ```
 
+## `dgctl block addon`
+
+Addon to a block
+
+```
+USAGE
+  $ dgctl block addon -b <value> [-t routing]
+
+FLAGS
+  -b, --block=<value>  (required) block to add the addon to
+  -t, --type=<option>  type of addon
+                       <options: routing>
+
+DESCRIPTION
+  Addon to a block
+```
+
 ## `dgctl block deploy [NAME]`
 
 Deploy application to AWS
 
 ```
 USAGE
-  $ dgctl block deploy [NAME] [-c <value>] [-d] [-p <value>] [-n]
+  $ dgctl block deploy [NAME] [-c <value>] [-d] [-p <value>] [-n] [-r <value>]
 
 FLAGS
   -c, --context=<value>  The code context for block deployment
   -d, --displayOnly      Only display commands, do not run them for block deployment
   -n, --no-input         Skip prompts
   -p, --profile=<value>  AWS profile to use
+  -r, --region=<value>   AWS region to use
 
 DESCRIPTION
   Deploy application to AWS
@@ -172,6 +194,21 @@ FLAGS
 
 DESCRIPTION
   Show application logs from AWS
+```
+
+## `dgctl block pack [NAME]`
+
+Packs an existing dgctl block folder that can be shared
+
+```
+USAGE
+  $ dgctl block pack [NAME]
+
+ARGUMENTS
+  NAME  name of the block to pack
+
+DESCRIPTION
+  Packs an existing dgctl block folder that can be shared
 ```
 
 ## `dgctl block register [NAME]`
@@ -223,6 +260,26 @@ EXAMPLES
   $ dgctl block rename
 ```
 
+## `dgctl block unpack [NAME]`
+
+Unpacks s dgctl block folder and registers it to dgctl.json
+
+```
+USAGE
+  $ dgctl block unpack [NAME] [-n <value>] [-u <value>] [-r <value>]
+
+ARGUMENTS
+  NAME  name of the block to unpack
+
+FLAGS
+  -n, --name=<value>    Name of the block preset from dgctl block repository
+  -r, --region=<value>  [default: us-east-1] aws region to add to
+  -u, --url=<value>     Url path to a json file that contains a packed block configuration
+
+DESCRIPTION
+  Unpacks s dgctl block folder and registers it to dgctl.json
+```
+
 ## `dgctl config NAME`
 
 Allows changing dgctl configuration
@@ -244,7 +301,7 @@ EXAMPLES
   $ dgctl config
 ```
 
-_See code: [dist/commands/config.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.12/dist/commands/config.ts)_
+_See code: [dist/commands/config.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.25/dist/commands/config.ts)_
 
 ## `dgctl eject`
 
@@ -264,7 +321,7 @@ EXAMPLES
   $ dgctl eject
 ```
 
-_See code: [dist/commands/eject.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.12/dist/commands/eject.ts)_
+_See code: [dist/commands/eject.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.25/dist/commands/eject.ts)_
 
 ## `dgctl generate`
 
@@ -278,7 +335,7 @@ DESCRIPTION
   Generates terraform based on the Digger infra bundle
 ```
 
-_See code: [dist/commands/generate.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.12/dist/commands/generate.ts)_
+_See code: [dist/commands/generate.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.25/dist/commands/generate.ts)_
 
 ## `dgctl help [COMMAND]`
 
@@ -319,7 +376,7 @@ EXAMPLES
   $ dgctl infra
 ```
 
-_See code: [dist/commands/infra.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.12/dist/commands/infra.ts)_
+_See code: [dist/commands/infra.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.25/dist/commands/infra.ts)_
 
 ## `dgctl init`
 
@@ -327,10 +384,11 @@ Creates a Digger infra bundle project
 
 ```
 USAGE
-  $ dgctl init [-f]
+  $ dgctl init [-f] [-r <value>]
 
 FLAGS
   -f, --force
+  -r, --region=<value>  [default: us-east-1]
 
 DESCRIPTION
   Creates a Digger infra bundle project
@@ -339,7 +397,7 @@ EXAMPLES
   $ dgctl init
 ```
 
-_See code: [dist/commands/init.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.12/dist/commands/init.ts)_
+_See code: [dist/commands/init.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.25/dist/commands/init.ts)_
 
 ## `dgctl login [KEY]`
 
@@ -356,7 +414,7 @@ EXAMPLES
   $ dgctl login
 ```
 
-_See code: [dist/commands/login.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.12/dist/commands/login.ts)_
+_See code: [dist/commands/login.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.25/dist/commands/login.ts)_
 
 ## `dgctl plugins`
 
@@ -607,7 +665,7 @@ EXAMPLES
   $ dgctl preset
 ```
 
-_See code: [dist/commands/preset.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.12/dist/commands/preset.ts)_
+_See code: [dist/commands/preset.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.25/dist/commands/preset.ts)_
 
 ## `dgctl provision [FILE]`
 
@@ -629,7 +687,7 @@ EXAMPLES
   $ dgctl provision
 ```
 
-_See code: [dist/commands/provision.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.12/dist/commands/provision.ts)_
+_See code: [dist/commands/provision.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.25/dist/commands/provision.ts)_
 
 ## `dgctl secret`
 
@@ -643,7 +701,7 @@ DESCRIPTION
   Perform secret management actions
 ```
 
-_See code: [dist/commands/secret/index.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.12/dist/commands/secret/index.ts)_
+_See code: [dist/commands/secret/index.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.25/dist/commands/secret/index.ts)_
 
 ## `dgctl secret add [KV]`
 
@@ -733,5 +791,5 @@ EXAMPLES
   $ dgctl variable
 ```
 
-_See code: [dist/commands/variable.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.12/dist/commands/variable.ts)_
+_See code: [dist/commands/variable.ts](https://github.com/diggerhq/dggr-cli/blob/v0.0.25/dist/commands/variable.ts)_
 <!-- commandsstop -->
