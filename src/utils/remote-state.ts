@@ -124,7 +124,7 @@ const createDynamoDB = async (ddbClient: DynamoDB, ddbTableName: string) => {
 export const createRemoteState = async (diggerConfig: any) => {
   if (diggerConfig.remote_state !== "local") {
     const ddbTableName = "digger-terraform-state-lock";
-    const bucketName = "digger-remote-state-bucket";
+    const bucketName = "digger-terraform-state";
     await createBucket(s3Client, bucketName);
     await createDynamoDB(ddbClient, ddbTableName);
   }
