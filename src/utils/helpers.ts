@@ -216,7 +216,7 @@ export const recreateBlockFromJson = (blockName: string) => {
 
   fs.writeFileSync(
     `${process.cwd()}/${blockName}/config.json`,
-    JSON.stringify({ ...defaults, ...rest }, null, 4)
+    JSON.stringify(currentBlock, null, 4)
   );
   fs.writeFileSync(`${process.cwd()}/${blockName}/dgctl.secrets.ini`, "");
   fs.writeFileSync(`${process.cwd()}/${blockName}/dgctl.variables.ini`, "");
