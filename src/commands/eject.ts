@@ -22,7 +22,7 @@ export default class Eject extends BaseCommand<typeof Eject> {
     const { flags } = await this.parse(Eject);
 
     if (!diggerJsonExists()) {
-      this.log("No dgclt.json found in path");
+      this.log("No dgctl.json found in path");
       return;
     }
 
