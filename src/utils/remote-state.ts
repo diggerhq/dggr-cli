@@ -1,4 +1,5 @@
 import { DynamoDB } from "@aws-sdk/client-dynamodb";
+import {GetCallerIdentityCommand, STS} from "@aws-sdk/client-sts";
 import {
   CreateBucketCommand,
   ListBucketsCommand,
@@ -121,10 +122,17 @@ const createDynamoDB = async (ddbClient: DynamoDB, ddbTableName: string) => {
   }
 };
 
+const getAWSAccountID = async () => {
+  const stsClient = new STS({region: "us-east-1"});
+  const { Account: accountId} = await stsClient.send(new GetCallerIdentityCommand({}));
+  return accountId
+}
+
 export const createRemoteState = async (diggerConfig: any) => {
   if (diggerConfig.remote_state !== "local") {
+    const accountId = await getAWSAccountID()
     const ddbTableName = "digger-terraform-state-lock";
-    const bucketName = "digger-terraform-state";
+    const bucketName = `digger-terraform-state-${accountId}`;
     await createBucket(s3Client, bucketName);
     await createDynamoDB(ddbClient, ddbTableName);
   }
