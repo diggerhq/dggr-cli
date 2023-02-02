@@ -1,5 +1,5 @@
-import { Flags } from "@oclif/core";
-import { BaseCommand }  from "../../base";
+import { Args, Flags } from "@oclif/core";
+import { BaseCommand } from "../../base";
 import { deleteSsmParameter } from "../../utils/aws";
 import { ConfigIniParser } from "config-ini-parser";
 import fs from "node:fs";
@@ -13,15 +13,15 @@ export default class Delete extends BaseCommand<typeof Delete> {
     block: Flags.string({ char: "b", description: "name of the block" }),
   };
 
-  static args = [
-    { name: "key" },
-  ];
+  static args = { key: Args.string() };
 
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Delete);
 
     if (!flags.block) {
-      this.warn("No block provided for the variable. Global secret will be deleted");
+      this.warn(
+        "No block provided for the variable. Global secret will be deleted"
+      );
     }
 
     const block = flags.block ?? "_bundle_";
@@ -39,15 +39,17 @@ export default class Delete extends BaseCommand<typeof Delete> {
     }
 
     if (!args.key) {
-      this.log(chalk.red("Missing parameter: key"))
+      this.log(chalk.red("Missing parameter: key"));
     }
 
     const diggerConfig = diggerJson();
     const id = diggerConfig.id;
     try {
-      await deleteSsmParameter(`/${id}/${block}/${args.key}`)
+      await deleteSsmParameter(`/${id}/${block}/${args.key}`);
     } catch {
-      this.log(chalk.red("Could not delete ssm parameter, does the key exist?"))
+      this.log(
+        chalk.red("Could not delete ssm parameter, does the key exist?")
+      );
       return;
     }
 
@@ -66,6 +68,6 @@ export default class Delete extends BaseCommand<typeof Delete> {
       parser.stringify("\n")
     );
 
-    this.log("Secret removed successfully")
+    this.log("Secret removed successfully");
   }
 }

@@ -1,13 +1,13 @@
-import { Flags } from "@oclif/core";
+import { Args, Flags } from "@oclif/core";
 import * as fs from "node:fs";
 import { diggerJson } from "../utils/helpers";
- 
+
 import chalk = require("chalk");
 import { callTF } from "../utils/terraform";
 import { getAwsCreds } from "../utils/aws";
 import { trackEvent } from "../utils/mixpanel";
 import { BaseCommand } from "../base";
-import {createRemoteState} from "../utils/remote-state";
+import { createRemoteState } from "../utils/remote-state";
 
 export default class Provision extends BaseCommand<typeof Provision> {
   static description = "describe the command here";
@@ -28,7 +28,9 @@ export default class Provision extends BaseCommand<typeof Provision> {
     bucket: Flags.string({ char: "b", description: "S3 bucket name" }),
   };
 
-  static args = [{ name: "file" }];
+  static args = {
+    file: Args.string(),
+  };
 
   public async run(): Promise<void> {
     if (!fs.existsSync(`${process.cwd()}/generated`)) {
@@ -52,7 +54,7 @@ export default class Provision extends BaseCommand<typeof Provision> {
       process.env.AWS_ACCESS_KEY_ID = awsLogin;
       process.env.AWS_SECRET_ACCESS_KEY = awsPassword;
 
-      await createRemoteState(diggerConfig)
+      await createRemoteState(diggerConfig);
 
       const terraformDir = "generated";
       // Init tf

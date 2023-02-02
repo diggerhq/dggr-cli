@@ -1,6 +1,6 @@
 import { BaseCommand } from "../base";
 import { createNewAwsProfile, getProfile, resetAwsProfile } from "../utils/aws";
-import { Flags } from "@oclif/core";
+import { Args, Flags } from "@oclif/core";
 import { diggerJson } from "../utils/helpers";
 
 export default class Config extends BaseCommand<typeof Config> {
@@ -15,15 +15,14 @@ export default class Config extends BaseCommand<typeof Config> {
     }),
   };
 
-  static args = [
-    {
-      name: "name",
+  static args = {
+    name: Args.string({
       options: ["aws"],
       description:
         "name for the config to change. Example `dgctl config <name>`",
       required: true,
-    },
-  ];
+    }),
+  };
 
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Config);

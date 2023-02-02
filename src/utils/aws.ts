@@ -1,6 +1,6 @@
 import * as fs from "node:fs";
 import * as AWS from "@aws-sdk/client-ssm";
-import { CliUx } from "@oclif/core";
+import { ux } from "@oclif/core";
 import * as path from "node:path";
 import * as ini from "ini";
 import { getHomeDir } from "./io";
@@ -11,8 +11,8 @@ import { getDiggerConfig, updateDiggerConfig } from "./digger-settings";
 import * as inquirer from "inquirer-shortcuts";
 
 export const promptForAwsCredentials = async () => {
-  const awsLogin = await CliUx.ux.prompt("AWS Access key?");
-  const awsPassword = await CliUx.ux.prompt("AWS Secret access key?", {
+  const awsLogin = await ux.prompt("AWS Access key?");
+  const awsPassword = await ux.prompt("AWS Secret access key?", {
     type: "hide",
   });
   return { awsLogin, awsPassword };

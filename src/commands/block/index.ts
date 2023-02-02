@@ -1,6 +1,4 @@
-import {
-  diggerJsonExists,
-} from "../../utils/helpers";
+import { diggerJsonExists } from "../../utils/helpers";
 import { BaseCommand } from "../../base";
 
 export default class Index extends BaseCommand<typeof Index> {
@@ -8,7 +6,7 @@ export default class Index extends BaseCommand<typeof Index> {
 
   static flags = {};
 
-  static args = [];
+  static args = {};
 
   public async run(): Promise<void> {
     if (!diggerJsonExists()) {

@@ -198,11 +198,7 @@ export const recreateBlockFromJson = (blockName: string) => {
     ({ name }: { name: string }) => blockName === name
   );
 
-  const {
-    custom_terraform,
-    environment_variables,
-    secrets,
-  } = currentBlock;
+  const { custom_terraform, environment_variables, secrets } = currentBlock;
 
   fs.mkdirSync(`${process.cwd()}/${blockName}`);
 

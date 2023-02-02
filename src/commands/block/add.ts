@@ -1,4 +1,4 @@
-import { Flags } from "@oclif/core";
+import { Args, Flags } from "@oclif/core";
 import { createBlock, importBlock } from "../../utils/helpers";
 import { trackEvent } from "../../utils/mixpanel";
 import { BaseCommand } from "../../base";
@@ -28,7 +28,9 @@ export default class Add extends BaseCommand<typeof Add> {
     }),
   };
 
-  static args = [{ name: "name", description: "new name for the block" }];
+  static args = {
+    name: Args.string({ description: "new name for the block" }),
+  };
 
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Add);
