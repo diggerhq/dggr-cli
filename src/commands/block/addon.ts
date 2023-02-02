@@ -4,6 +4,7 @@ import {
   combinedDiggerJson,
   createAddon,
   createBlock,
+  createOrUpdateVpc,
   diggerJson,
 } from "../../utils/helpers";
 import { trackEvent } from "../../utils/mixpanel";
@@ -147,18 +148,7 @@ export default class Addon extends BaseCommand<typeof Addon> {
         const currentDiggerJson = combinedDiggerJson(); 
         const block = currentDiggerJson.blocks.find((block: any) => block.name === blockName);
         if (block?.type === "container" || ["redis", "postgres", "mysql", "docdb"].includes(block?.type)) {
-          const existingVpc = currentDiggerJson.blocks.find((block: any) => block.name === "default_network");
-          if (!existingVpc) {
-            createBlock({type: "vpc", name: "default_network", region: answers.regions[0]});
-          }
-
-          const updatedDiggerJson = combinedDiggerJson();
-          const updatedVpc = updatedDiggerJson.blocks.find((block: any) => block.name === "default_network");
-          createAddon({
-            type: "regions",
-            blockName: "default_network",
-            options: {...regionConfigs, ...updatedVpc.aws_regions},
-          })
+          createOrUpdateVpc(answers.regions[0], regionConfigs)
         }
       
 

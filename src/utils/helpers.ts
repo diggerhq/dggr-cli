@@ -398,6 +398,21 @@ export const createAddon = ({
   );
 };
 
+export const createOrUpdateVpc = (region: string, existing_region_configs: any) => {
+  const currentCombinedDiggerJson = combinedDiggerJson();
+  const existingVpc = currentCombinedDiggerJson.blocks.find((block: any) => block.name === "default_network");
+  if (!existingVpc) {
+    createBlock({type: "vpc", name: "default_network", region: region});
+  }
+
+  const updatedDiggerJson = combinedDiggerJson();
+  const updatedVpc = updatedDiggerJson.blocks.find((block: any) => block.name === "default_network");
+  createAddon({
+    type: "regions",
+    blockName: "default_network",
+    options: {...existing_region_configs, ...updatedVpc.aws_regions},
+  })
+};
 
 export const gitIgnore = [
   ".archive",

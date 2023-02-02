@@ -1,5 +1,5 @@
 import { Args, Flags } from "@oclif/core";
-import { combinedDiggerJson, createBlock, importBlock } from "../../utils/helpers";
+import { combinedDiggerJson, createAddon, createBlock, createOrUpdateVpc, importBlock } from "../../utils/helpers";
 import { trackEvent } from "../../utils/mixpanel";
 import { BaseCommand } from "../../base";
 import * as crypto from "node:crypto";
@@ -77,17 +77,10 @@ export default class Add extends BaseCommand<typeof Add> {
       } else {
         createBlock({ type, name: blockName, region: flags.region });
         
-        const currentCombinedDiggerJson = combinedDiggerJson()
-        
-        if (type === "container" || ["redis", "docdb", "mysql", "postgres".includes(type)]) {
-
-          const vpcRegions = currentCombinedDiggerJson.blocks?.find(
-            (block: any) => block.name === "default_network"
-          )?.aws_regions ?? {};
-          if (!(flags.region in vpcRegions)) {
-            createBlock({ type: "vpc", name: "default_network", region: flags.region });
-          }
+        if (type === "container" || ["redis", "postgres", "mysql", "docdb"].includes(type)) {
+          createOrUpdateVpc(flags.region, {[flags.region]: {"config_overrides": {}}} )
         }
+      
 
         this.log("Successfully added a block to the Digger project");
       }
