@@ -290,7 +290,7 @@ export const combinedDiggerJson = () => {
     return prepareAddonJson(addon);
   })
 
-  const combinedJson = {
+  return {
     ...currentDiggerJson,
     // eslint-disable-next-line camelcase
     environment_variables: getVarsFromIniFile("dgctl.variables.ini", null),
@@ -298,8 +298,6 @@ export const combinedDiggerJson = () => {
     blocks: mergedBlocks,
     addons: mergedAddons,
   };
-
-  return combinedJson;
 };
 
 
@@ -413,6 +411,11 @@ export const createOrUpdateVpc = (region: string, existing_region_configs: any) 
     options: {...existing_region_configs, ...updatedVpc.aws_regions},
   })
 };
+
+
+export function requiresVpc(type: string) {
+  return ["container", "redis", "postgres", "mysql", "docdb"].includes(type);
+}
 
 export const gitIgnore = [
   ".archive",

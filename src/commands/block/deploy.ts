@@ -76,16 +76,20 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
     const region = flags.region
     const terraformOutputs = await tfOutput(infraDirectory);
 
-    const blockRegions = region === undefined || region === null ? Object.keys(diggerConfig.blocks.find((block: any) => block.name === args.name).aws_regions) : [region];
+    const blockRegions = Object.keys(diggerConfig.blocks.find((block: any) => block.name === args.name)?.aws_regions) ?? [region];
 
     const configPerRegion: {[region: string]: {[key: string]: any}} = {}
     const awsProfile = "default";
     for (const region of blockRegions) {
+      
       const moduleName = `${args.name}_${region}`;
-      const lbUrl = terraformOutputs[moduleName].value.lb_dns;
-      const ecrRepoUrl = terraformOutputs[moduleName].value.docker_registry_url;
-      const ecsClusterName = terraformOutputs[moduleName].value.ecs_cluster_name;
-      const ecsServiceName = terraformOutputs[moduleName].value.ecs_service_name;
+      const {
+        lb_dns: lbUrl,
+        docker_registry_url: ecrRepoUrl,
+        ecs_cluster_name: ecsClusterName,
+        ecs_service_name: ecsServiceName
+      } = terraformOutputs[moduleName].value
+      
       configPerRegion[region] = {
         moduleName: moduleName,
         lbUrl: lbUrl,

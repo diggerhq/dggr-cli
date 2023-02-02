@@ -1,5 +1,5 @@
 import { Args, Flags } from "@oclif/core";
-import { createBlock, createOrUpdateVpc, importBlock } from "../../utils/helpers";
+import { createBlock, createOrUpdateVpc, importBlock, requiresVpc } from "../../utils/helpers";
 import { trackEvent } from "../../utils/mixpanel";
 import { BaseCommand } from "../../base";
 import * as crypto from "node:crypto";
@@ -77,7 +77,7 @@ export default class Add extends BaseCommand<typeof Add> {
       } else {
         createBlock({ type, name: blockName, region: flags.region });
         
-        if (type === "container" || ["redis", "postgres", "mysql", "docdb"].includes(type)) {
+        if (requiresVpc(type)) {
           createOrUpdateVpc(flags.region, {[flags.region]: {"config_overrides": {}}} )
         }
       
@@ -89,3 +89,4 @@ export default class Add extends BaseCommand<typeof Add> {
     }
   }
 }
+

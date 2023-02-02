@@ -17,7 +17,7 @@ $ npm install -g dgctl
 $ dgctl COMMAND
 running command...
 $ dgctl (--version)
-dgctl/0.0.25 darwin-arm64 node-v17.8.0
+dgctl/0.0.25 darwin-arm64 node-v16.15.1
 $ dgctl --help [COMMAND]
 USAGE
   $ dgctl COMMAND

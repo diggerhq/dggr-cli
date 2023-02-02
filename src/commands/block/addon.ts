@@ -5,12 +5,14 @@ import {
   createAddon,
   createOrUpdateVpc,
   diggerJson,
+  requiresVpc,
 } from "../../utils/helpers";
 import { trackEvent } from "../../utils/mixpanel";
 import { BaseCommand } from "../../base";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import * as inquirer from "inquirer-shortcuts";
+import { awsRegions } from "../../utils/digger-settings";
 
 export default class Addon extends BaseCommand<typeof Addon> {
   static description = "Addon to a block";
@@ -26,6 +28,7 @@ export default class Addon extends BaseCommand<typeof Addon> {
       description: "block to add the addon to",
       required: true,
     }),
+    force: Flags.boolean({ char: "f" }),
   };
 
   public async run(): Promise<void> {
@@ -45,7 +48,7 @@ export default class Addon extends BaseCommand<typeof Addon> {
       ) ?? [];
 
     if (existingAddonForBlock.length > 0) {
-      const { confirmation } = await inquirer.prompt([
+      const { confirmation } = flags.force ? { confirmation: flags.force } : await inquirer.prompt([
         {
           type: "confirm",
           name: "confirmation",
@@ -113,24 +116,7 @@ export default class Addon extends BaseCommand<typeof Addon> {
             type: "checkbox",
             name: "regions",
             message: `Which regions you want to deploy to?`,
-            choices: [
-              { name: "US East (Ohio)", value: "us-east-2" },
-              { name: "US East (N. Virginia)", value: "us-east-1" },
-              { name: "US West (N. California)", value: "us-west-1" },
-              { name: "US West (Oregon)", value: "us-west-2" },
-              { name: "Asia Pacific (Mumbai)", value: "ap-south-1" },
-              { name: "Asia Pacific (Seoul)", value: "ap-northeast-2" },
-              { name: "Asia Pacific (Singapore)", value: "ap-southeast-1" },
-              { name: "Asia Pacific (Sydney)", value: "ap-southeast-2" },
-              { name: "Asia Pacific (Tokyo)", value: "ap-northeast-1" },
-              { name: "Canada (Central)", value: "ca-central-1" },
-              { name: "Europe (Frankfurt)", value: "eu-central-1" },
-              { name: "Europe (Ireland)", value: "eu-west-1" },
-              { name: "Europe (London)", value: "eu-west-2" },
-              { name: "Europe (Paris)", value: "eu-west-3" },
-              { name: "Europe (Stockholm)", value: "eu-north-1" },
-              { name: "South America (São Paulo)", value: "sa-east-1" }
-            ],
+            choices: awsRegions,
           }
         ]);
         
@@ -146,7 +132,7 @@ export default class Addon extends BaseCommand<typeof Addon> {
          
         const currentDiggerJson = combinedDiggerJson(); 
         const block = currentDiggerJson.blocks.find((block: any) => block.name === blockName);
-        if (block?.type === "container" || ["redis", "postgres", "mysql", "docdb"].includes(block?.type)) {
+        if (requiresVpc(block?.type)) {
           createOrUpdateVpc(answers.regions[0], regionConfigs)
         }
       
