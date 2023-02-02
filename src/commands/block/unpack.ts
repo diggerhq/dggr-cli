@@ -1,6 +1,6 @@
 import { trackEvent } from "../../utils/mixpanel";
 import { BaseCommand } from "../../base";
-import { Flags } from "@oclif/core";
+import { Args, Flags } from "@oclif/core";
 import { PRESET_URL } from "../../config";
 import chalk from "chalk";
 import axios from "axios";
@@ -27,7 +27,9 @@ export default class Unpack extends BaseCommand<typeof Unpack> {
     }),
   };
 
-  static args = [{ name: "name", description: "name of the block to unpack" }];
+  static args = {
+    name: Args.string({ description: "name of the block to unpack" }),
+  };
 
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Unpack);

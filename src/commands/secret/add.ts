@@ -1,10 +1,10 @@
-import { Flags } from "@oclif/core";
-import {BaseCommand}  from "../../base";
-import {createSsmParameter} from "../../utils/aws";
+import { Args, Flags } from "@oclif/core";
+import { BaseCommand } from "../../base";
+import { createSsmParameter } from "../../utils/aws";
 import { ConfigIniParser } from "config-ini-parser";
 import fs from "node:fs";
-// eslint-disable-next-line unicorn/import-style
-import * as chalk from "chalk";
+
+import chalk = require("chalk");
 import { diggerJson } from "../../utils/helpers";
 
 export default class Add extends BaseCommand<typeof Add> {
@@ -16,9 +16,7 @@ export default class Add extends BaseCommand<typeof Add> {
     block: Flags.string({ char: "b", description: "name of the block" }),
   };
 
-  static args = [
-    { name: "kv" },
-  ];
+  static args = { kv: Args.string() };
 
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Add);
@@ -38,7 +36,7 @@ export default class Add extends BaseCommand<typeof Add> {
     }
 
     if (!key || !value) {
-      this.log(chalk.red("Missing parameter: key and value"))
+      this.log(chalk.red("Missing parameter: key and value"));
     }
 
     const diggerConfig = diggerJson();
@@ -46,11 +44,13 @@ export default class Add extends BaseCommand<typeof Add> {
     let result;
     let valueSsmArn;
     try {
-      const paramName = block ? `/${id}/${block}/${key}` : `/${id}/${key}`
-      result = await createSsmParameter(paramName, value)
-      valueSsmArn = result.arn
+      const paramName = block ? `/${id}/${block}/${key}` : `/${id}/${key}`;
+      result = await createSsmParameter(paramName, value);
+      valueSsmArn = result.arn;
     } catch (error) {
-      this.log(chalk.red("Could not create ssm parameter, does the key already exist?"))
+      this.log(
+        chalk.red("Could not create ssm parameter, does the key already exist?")
+      );
       throw error;
     }
 
@@ -78,6 +78,6 @@ export default class Add extends BaseCommand<typeof Add> {
       parser.stringify("\n")
     );
 
-    this.log("Secret added successfully")
+    this.log("Secret added successfully");
   }
 }

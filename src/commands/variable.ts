@@ -1,4 +1,4 @@
-import { Flags } from "@oclif/core";
+import { Args, Flags } from "@oclif/core";
 import { BaseCommand } from "../base";
 import { ConfigIniParser } from "config-ini-parser";
 import fs from "node:fs";
@@ -12,13 +12,12 @@ export default class Variable extends BaseCommand<typeof Variable> {
     block: Flags.string({ char: "b", description: "name of the block" }),
   };
 
-  static args = [
-    {
-      name: "command",
+  static args = {
+    command: Args.string({
       options: ["add", "get", "delete", "import", "list"],
-    },
-    { name: "kv" },
-  ];
+    }),
+    kv: Args.string(),
+  };
 
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Variable);

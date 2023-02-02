@@ -1,4 +1,4 @@
-import { CliUx, Flags } from "@oclif/core";
+import { Args, ux, Flags } from "@oclif/core";
 import chalk = require("chalk");
 import { execSync } from "node:child_process";
 import { lookpath } from "lookpath";
@@ -27,7 +27,7 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
       description: "AWS profile to use",
       default: undefined,
     }),
-    'no-input': Flags.boolean({
+    "no-input": Flags.boolean({
       char: "n",
       description: "Skip prompts",
       default: false,
@@ -38,7 +38,7 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
     }),
   };
 
-  static args = [{ name: "name" }];
+  static args = { name: Args.string() };
 
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Deploy);
@@ -71,8 +71,7 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
 
     const diggerConfig = diggerJson();
     const codeDirectory =
-      flags.context ??
-      (await CliUx.ux.prompt("Where is your code checked out?"));
+      flags.context ?? (await ux.prompt("Where is your code checked out?"));
     const infraDirectory = "generated";
     const region = flags.region
     const terraformOutputs = await tfOutput(infraDirectory);
@@ -161,7 +160,7 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
         this.log(chalk.greenBright(`Success! Your app is deployed at ${config.lbUrl} in region ${region}`));
       }
 
-      if (!flags["no-input"] && blockRegions.length === 1 && await CliUx.ux.confirm("Do you want to follow logs?")) {
+      if (!flags["no-input"] && blockRegions.length === 1 && await ux.confirm("Do you want to follow logs?")) {
         const region = blockRegions[0]; 
         this.log(
           chalk.blueBright(
@@ -171,11 +170,10 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
         execSync(
           `aws logs tail --follow --profile ${awsProfile} /ecs/service/${configPerRegion[region].ecsServiceName} --region ${region} --color auto`,
           {
-            stdio: [process.stdin, process.stdout, process.stderr]
+            stdio: [process.stdin, process.stdout, process.stderr],
           }
         );
       }
-
     }
 
     trackEvent("block deploy successful", { flags, args, diggerConfig });

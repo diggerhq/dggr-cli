@@ -1,7 +1,7 @@
 import { trackEvent } from "../../utils/mixpanel";
 import { diggerJson } from "../../utils/helpers";
 import { BaseCommand } from "../../base";
-import { CliUx } from "@oclif/core";
+import { ux } from "@oclif/core";
 
 export default class List extends BaseCommand<typeof List> {
   static description = "list all blocks in the project";
@@ -17,7 +17,7 @@ export default class List extends BaseCommand<typeof List> {
       return;
     }
 
-    CliUx.ux.table(
+    ux.table(
       currentDiggerJson.blocks,
       {
         type: {},

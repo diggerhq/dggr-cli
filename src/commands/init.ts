@@ -1,4 +1,4 @@
-import { Flags } from "@oclif/core";
+import { Args, Flags } from "@oclif/core";
 import * as fs from "node:fs";
 import {
   createBlock,
@@ -36,9 +36,9 @@ export default class Init extends BaseCommand<typeof Init> {
     }),
   };
 
-  static args = [
-    { name: "name", description: "name of the block to initialise" },
-  ];
+  static args = {
+    name: Args.string({ description: "name of the block to initialise" }),
+  };
 
   public async run(): Promise<void> {
     const { flags, args } = await this.parse(Init);

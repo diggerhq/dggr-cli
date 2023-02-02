@@ -2,12 +2,15 @@ import { trackEvent } from "../../utils/mixpanel";
 import { BaseCommand } from "../../base";
 import { prepareBlockJson } from "../../utils/helpers";
 import fs from "node:fs";
+import { Args } from "@oclif/core";
 
 export default class Pack extends BaseCommand<typeof Pack> {
   static description =
     "Packs an existing dgctl block folder that can be shared";
 
-  static args = [{ name: "name", description: "name of the block to pack" }];
+  static args = {
+    name: Args.string({ description: "name of the block to pack" }),
+  };
 
   public async run(): Promise<void> {
     const { args } = await this.parse(Pack);
