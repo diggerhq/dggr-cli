@@ -199,19 +199,11 @@ export const recreateBlockFromJson = (blockName: string) => {
   );
 
   const {
-    type,
     custom_terraform,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    aws_app_identifier,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    name,
     environment_variables,
     secrets,
-    ...rest
   } = currentBlock;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const defaults = blocks[type];
+
   fs.mkdirSync(`${process.cwd()}/${blockName}`);
 
   fs.writeFileSync(
