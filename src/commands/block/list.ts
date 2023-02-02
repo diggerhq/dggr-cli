@@ -24,6 +24,10 @@ export default class List extends BaseCommand<typeof List> {
         name: {
           minWidth: 7,
         },
+        // eslint-disable-next-line camelcase
+        aws_regions: {
+          get: row => row.aws_regions && Object.keys(row.aws_regions)
+        }
       },
       {
         printLine: this.log.bind(this),

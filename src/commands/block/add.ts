@@ -1,5 +1,5 @@
 import { Flags } from "@oclif/core";
-import { createBlock, importBlock } from "../../utils/helpers";
+import { combinedDiggerJson, createBlock, importBlock } from "../../utils/helpers";
 import { trackEvent } from "../../utils/mixpanel";
 import { BaseCommand } from "../../base";
 import * as crypto from "node:crypto";
@@ -25,6 +25,11 @@ export default class Add extends BaseCommand<typeof Add> {
     service: Flags.string({
       char: "s",
       description: "aws service name to search",
+    }),   
+    region: Flags.string({
+      char: "r",
+      description: "aws region to add to",
+      default: "us-east-1",
     }),
   };
 
@@ -68,7 +73,20 @@ export default class Add extends BaseCommand<typeof Add> {
         importBlock(blockName, flags.id);
         this.log("Successfully added a block to the Digger project");
       } else {
-        createBlock({ type, name: blockName });
+        createBlock({ type, name: blockName, region: flags.region });
+        
+        const currentCombinedDiggerJson = combinedDiggerJson()
+        
+        if (type === "container" || ["redis", "docdb", "mysql", "postgres".includes(type)]) {
+
+          const vpcRegions = currentCombinedDiggerJson.blocks?.find(
+            (block: any) => block.name === "default_network"
+          )?.aws_regions ?? {};
+          if (!(flags.region in vpcRegions)) {
+            createBlock({ type: "vpc", name: "default_network", region: flags.region });
+          }
+        }
+
         this.log("Successfully added a block to the Digger project");
       }
     } catch (error: any) {

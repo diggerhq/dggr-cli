@@ -29,6 +29,10 @@ export default class Init extends BaseCommand<typeof Init> {
       char: "t",
       description: "type of block",
       options: blockOptions,
+    }),    
+    region: Flags.string({ 
+      char: "r", 
+      default: "us-east-1" 
     }),
   };
 
@@ -62,7 +66,7 @@ export default class Init extends BaseCommand<typeof Init> {
             },
           ]);
 
-      createBlock({ type, name: args.name, blockOnly: true });
+      createBlock({ type, name: args.name, region: flags.region, blockOnly: true });
 
       this.log(
         chalk.green`Successfully created a standalone block. Access it in ${chalk.greenBright`${args.name}`} directory`
@@ -88,11 +92,6 @@ export default class Init extends BaseCommand<typeof Init> {
 
         // if advanced, don't bother creating other files - just the json
         if (!flags.advanced) {
-          createBlock({ type: "vpc", name: "default_network" });
-          this.log(
-            "Successfully added default network block to the Digger project"
-          );
-
           // fs.mkdirSync(`${process.cwd()}/overrides`); Re-enable when we start using it
           fs.writeFileSync(`${process.cwd()}/dgctl.secrets.ini`, "");
           fs.writeFileSync(`${process.cwd()}/dgctl.variables.ini`, "");

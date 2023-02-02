@@ -1,9 +1,9 @@
 import {
+  combinedDiggerJson,
   diggerAPIKey,
   diggerAPIKeyExists,
   diggerJson,
   diggerJsonExists,
-  prepareBlockJson,
 } from "../utils/helpers";
 import * as fs from "node:fs";
 import axios from "axios";
@@ -12,15 +12,12 @@ import path = require("node:path");
 import { trackEvent } from "../utils/mixpanel";
 import { BaseCommand } from "../base";
 import { getTrowelUrl } from "../config";
-import { getSecretsFromIniFile, getVarsFromIniFile } from "../utils/io";
 
 export default class Generate extends BaseCommand<typeof Generate> {
   static description = "Generates terraform based on the Digger infra bundle";
 
-  // static args = [{ name: "environment" }];
 
   public async run(): Promise<void> {
-    // const { args } = await this.parse(Generate);
 
     if (!diggerJsonExists()) {
       this.log(
@@ -37,17 +34,7 @@ export default class Generate extends BaseCommand<typeof Generate> {
       // advanced mode, just take the digger json directly
       combinedJson = currentDiggerJson;
     } else {
-      const mergedBlocks = currentDiggerJson.blocks.map((block: any) => {
-        return prepareBlockJson(block);
-      });
-
-      combinedJson = {
-        ...currentDiggerJson,
-        // eslint-disable-next-line camelcase
-        environment_variables: getVarsFromIniFile("dgctl.variables.ini", null),
-        secrets: getSecretsFromIniFile("dgctl.secrets.ini", null),
-        blocks: mergedBlocks,
-      };
+      combinedJson = combinedDiggerJson()
       trackEvent("generate called", {
         diggerConfig: currentDiggerJson,
         combinedJson,
@@ -64,7 +51,7 @@ export default class Generate extends BaseCommand<typeof Generate> {
       ? {
           "X-Digger-Api-Key": diggerAPIKey(),
         }
-      : undefined;
+      : undefined; 
 
     const response = await axios.post(getTrowelUrl(), combinedJson, {
       headers,

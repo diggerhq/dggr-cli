@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import * as fs from "node:fs";
-import * as blocks from "../utils/block-defaults";
+import * as block_defaults from "../utils/block-defaults" ;
 import * as crypto from "node:crypto";
 import { ConfigIniParser } from "config-ini-parser";
 import { getSecretsFromIniFile, getVarsFromIniFile } from "./io";
@@ -118,20 +118,21 @@ export const importBlock = (blockName: string, id: string) => {
 
 export const createBlock = ({
   type,
-  name,
+  name, 
+  region,
   extraOptions,
   blockDefault,
   blockOnly,
 }: {
   type: string;
   name: string;
+  region: string;
   extraOptions?: any;
   blockDefault?: any;
   blockOnly?: boolean;
 }) => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const defaults = blockDefault ?? blocks[type];
+  
+  const defaults = blockDefault ?? block_defaults[type as keyof typeof block_defaults];
 
   const awsIdentifier = `${name}-${crypto.randomBytes(4).toString("hex")}`;
 
@@ -166,9 +167,18 @@ export const createBlock = ({
       4
     )
   );
-  fs.writeFileSync(`${process.cwd()}/${name}/dgctl.secrets.ini`, "");
-  fs.writeFileSync(`${process.cwd()}/${name}/dgctl.variables.ini`, "");
-  fs.writeFileSync(`${process.cwd()}/${name}/dgctl.overrides.tf`, "");
+  fs.writeFileSync(
+    `${process.cwd()}/${name}/regions.json`,
+    JSON.stringify(
+      {
+        [region]: {
+          config_overrides: {},
+        }
+      },
+      null,
+      4
+    )
+  )
 };
 
 export const registerBlock = (blockType: string, blockName: string) => {
@@ -281,6 +291,30 @@ const writeSecrets = (secrets: object, blockName: string) => {
   );
 };
 
+export const combinedDiggerJson = () => {
+  const currentDiggerJson = diggerJson();
+
+  const mergedBlocks = currentDiggerJson.blocks.map((block: any) => {
+    return prepareBlockJson(block);
+  });
+
+  const mergedAddons = currentDiggerJson.addons.map((addon: any) => {
+    return prepareAddonJson(addon);
+  })
+
+  const combinedJson = {
+    ...currentDiggerJson,
+    // eslint-disable-next-line camelcase
+    environment_variables: getVarsFromIniFile("dgctl.variables.ini", null),
+    secrets: getSecretsFromIniFile("dgctl.secrets.ini", null),
+    blocks: mergedBlocks,
+    addons: mergedAddons,
+  };
+
+  return combinedJson;
+};
+
+
 export const prepareBlockJson = (block: any) => {
   const configRaw = fs.readFileSync(
     `${process.cwd()}/${block.name}/config.json`,
@@ -304,6 +338,15 @@ export const prepareBlockJson = (block: any) => {
   );
   block.secrets = getSecretsFromIniFile("dgctl.secrets.ini", block.name);
 
+  const awsRegionsRaw = fs.readFileSync(
+    `${process.cwd()}/${block.name}/regions.json`,
+    "utf8"
+  );
+
+  const awsRegions = JSON.parse(awsRegionsRaw);
+
+  block.aws_regions = awsRegions
+
   const overridesPath = `${process.cwd()}/${block.name}/dgctl.overrides.tf`;
   if (fs.existsSync(overridesPath)) {
     const tfBase64 = fs.readFileSync(overridesPath, { encoding: "base64" });
@@ -319,6 +362,54 @@ export const prepareBlockJson = (block: any) => {
     ...config,
   };
 };
+
+export const prepareAddonJson = (addon: any) => {
+  const configRaw = fs.readFileSync(
+    `${process.cwd()}/${addon.block_name}/${addon.type}.json`,
+    "utf8"
+  );
+  const config = JSON.parse(configRaw);
+  return {
+    ...addon,
+    ...config,
+  };
+};
+
+export const createAddon = ({
+  type,
+  blockName,
+  options
+}: {
+  type: string;
+  blockName: string;
+  options: any;
+}) => {
+  const currentDiggerJson = diggerJson();
+
+  const addons = currentDiggerJson.addons ?? [];
+
+  const existingAddon = addons.find((addon: any) => addon.block_name === blockName && addon.type === type);
+  if (existingAddon) {
+    addons.splice(addons.indexOf(existingAddon), 1);
+  }
+
+
+  updateDiggerJson({
+    ...currentDiggerJson,
+    addons: [
+      ...(currentDiggerJson.addons ?? []),
+      {
+        block_name: blockName,
+        type: type,
+      },
+    ],
+  });
+  fs.writeFileSync(
+    `${process.cwd()}/${blockName}/${type}.json`,
+    JSON.stringify(options, null, 4)
+  );
+};
+
 
 export const gitIgnore = [
   ".archive",
