@@ -5,9 +5,8 @@ export default class Index extends BaseCommand<typeof Index> {
 
   static flags = {};
 
-  static args = [];
+  static args = {};
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  public async run(): Promise<void> {
-  }
+  public async run(): Promise<void> {}
 }

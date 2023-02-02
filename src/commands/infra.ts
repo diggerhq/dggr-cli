@@ -1,4 +1,4 @@
-import { Flags } from "@oclif/core";
+import { Args, Flags } from "@oclif/core";
 import { BaseCommand } from "../base";
 
 export default class Infra extends BaseCommand<typeof Infra> {
@@ -13,15 +13,15 @@ export default class Infra extends BaseCommand<typeof Infra> {
     force: Flags.boolean({ char: "f" }),
   };
 
-  static args = [{ name: "action", options: ["apply"] }];
+  static args = { action: Args.string({ options: ["apply"] }) };
 
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Infra);
 
     const name = flags.name ?? "world";
     this.log(`hello ${name}`);
-    if (args.file && flags.force) {
-      this.log(`you input --force and --file: ${args.file}`);
+    if (args.action && flags.force) {
+      this.log(`${args.action}`);
     }
   }
 }

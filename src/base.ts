@@ -5,7 +5,7 @@ import * as Sentry from "@sentry/node";
 import { SENTRY_DSN } from "./config";
 
 export type Flags<T extends typeof Command> = Interfaces.InferredFlags<
-  typeof BaseCommand["globalFlags"] & T["flags"]
+  typeof BaseCommand["baseFlags"] & T["flags"]
 >;
 
 export abstract class BaseCommand<T extends typeof Command> extends Command {

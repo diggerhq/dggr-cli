@@ -1,4 +1,4 @@
-import { Flags } from "@oclif/core";
+import { Args, Flags } from "@oclif/core";
 import chalk = require("chalk");
 import { execSync } from "node:child_process";
 import { lookpath } from "lookpath";
@@ -20,10 +20,10 @@ export default class Logs extends BaseCommand<typeof Logs> {
       char: "f",
       description: "Follow logs",
       default: false,
-    })
+    }),
   };
 
-  static args = [{ name: "name" }];
+  static args = { name: Args.string() };
 
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Logs);
@@ -55,11 +55,12 @@ export default class Logs extends BaseCommand<typeof Logs> {
       )
     );
     execSync(
-      `aws logs tail ${flags.follow ? "--follow" : ""} --profile ${awsProfile} /ecs/service/${ecsServiceName} --color auto`,
+      `aws logs tail ${
+        flags.follow ? "--follow" : ""
+      } --profile ${awsProfile} /ecs/service/${ecsServiceName} --color auto`,
       {
-        stdio: [process.stdin, process.stdout, process.stderr]
+        stdio: [process.stdin, process.stdout, process.stderr],
       }
     );
-    
   }
 }
