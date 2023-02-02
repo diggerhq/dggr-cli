@@ -1,5 +1,5 @@
 import { Args, Flags } from "@oclif/core";
-import { combinedDiggerJson, createAddon, createBlock, createOrUpdateVpc, importBlock } from "../../utils/helpers";
+import { createBlock, createOrUpdateVpc, importBlock } from "../../utils/helpers";
 import { trackEvent } from "../../utils/mixpanel";
 import { BaseCommand } from "../../base";
 import * as crypto from "node:crypto";

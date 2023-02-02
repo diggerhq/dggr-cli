@@ -3,7 +3,6 @@ import { Flags } from "@oclif/core";
 import {
   combinedDiggerJson,
   createAddon,
-  createBlock,
   createOrUpdateVpc,
   diggerJson,
 } from "../../utils/helpers";

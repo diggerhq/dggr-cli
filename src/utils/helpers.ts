@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import * as fs from "node:fs";
-import * as block_defaults from "../utils/block-defaults" ;
+import * as blockDefaults from "../utils/block-defaults" ;
 import * as crypto from "node:crypto";
 import { ConfigIniParser } from "config-ini-parser";
 import { getSecretsFromIniFile, getVarsFromIniFile } from "./io";
@@ -132,7 +132,7 @@ export const createBlock = ({
   blockOnly?: boolean;
 }) => {
   
-  const defaults = blockDefault ?? block_defaults[type as keyof typeof block_defaults];
+  const defaults = blockDefault ?? blockDefaults[type as keyof typeof blockDefaults];
 
   const awsIdentifier = `${name}-${crypto.randomBytes(4).toString("hex")}`;
 
