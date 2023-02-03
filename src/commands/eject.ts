@@ -41,7 +41,7 @@ export default class Eject extends BaseCommand<typeof Eject> {
     });
     
     // eslint-disable-next-line camelcase
-    json.addons.map(({ block_name, type, ...rest }: {block_name:string, type: string, rest: any}) => {
+    json.addons?.map(({ block_name, type, ...rest }: {block_name:string, type: string, rest: any}) => {
       return recreateAddonFromJson(block_name, type, rest);
     });
 
