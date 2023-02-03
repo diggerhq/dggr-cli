@@ -20,13 +20,11 @@ const hook: Hook<'init'> = async function () {
             }, null, 4));
           }
         }
-
-        delete config.aws_region;
       } catch (error: any) {
         console.log(error);
       }
     }
-    
+
     if (!("addons" in config)) {
       config.addons = [];
     }
