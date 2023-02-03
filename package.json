@@ -107,6 +107,9 @@
       "preset": {
         "description": "Commands to initialise a project based on a preset"
       }
+    },
+    "hooks": {
+      "init": "./dist/hooks/init/version-upgrade"
     }
   },
   "scripts": {
