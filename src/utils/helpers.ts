@@ -208,7 +208,7 @@ export const recreateBlockFromJson = (blockName: string) => {
     ({ name }: { name: string }) => blockName === name
   );
 
-  const { custom_terraform, environment_variables, secrets } = currentBlock;
+  const { custom_terraform, environment_variables, secrets, aws_regions } = currentBlock;
 
   fs.mkdirSync(`${process.cwd()}/${blockName}`);
 
@@ -236,6 +236,21 @@ export const recreateBlockFromJson = (blockName: string) => {
   } else {
     fs.writeFileSync(`${process.cwd()}/${blockName}/dgctl.overrides.tf`, "");
   }
+
+  if (aws_regions) {
+    fs.writeFileSync(
+      `${process.cwd()}/${blockName}/regions.tf`,
+      aws_regions,
+      "utf8"
+    );
+  }
+};
+
+export const recreateAddonFromJson = (blockName: string, addonType: string, options: any) => {
+  fs.writeFileSync(
+    `${process.cwd()}/${blockName}/${addonType}.json`,
+    JSON.stringify(options, null, 4)
+  );
 };
 
 const writeEnvVars = (envVars: [], blockName: string) => {

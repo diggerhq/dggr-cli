@@ -1,6 +1,7 @@
 import {
   diggerJson,
   diggerJsonExists,
+  recreateAddonFromJson,
   recreateBlockFromJson,
   updateDiggerJson,
 } from "../utils/helpers";
@@ -38,6 +39,13 @@ export default class Eject extends BaseCommand<typeof Eject> {
     json.blocks.map(({ name }: any) => {
       return recreateBlockFromJson(name);
     });
+    
+    if (json.addons) {
+      // eslint-disable-next-line camelcase
+      json.addons.map(({ block_name, type, ...rest }: {block_name:string, type: string, rest: any}) => {
+        return recreateAddonFromJson(block_name, type, rest);
+      });
+    }
 
     const { advanced, ...rest } = json;
     this.log(`Setting advanced to ${!advanced}`);
