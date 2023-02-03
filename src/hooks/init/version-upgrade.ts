@@ -11,7 +11,7 @@ const hook: Hook<'init'> = async function () {
         const region = config.aws_region;
         for (const block of config.blocks) {
           const blockPath = `${process.cwd()}/${block.name}`;
-          if (fs.existsSync(blockPath)) {
+          if (fs.existsSync(blockPath) && !fs.existsSync(`${blockPath}/regions.json`)) {
             fs.writeFileSync(`${blockPath}/regions.json`, JSON.stringify({
               [region]: {
                 // eslint-disable-next-line camelcase
