@@ -25,9 +25,14 @@ const hook: Hook<'init'> = async function () {
       } catch (error: any) {
         console.log(error);
       }
-      
-      updateDiggerJson({ ...config, updated: Date.now() });
     }
+    
+    if (!("addons" in config)) {
+      config.addons = [];
+    }
+
+      
+    updateDiggerJson({ ...config, updated: Date.now() });
   }
 }
 
