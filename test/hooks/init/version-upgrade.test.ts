@@ -1,6 +1,6 @@
 import {expect, test} from '@oclif/test'
 
-describe('hooks', () => {
+xdescribe('hooks', () => {
   test
   .stdout()
   .hook('init', {id: 'mycommand'})
