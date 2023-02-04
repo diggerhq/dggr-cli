@@ -17,7 +17,7 @@
     "/oclif.manifest.json"
   ],
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.262.0",
+    "@aws-sdk/client-dynamodb": "^3.264.0",
     "@aws-sdk/client-s3": "^3.262.0",
     "@aws-sdk/client-ssm": "^3.262.0",
     "@aws-sdk/client-sts": "^3.262.0",
