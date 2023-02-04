@@ -1405,10 +1405,10 @@
   dependencies:
     "@oclif/core" "^2.0.7"
 
-"@oclif/plugin-not-found@^2.3.17", "@oclif/plugin-not-found@^2.3.7":
-  version "2.3.17"
-  resolved "https://registry.yarnpkg.com/@oclif/plugin-not-found/-/plugin-not-found-2.3.17.tgz#c27fd323591d559110ef022a34074bf9732eb41c"
-  integrity sha512-KTh4vQ3GIiHNeuqsMV58cdvRBO1IREoEGuAE+e73OcP5VEjjsbJNQS+IXg0UHivMQhVBl7FeadgvAqGzUHPv5w==
+"@oclif/plugin-not-found@^2.3.18", "@oclif/plugin-not-found@^2.3.7":
+  version "2.3.18"
+  resolved "https://registry.yarnpkg.com/@oclif/plugin-not-found/-/plugin-not-found-2.3.18.tgz#9dced0d69305d71a486ae6c0160eabac8f516fb2"
+  integrity sha512-yUXgdPwjE/JIuWZ23Ge6G5gM+qiw7Baq/26oBq3eusIP6hZuHYeCpwQ96Zy5aHcjm2NSZcMjkZG1jARyr9BzkQ==
   dependencies:
     "@oclif/color" "^1.0.3"
     "@oclif/core" "^2.0.3"

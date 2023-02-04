@@ -25,7 +25,7 @@
     "@oclif/core": "^2.0.8",
     "@oclif/plugin-autocomplete": "^1.4.4",
     "@oclif/plugin-help": "^5.2.2",
-    "@oclif/plugin-not-found": "^2.3.17",
+    "@oclif/plugin-not-found": "^2.3.18",
     "@oclif/plugin-plugins": "^2.3.0",
     "@oclif/plugin-update": "^3.1.1",
     "@oclif/plugin-warn-if-update-available": "^2.0.24",
