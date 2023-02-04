@@ -29,7 +29,7 @@
     "@oclif/plugin-plugins": "^2.3.0",
     "@oclif/plugin-update": "^3.1.1",
     "@oclif/plugin-warn-if-update-available": "^2.0.24",
-    "@sentry/node": "^7.35.0",
+    "@sentry/node": "^7.36.0",
     "@sentry/tracing": "^7.35.0",
     "@typescript-eslint/eslint-plugin": "^5.50.0",
     "@typescript-eslint/parser": "^5.50.0",
