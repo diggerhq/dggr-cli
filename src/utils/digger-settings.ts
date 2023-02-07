@@ -1,8 +1,8 @@
 import * as fs from "node:fs";
-import { getHomeDir } from "./io";
+import { getHomeDir } from "@utils/io";
 import * as path from "node:path";
 import * as ini from "ini";
-import * as crypto from 'node:crypto'
+import * as crypto from "node:crypto";
 
 const initConfig = () => {
   const diggerFolder = path.join(getHomeDir(), ".digger");
@@ -37,19 +37,25 @@ export const updateDiggerConfig = (newSettings: object) => {
   overwriteDiggerConfig(newConfig);
 };
 
-
 export const defaultContent = (version: any) => ({
   target: "diggerhq/tf-module-bundler@master",
   version,
   // eslint-disable-next-line camelcase
   aws_region: "us-east-1",
   id: crypto.randomUUID(),
-  blocks: [],  
+  blocks: [],
   addons: [],
   created: Date.now(),
-})
+});
 
-export const blockOptions = ["container", "mysql", "postgres", "docdb", "redis", "imported"]
+export const blockOptions = [
+  "container",
+  "mysql",
+  "postgres",
+  "docdb",
+  "redis",
+  "imported",
+];
 
 export const awsRegions = [
   { name: "US East (Ohio)", value: "us-east-2" },
@@ -67,5 +73,5 @@ export const awsRegions = [
   { name: "Europe (London)", value: "eu-west-2" },
   { name: "Europe (Paris)", value: "eu-west-3" },
   { name: "Europe (Stockholm)", value: "eu-north-1" },
-  { name: "South America (São Paulo)", value: "sa-east-1" }
-]
+  { name: "South America (São Paulo)", value: "sa-east-1" },
+];

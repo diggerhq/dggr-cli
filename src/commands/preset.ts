@@ -1,13 +1,13 @@
-import { BaseCommand } from "../base";
+import { BaseCommand } from "@/base";
 import axios from "axios";
-import { PRESET_URL } from "../config";
+import { PRESET_URL } from "@/config";
 import fs from "node:fs";
 import chalk from "chalk";
 import {
   diggerJson,
   recreateBlockFromJson,
   updateDiggerJson,
-} from "../utils/helpers";
+} from "@utils/helpers";
 import { Args, Flags } from "@oclif/core";
 
 export default class Preset extends BaseCommand<typeof Preset> {

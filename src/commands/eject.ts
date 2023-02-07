@@ -4,8 +4,8 @@ import {
   recreateAddonFromJson,
   recreateBlockFromJson,
   updateDiggerJson,
-} from "../utils/helpers";
-import { BaseCommand } from "../base";
+} from "@utils/helpers";
+import { BaseCommand } from "@/base";
 import { Flags } from "@oclif/core";
 import fs from "node:fs";
 
@@ -39,12 +39,22 @@ export default class Eject extends BaseCommand<typeof Eject> {
     json.blocks.map(({ name }: any) => {
       return recreateBlockFromJson(name);
     });
-    
+
     if (json.addons) {
       // eslint-disable-next-line camelcase
-      json.addons.map(({ block_name, type, ...rest }: {block_name:string, type: string, rest: any}) => {
-        return recreateAddonFromJson(block_name, type, rest);
-      });
+      json.addons.map(
+        ({
+          block_name,
+          type,
+          ...rest
+        }: {
+          block_name: string;
+          type: string;
+          rest: any;
+        }) => {
+          return recreateAddonFromJson(block_name, type, rest);
+        }
+      );
     }
 
     const { advanced, ...rest } = json;

@@ -1,10 +1,10 @@
-import { trackEvent } from "../../utils/mixpanel";
-import { BaseCommand } from "../../base";
+import { trackEvent } from "@utils/mixpanel";
+import { BaseCommand } from "@/base";
 import { Args, Flags } from "@oclif/core";
-import { PRESET_URL } from "../../config";
+import { PRESET_URL } from "@/config";
 import chalk from "chalk";
 import axios from "axios";
-import { createBlock } from "../../utils/helpers";
+import { createBlock } from "@utils/helpers";
 
 export default class Unpack extends BaseCommand<typeof Unpack> {
   static description =
@@ -66,7 +66,12 @@ export default class Unpack extends BaseCommand<typeof Unpack> {
       chalk.green`Saving ${chalk.greenBright`${flags.name}`} as ${chalk.greenBright`${blockName}/`}`
     );
 
-    createBlock({ type, name: blockName, region: flags.region, blockDefault: blockData });
+    createBlock({
+      type,
+      name: blockName,
+      region: flags.region,
+      blockDefault: blockData,
+    });
 
     try {
       this.log("Successfully unpacked a block to the Digger project");

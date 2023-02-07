@@ -1,8 +1,8 @@
 import { Args, Flags } from "@oclif/core";
-import { trackEvent } from "../../utils/mixpanel";
+import { trackEvent } from "@utils/mixpanel";
 import * as fs from "node:fs";
-import { diggerJson, updateDiggerJson } from "../../utils/helpers";
-import { BaseCommand } from "../../base";
+import { diggerJson, updateDiggerJson } from "@utils/helpers";
+import { BaseCommand } from "@/base";
 
 export default class Rename extends BaseCommand<typeof Rename> {
   static description = "rename a block in the project";

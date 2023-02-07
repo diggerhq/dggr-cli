@@ -1,6 +1,6 @@
-import { trackEvent } from "../../utils/mixpanel";
-import { diggerJson } from "../../utils/helpers";
-import { BaseCommand } from "../../base";
+import { trackEvent } from "@utils/mixpanel";
+import { diggerJson } from "@utils/helpers";
+import { BaseCommand } from "@/base";
 import { ux } from "@oclif/core";
 
 export default class List extends BaseCommand<typeof List> {
@@ -26,8 +26,8 @@ export default class List extends BaseCommand<typeof List> {
         },
         // eslint-disable-next-line camelcase
         aws_regions: {
-          get: row => row.aws_regions && Object.keys(row.aws_regions)
-        }
+          get: (row) => row.aws_regions && Object.keys(row.aws_regions),
+        },
       },
       {
         printLine: this.log.bind(this),

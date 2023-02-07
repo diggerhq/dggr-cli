@@ -6,10 +6,10 @@ import {
   diggerJsonExists,
   gitIgnore,
   updateDiggerJson,
-} from "../utils/helpers";
-import { trackEvent } from "../utils/mixpanel";
-import { BaseCommand } from "../base";
-import { blockOptions, defaultContent } from "../utils/digger-settings";
+} from '@utils/helpers';
+import { trackEvent } from '@utils/mixpanel';
+import { BaseCommand } from '@/base';
+import { blockOptions, defaultContent } from '@utils/digger-settings';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import * as inquirer from "inquirer-shortcuts";
@@ -29,10 +29,10 @@ export default class Init extends BaseCommand<typeof Init> {
       char: "t",
       description: "type of block",
       options: blockOptions,
-    }),    
-    region: Flags.string({ 
-      char: "r", 
-      default: "us-east-1" 
+    }),
+    region: Flags.string({
+      char: "r",
+      default: "us-east-1"
     }),
   };
 

@@ -1,5 +1,5 @@
-import { BaseCommand } from "../base";
-import { writeDiggerApiKey } from "../utils/helpers";
+import { BaseCommand } from "@/base";
+import { writeDiggerApiKey } from "@utils/helpers";
 import { Args } from "@oclif/core";
 
 export default class Login extends BaseCommand<typeof Login> {

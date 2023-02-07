@@ -1,10 +1,10 @@
 import { Args, Flags } from "@oclif/core";
-import { BaseCommand } from "../../base";
-import { deleteSsmParameter } from "../../utils/aws";
+import { BaseCommand } from "@/base";
+import { deleteSsmParameter } from "@utils/aws";
 import { ConfigIniParser } from "config-ini-parser";
 import fs from "node:fs";
 import chalk from "chalk";
-import { diggerJson } from "../../utils/helpers";
+import { diggerJson } from "@utils/helpers";
 
 export default class Delete extends BaseCommand<typeof Delete> {
   static description = "Delete secret";

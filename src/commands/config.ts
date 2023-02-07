@@ -1,7 +1,7 @@
-import { BaseCommand } from "../base";
-import { createNewAwsProfile, getProfile, resetAwsProfile } from "../utils/aws";
+import { BaseCommand } from "@/base";
+import { createNewAwsProfile, getProfile, resetAwsProfile } from "@utils/aws";
 import { Args, Flags } from "@oclif/core";
-import { diggerJson } from "../utils/helpers";
+import { diggerJson } from "@utils/helpers";
 
 export default class Config extends BaseCommand<typeof Config> {
   static description = "Allows changing dgctl configuration";

@@ -3,9 +3,9 @@ import * as AWS from "@aws-sdk/client-ssm";
 import { ux } from "@oclif/core";
 import * as path from "node:path";
 import * as ini from "ini";
-import { getHomeDir } from "./io";
-import { diggerJson } from "./helpers";
-import { getDiggerConfig, updateDiggerConfig } from "./digger-settings";
+import { getHomeDir } from "@utils/io";
+import { diggerJson } from "@utils/helpers";
+import { getDiggerConfig, updateDiggerConfig } from "@utils/digger-settings";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import * as inquirer from "inquirer-shortcuts";

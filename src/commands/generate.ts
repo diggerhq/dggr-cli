@@ -4,21 +4,19 @@ import {
   diggerAPIKeyExists,
   diggerJson,
   diggerJsonExists,
-} from "../utils/helpers";
+} from "@utils/helpers";
 import * as fs from "node:fs";
 import axios from "axios";
 import extract = require("extract-zip");
 import path = require("node:path");
-import { trackEvent } from "../utils/mixpanel";
-import { BaseCommand } from "../base";
-import { getTrowelUrl } from "../config";
+import { trackEvent } from "@utils/mixpanel";
+import { BaseCommand } from "@/base";
+import { getTrowelUrl } from "@/config";
 
 export default class Generate extends BaseCommand<typeof Generate> {
   static description = "Generates terraform based on the Digger infra bundle";
 
-
   public async run(): Promise<void> {
-
     if (!diggerJsonExists()) {
       this.log(
         "No Digger infra project found. Try running `dgctl init` first or changing to a directory with dgctl.json"
@@ -34,7 +32,7 @@ export default class Generate extends BaseCommand<typeof Generate> {
       // advanced mode, just take the digger json directly
       combinedJson = currentDiggerJson;
     } else {
-      combinedJson = combinedDiggerJson()
+      combinedJson = combinedDiggerJson();
       trackEvent("generate called", {
         diggerConfig: currentDiggerJson,
         combinedJson,
@@ -51,7 +49,7 @@ export default class Generate extends BaseCommand<typeof Generate> {
       ? {
           "X-Digger-Api-Key": diggerAPIKey(),
         }
-      : undefined; 
+      : undefined;
 
     const response = await axios.post(getTrowelUrl(), combinedJson, {
       headers,

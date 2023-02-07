@@ -1,7 +1,7 @@
-import {Args, Flags} from '@oclif/core'
-import { registerBlock } from "../../utils/helpers";
-import { trackEvent } from "../../utils/mixpanel";
-import { BaseCommand } from "../../base";
+import { Args, Flags } from "@oclif/core";
+import { registerBlock } from "@utils/helpers";
+import { trackEvent } from "@utils/mixpanel";
+import { BaseCommand } from "@/base";
 
 export default class Register extends BaseCommand<typeof Register> {
   static description =

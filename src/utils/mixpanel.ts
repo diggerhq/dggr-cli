@@ -3,8 +3,8 @@ import * as path from "node:path";
 import * as Mixpanel from "mixpanel";
 import { getHomeDir } from "./io";
 import * as crypto from "node:crypto";
-import { MIXPANEL_TOKEN } from "../config";
-import { diggerAPIKey, diggerAPIKeyExists } from "./helpers";
+import { MIXPANEL_TOKEN } from "@/config";
+import { diggerAPIKey, diggerAPIKeyExists } from "@utils/helpers";
 
 const mixpanel = initialiseMixpanel();
 

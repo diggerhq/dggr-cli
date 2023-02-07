@@ -2,10 +2,10 @@ import { Args, Flags } from "@oclif/core";
 import chalk = require("chalk");
 import { execSync } from "node:child_process";
 import { lookpath } from "lookpath";
-import { getAwsCreds } from "../../utils/aws";
-import { trackEvent } from "../../utils/mixpanel";
-import { tfOutput } from "../../utils/terraform";
-import { BaseCommand } from "../../base";
+import { getAwsCreds } from "@utils/aws";
+import { trackEvent } from "@utils/mixpanel";
+import { tfOutput } from "@utils/terraform";
+import { BaseCommand } from "@/base";
 
 export default class Logs extends BaseCommand<typeof Logs> {
   static description = "Show application logs from AWS";
@@ -62,7 +62,9 @@ export default class Logs extends BaseCommand<typeof Logs> {
     execSync(
       `aws logs tail ${
         flags.follow ? "--follow" : ""
-      } --profile ${awsProfile} /ecs/service/${ecsServiceName} --region ${flags.region} --color auto`,
+      } --profile ${awsProfile} /ecs/service/${ecsServiceName} --region ${
+        flags.region
+      } --color auto`,
       {
         stdio: [process.stdin, process.stdout, process.stderr],
       }

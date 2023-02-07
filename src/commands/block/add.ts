@@ -1,9 +1,14 @@
 import { Args, Flags } from "@oclif/core";
-import { createBlock, createOrUpdateVpc, importBlock, requiresVpc } from "../../utils/helpers";
-import { trackEvent } from "../../utils/mixpanel";
-import { BaseCommand } from "../../base";
+import {
+  createBlock,
+  createOrUpdateVpc,
+  importBlock,
+  requiresVpc,
+} from "@utils/helpers";
+import { trackEvent } from "@utils/mixpanel";
+import { BaseCommand } from "@/base";
 import * as crypto from "node:crypto";
-import { blockOptions } from "../../utils/digger-settings";
+import { blockOptions } from "@utils/digger-settings";
 
 export default class Add extends BaseCommand<typeof Add> {
   static description = "Adds a block to the project";
@@ -25,7 +30,7 @@ export default class Add extends BaseCommand<typeof Add> {
     service: Flags.string({
       char: "s",
       description: "aws service name to search",
-    }),   
+    }),
     region: Flags.string({
       char: "r",
       description: "aws region to add to",
@@ -76,11 +81,12 @@ export default class Add extends BaseCommand<typeof Add> {
         this.log("Successfully added a block to the Digger project");
       } else {
         createBlock({ type, name: blockName, region: flags.region });
-        
+
         if (requiresVpc(type)) {
-          createOrUpdateVpc(flags.region, {[flags.region]: {"config_overrides": {}}} )
+          createOrUpdateVpc(flags.region, {
+            [flags.region]: { config_overrides: {} },
+          });
         }
-      
 
         this.log("Successfully added a block to the Digger project");
       }
@@ -89,4 +95,3 @@ export default class Add extends BaseCommand<typeof Add> {
     }
   }
 }
-

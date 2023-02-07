@@ -1,13 +1,13 @@
 import { Args, Flags } from "@oclif/core";
 import * as fs from "node:fs";
-import { diggerJson } from "../utils/helpers";
+import { diggerJson } from "@utils/helpers";
 
 import chalk = require("chalk");
-import { callTF } from "../utils/terraform";
-import { getAwsCreds } from "../utils/aws";
-import { trackEvent } from "../utils/mixpanel";
-import { BaseCommand } from "../base";
-import { createRemoteState } from "../utils/remote-state";
+import { callTF } from "@utils/terraform";
+import { getAwsCreds } from "@utils/aws";
+import { trackEvent } from "@utils/mixpanel";
+import { BaseCommand } from "@/base";
+import { createRemoteState } from "@utils/remote-state";
 
 export default class Provision extends BaseCommand<typeof Provision> {
   static description = "describe the command here";

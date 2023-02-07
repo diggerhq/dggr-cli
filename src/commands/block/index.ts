@@ -1,5 +1,5 @@
-import { diggerJsonExists } from "../../utils/helpers";
-import { BaseCommand } from "../../base";
+import { diggerJsonExists } from "@utils/helpers";
+import { BaseCommand } from "@/base";
 
 export default class Index extends BaseCommand<typeof Index> {
   static description = "Adds a infra block to a Digger infra bundle";

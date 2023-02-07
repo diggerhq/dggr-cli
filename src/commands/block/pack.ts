@@ -1,6 +1,6 @@
-import { trackEvent } from "../../utils/mixpanel";
-import { BaseCommand } from "../../base";
-import { prepareBlockJson } from "../../utils/helpers";
+import { trackEvent } from "@utils/mixpanel";
+import { BaseCommand } from "@/base";
+import { prepareBlockJson } from "@utils/helpers";
 import fs from "node:fs";
 import { Args } from "@oclif/core";
 

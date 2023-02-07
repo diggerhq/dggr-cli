@@ -118,7 +118,7 @@ export const importBlock = (blockName: string, id: string) => {
 
 export const createBlock = ({
   type,
-  name, 
+  name,
   region,
   extraOptions,
   blockDefault,
@@ -131,7 +131,7 @@ export const createBlock = ({
   blockDefault?: any;
   blockOnly?: boolean;
 }) => {
-  
+
   const defaults = blockDefault ?? blockDefaults[type as keyof typeof blockDefaults];
 
   const awsIdentifier = `${name}-${crypto.randomBytes(4).toString("hex")}`;
@@ -307,7 +307,6 @@ export const combinedDiggerJson = () => {
 
   return {
     ...currentDiggerJson,
-    // eslint-disable-next-line camelcase
     environment_variables: getVarsFromIniFile("dgctl.variables.ini", null),
     secrets: getSecretsFromIniFile("dgctl.secrets.ini", null),
     blocks: mergedBlocks,

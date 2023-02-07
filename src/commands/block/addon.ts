@@ -1,4 +1,3 @@
-/* eslint-disable max-depth */
 import { Flags } from "@oclif/core";
 import {
   combinedDiggerJson,
@@ -6,13 +5,13 @@ import {
   createOrUpdateVpc,
   diggerJson,
   requiresVpc,
-} from "../../utils/helpers";
-import { trackEvent } from "../../utils/mixpanel";
-import { BaseCommand } from "../../base";
+} from "@utils/helpers";
+import { trackEvent } from "@utils/mixpanel";
+import { BaseCommand } from "@/base";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import * as inquirer from "inquirer-shortcuts";
-import { awsRegions } from "../../utils/digger-settings";
+import { awsRegions } from "@utils/digger-settings";
 
 export default class Addon extends BaseCommand<typeof Addon> {
   static description = "Addon to a block";
@@ -48,13 +47,15 @@ export default class Addon extends BaseCommand<typeof Addon> {
       ) ?? [];
 
     if (existingAddonForBlock.length > 0) {
-      const { confirmation } = flags.force ? { confirmation: flags.force } : await inquirer.prompt([
-        {
-          type: "confirm",
-          name: "confirmation",
-          message: `Do you want to overwrite existing addon setting of type ${flags.type} for block ${flags.blockName} ?`,
-        },
-      ]);
+      const { confirmation } = flags.force
+        ? { confirmation: flags.force }
+        : await inquirer.prompt([
+            {
+              type: "confirm",
+              name: "confirmation",
+              message: `Do you want to overwrite existing addon setting of type ${flags.type} for block ${flags.blockName} ?`,
+            },
+          ]);
       if (!confirmation) {
         return;
       }
@@ -63,7 +64,6 @@ export default class Addon extends BaseCommand<typeof Addon> {
     const type = flags.type;
     const blockName = flags.block;
     try {
-
       const currentDiggerJson = combinedDiggerJson();
       if (type === "routing") {
         const { domainName } = await inquirer.prompt([
@@ -117,25 +117,25 @@ export default class Addon extends BaseCommand<typeof Addon> {
             name: "regions",
             message: `Which regions you want to deploy to?`,
             choices: awsRegions,
-          }
+          },
         ]);
-        
-        const regionConfigs: { [key: string] : any } = {};
+
+        const regionConfigs: { [key: string]: any } = {};
 
         for (const region of answers.regions) {
           regionConfigs[region] = {
             // eslint-disable-next-line camelcase
-            config_overrides: {}
+            config_overrides: {},
           };
         }
 
-         
-        const currentDiggerJson = combinedDiggerJson(); 
-        const block = currentDiggerJson.blocks.find((block: any) => block.name === blockName);
+        const currentDiggerJson = combinedDiggerJson();
+        const block = currentDiggerJson.blocks.find(
+          (block: any) => block.name === blockName
+        );
         if (requiresVpc(block?.type)) {
-          createOrUpdateVpc(answers.regions[0], regionConfigs)
+          createOrUpdateVpc(answers.regions[0], regionConfigs);
         }
-      
 
         createAddon({
           type: type,

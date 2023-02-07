@@ -2,11 +2,11 @@ import { Args, ux, Flags } from "@oclif/core";
 import chalk = require("chalk");
 import { execSync } from "node:child_process";
 import { lookpath } from "lookpath";
-import { getAwsCreds } from "../../utils/aws";
-import { diggerJson } from "../../utils/helpers";
-import { trackEvent } from "../../utils/mixpanel";
-import { tfOutput } from "../../utils/terraform";
-import { BaseCommand } from "../../base";
+import { getAwsCreds } from "@utils/aws";
+import { diggerJson } from "@utils/helpers";
+import { trackEvent } from "@utils/mixpanel";
+import { tfOutput } from "@utils/terraform";
+import { BaseCommand } from "@/base";
 
 export default class Deploy extends BaseCommand<typeof Deploy> {
   static description = "Deploy application to AWS";
@@ -31,10 +31,10 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
       char: "n",
       description: "Skip prompts",
       default: false,
-    }),    
+    }),
     region: Flags.string({
       char: "r",
-      description: "AWS region to use"
+      description: "AWS region to use",
     }),
   };
 
@@ -73,33 +73,37 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
     const codeDirectory =
       flags.context ?? (await ux.prompt("Where is your code checked out?"));
     const infraDirectory = "generated";
-    const region = flags.region
+    const region = flags.region;
     const terraformOutputs = await tfOutput(infraDirectory);
 
-    const blockRegions = Object.keys(diggerConfig.blocks.find((block: any) => block.name === args.name)?.aws_regions) ?? [region];
+    const blockRegions = Object.keys(
+      diggerConfig.blocks.find((block: any) => block.name === args.name)
+        ?.aws_regions
+    ) ?? [region];
 
-    const configPerRegion: {[region: string]: {[key: string]: any}} = {}
+    const configPerRegion: { [region: string]: { [key: string]: any } } = {};
     const awsProfile = "default";
     for (const region of blockRegions) {
-      
       const moduleName = `${args.name}_${region}`;
       const {
         lb_dns: lbUrl,
         docker_registry_url: ecrRepoUrl,
         ecs_cluster_name: ecsClusterName,
-        ecs_service_name: ecsServiceName
-      } = terraformOutputs[moduleName].value
-      
+        ecs_service_name: ecsServiceName,
+      } = terraformOutputs[moduleName].value;
+
       configPerRegion[region] = {
         moduleName: moduleName,
         lbUrl: lbUrl,
         ecrRepoUrl: ecrRepoUrl,
         ecsClusterName: ecsClusterName,
         ecsServiceName: ecsServiceName,
-      }
+      };
     }
 
-    const ecrTags = Object.values(configPerRegion).map((config: any) => `-t ${config.ecrRepoUrl}`).join(" ")
+    const ecrTags = Object.values(configPerRegion)
+      .map((config: any) => `-t ${config.ecrRepoUrl}`)
+      .join(" ");
 
     if (flags.displayOnly) {
       this.log(
@@ -130,11 +134,11 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
         cwd: codeDirectory,
       });
 
-
       for (const [region, config] of Object.entries(configPerRegion)) {
-
         this.log(
-          chalk.blueBright(`[INFO] Logging to ECR registry ${config.ecrRepoUrl}`)
+          chalk.blueBright(
+            `[INFO] Logging to ECR registry ${config.ecrRepoUrl}`
+          )
         );
         execSync(
           `aws ecr get-login-password --region ${region} --profile ${awsProfile} | 
@@ -161,11 +165,19 @@ export default class Deploy extends BaseCommand<typeof Deploy> {
             cwd: codeDirectory,
           }
         );
-        this.log(chalk.greenBright(`Success! Your app is deployed at ${config.lbUrl} in region ${region}`));
+        this.log(
+          chalk.greenBright(
+            `Success! Your app is deployed at ${config.lbUrl} in region ${region}`
+          )
+        );
       }
 
-      if (!flags["no-input"] && blockRegions.length === 1 && await ux.confirm("Do you want to follow logs?")) {
-        const region = blockRegions[0]; 
+      if (
+        !flags["no-input"] &&
+        blockRegions.length === 1 &&
+        (await ux.confirm("Do you want to follow logs?"))
+      ) {
+        const region = blockRegions[0];
         this.log(
           chalk.blueBright(
             `[INFO] Streaming logs from ECS service ${configPerRegion[region].ecsServiceName}`
