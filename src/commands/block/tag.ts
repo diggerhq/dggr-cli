@@ -42,7 +42,19 @@ export default class Rename extends BaseCommand<typeof Rename> {
     const currentDiggerJson = diggerJson();
     const updatedApp = currentDiggerJson.blocks.map((block: any) => {
       if (block.name === args.name) {
-        block.ecr_image_tag = flags.tag
+        const configRaw = fs.readFileSync(
+          `${process.cwd()}/${block.name}/config.json`,
+          "utf8"
+        );
+
+        const config = JSON.parse(configRaw);
+        config.ecr_image_tag = flags.tag
+
+        fs.writeFileSync(
+          `${process.cwd()}/${block.name}/config.json`,
+          JSON.stringify(config, null, 4)
+        );
+
       }
 
       return block;
