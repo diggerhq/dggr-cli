@@ -84,6 +84,7 @@ export default class Add extends BaseCommand<typeof Add> {
 
         if (requiresVpc(type)) {
           createOrUpdateVpc(flags.region, {
+            // eslint-disable-next-line camelcase
             [flags.region]: { config_overrides: {} },
           });
         }
