@@ -48,7 +48,7 @@ export default class Rename extends BaseCommand<typeof Rename> {
         );
 
         const config = JSON.parse(configRaw);
-        config.ecr_image_tag = flags.tag
+        config["ecr_image_tag"] = flags.tag
 
         fs.writeFileSync(
           `${process.cwd()}/${block.name}/config.json`,
