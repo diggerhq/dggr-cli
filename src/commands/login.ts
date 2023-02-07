@@ -1,4 +1,4 @@
-import { BaseCommand } from "@/base";
+import { BaseCommand } from "base";
 import { writeDiggerApiKey } from "@utils/helpers";
 import { Args } from "@oclif/core";
 

@@ -6,7 +6,7 @@ import { getAwsCreds } from "@utils/aws";
 import { diggerJson } from "@utils/helpers";
 import { trackEvent } from "@utils/mixpanel";
 import { tfOutput } from "@utils/terraform";
-import { BaseCommand } from "@/base";
+import { BaseCommand } from "base";
 
 export default class Deploy extends BaseCommand<typeof Deploy> {
   static description = "Deploy application to AWS";

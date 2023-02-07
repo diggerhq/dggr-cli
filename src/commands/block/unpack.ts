@@ -1,7 +1,7 @@
 import { trackEvent } from "@utils/mixpanel";
-import { BaseCommand } from "@/base";
+import { BaseCommand } from "base";
 import { Args, Flags } from "@oclif/core";
-import { PRESET_URL } from "@/config";
+import { PRESET_URL } from "config";
 import chalk from "chalk";
 import axios from "axios";
 import { createBlock } from "@utils/helpers";

@@ -1,7 +1,7 @@
 import { diggerJson, updateDiggerJson } from "@utils/helpers";
 import { trackEvent } from "@utils/mixpanel";
 import * as fs from "node:fs";
-import { BaseCommand } from "@/base";
+import { BaseCommand } from "base";
 import { Args } from "@oclif/core";
 
 export default class Remove extends BaseCommand<typeof Remove> {

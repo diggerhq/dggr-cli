@@ -10,8 +10,8 @@ import axios from "axios";
 import extract = require("extract-zip");
 import path = require("node:path");
 import { trackEvent } from "@utils/mixpanel";
-import { BaseCommand } from "@/base";
-import { getTrowelUrl } from "@/config";
+import { BaseCommand } from "base";
+import { getTrowelUrl } from "config";
 
 export default class Generate extends BaseCommand<typeof Generate> {
   static description = "Generates terraform based on the Digger infra bundle";

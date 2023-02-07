@@ -5,7 +5,7 @@ import { lookpath } from "lookpath";
 import { getAwsCreds } from "@utils/aws";
 import { trackEvent } from "@utils/mixpanel";
 import { tfOutput } from "@utils/terraform";
-import { BaseCommand } from "@/base";
+import { BaseCommand } from "base";
 
 export default class Logs extends BaseCommand<typeof Logs> {
   static description = "Show application logs from AWS";

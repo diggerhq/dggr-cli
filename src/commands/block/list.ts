@@ -1,6 +1,6 @@
 import { trackEvent } from "@utils/mixpanel";
 import { diggerJson } from "@utils/helpers";
-import { BaseCommand } from "@/base";
+import { BaseCommand } from "base";
 import { ux } from "@oclif/core";
 
 export default class List extends BaseCommand<typeof List> {

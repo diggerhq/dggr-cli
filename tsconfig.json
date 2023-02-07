@@ -8,22 +8,27 @@
     "strict": true,
     "target": "es2019",
     "esModuleInterop": true,
+    "baseUrl": "./src",
     "paths": {
       "@commands/*": [
-        "./src/commands/*"
+        "commands/*"
       ],
       "@utils/*": [
-        "./src/utils/*"
+        "utils/*"
       ],
       "@hooks/*": [
-        "./src/hooks/*"
-      ],
-      "@/*": [
-        "./src/*"
+        "hooks/*"
       ]
     }
   },
   "include": [
-    "src/**/*"
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "test/**/*",
+    "**/*.test.ts",
+    "**/*.test.tsx"
   ]
 }

@@ -1,6 +1,6 @@
-import { BaseCommand } from "@/base";
+import { BaseCommand } from "base";
 import axios from "axios";
-import { PRESET_URL } from "@/config";
+import { PRESET_URL } from "config";
 import fs from "node:fs";
 import chalk from "chalk";
 import {

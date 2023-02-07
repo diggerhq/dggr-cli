@@ -5,7 +5,7 @@ import {
   recreateBlockFromJson,
   updateDiggerJson,
 } from "@utils/helpers";
-import { BaseCommand } from "@/base";
+import { BaseCommand } from "base";
 import { Flags } from "@oclif/core";
 import fs from "node:fs";
 

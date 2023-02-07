@@ -1,4 +1,4 @@
-import { BaseCommand } from "@/base";
+import { BaseCommand } from "base";
 import { createNewAwsProfile, getProfile, resetAwsProfile } from "@utils/aws";
 import { Args, Flags } from "@oclif/core";
 import { diggerJson } from "@utils/helpers";

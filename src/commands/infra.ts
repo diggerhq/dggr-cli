@@ -1,5 +1,5 @@
 import { Args, Flags } from "@oclif/core";
-import { BaseCommand } from "@/base";
+import { BaseCommand } from "base";
 
 export default class Infra extends BaseCommand<typeof Infra> {
   static description = "describe the command here";

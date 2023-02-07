@@ -7,7 +7,7 @@ import {
   requiresVpc,
 } from "@utils/helpers";
 import { trackEvent } from "@utils/mixpanel";
-import { BaseCommand } from "@/base";
+import { BaseCommand } from "base";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import * as inquirer from "inquirer-shortcuts";

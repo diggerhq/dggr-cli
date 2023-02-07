@@ -6,7 +6,7 @@ import {
   requiresVpc,
 } from "@utils/helpers";
 import { trackEvent } from "@utils/mixpanel";
-import { BaseCommand } from "@/base";
+import { BaseCommand } from "base";
 import * as crypto from "node:crypto";
 import { blockOptions } from "@utils/digger-settings";
 

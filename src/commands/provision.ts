@@ -6,7 +6,7 @@ import chalk = require("chalk");
 import { callTF } from "@utils/terraform";
 import { getAwsCreds } from "@utils/aws";
 import { trackEvent } from "@utils/mixpanel";
-import { BaseCommand } from "@/base";
+import { BaseCommand } from "base";
 import { createRemoteState } from "@utils/remote-state";
 
 export default class Provision extends BaseCommand<typeof Provision> {

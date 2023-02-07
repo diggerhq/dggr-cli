@@ -1,5 +1,5 @@
 import { Args, Flags } from "@oclif/core";
-import { BaseCommand } from "@/base";
+import { BaseCommand } from "base";
 import { createSsmParameter } from "@utils/aws";
 import { ConfigIniParser } from "config-ini-parser";
 import fs from "node:fs";

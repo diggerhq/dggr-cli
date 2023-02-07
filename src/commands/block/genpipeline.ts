@@ -2,7 +2,7 @@ import { Args, Flags } from "@oclif/core";
 import { diggerJson } from "@utils/helpers";
 import { trackEvent } from "@utils/mixpanel";
 import { tfOutput } from "@utils/terraform";
-import { BaseCommand } from "@/base";
+import { BaseCommand } from "base";
 
 export default class Genpipeline extends BaseCommand<typeof Genpipeline> {
   static description = "Generate pipeline for your block";

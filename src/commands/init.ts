@@ -6,10 +6,10 @@ import {
   diggerJsonExists,
   gitIgnore,
   updateDiggerJson,
-} from '@utils/helpers';
-import { trackEvent } from '@utils/mixpanel';
-import { BaseCommand } from '@/base';
-import { blockOptions, defaultContent } from '@utils/digger-settings';
+} from "@utils/helpers";
+import { trackEvent } from "@utils/mixpanel";
+import { BaseCommand } from "base";
+import { blockOptions, defaultContent } from "@utils/digger-settings";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import * as inquirer from "inquirer-shortcuts";
@@ -32,7 +32,7 @@ export default class Init extends BaseCommand<typeof Init> {
     }),
     region: Flags.string({
       char: "r",
-      default: "us-east-1"
+      default: "us-east-1",
     }),
   };
 
@@ -66,7 +66,12 @@ export default class Init extends BaseCommand<typeof Init> {
             },
           ]);
 
-      createBlock({ type, name: args.name, region: flags.region, blockOnly: true });
+      createBlock({
+        type,
+        name: args.name,
+        region: flags.region,
+        blockOnly: true,
+      });
 
       this.log(
         chalk.green`Successfully created a standalone block. Access it in ${chalk.greenBright`${args.name}`} directory`
