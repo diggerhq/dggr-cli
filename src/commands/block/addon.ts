@@ -1,4 +1,3 @@
-/* eslint-disable max-depth */
 import { Flags } from "@oclif/core";
 import {
   combinedDiggerJson,
@@ -119,7 +118,7 @@ export default class Addon extends BaseCommand<typeof Addon> {
             choices: awsRegions,
           }
         ]);
-        
+
         const regionConfigs: { [key: string] : any } = {};
 
         for (const region of answers.regions) {
@@ -129,13 +128,13 @@ export default class Addon extends BaseCommand<typeof Addon> {
           };
         }
 
-         
-        const currentDiggerJson = combinedDiggerJson(); 
+
+        const currentDiggerJson = combinedDiggerJson();
         const block = currentDiggerJson.blocks.find((block: any) => block.name === blockName);
         if (requiresVpc(block?.type)) {
           createOrUpdateVpc(answers.regions[0], regionConfigs)
         }
-      
+
 
         createAddon({
           type: type,

@@ -21,9 +21,7 @@ export default class Rename extends BaseCommand<typeof Rename> {
     const { args, flags } = await this.parse(Rename);
     trackEvent("block tag called", { flags, args });
     if (!args.name) {
-      this.log(
-        `No app name provided. Example: dgctl block <name>`
-      );
+      this.log(`No app name provided. Example: dgctl block <name>`);
       return;
     }
 
@@ -48,13 +46,13 @@ export default class Rename extends BaseCommand<typeof Rename> {
         );
 
         const config = JSON.parse(configRaw);
-        config["ecr_image_tag"] = flags.tag
+        // eslint-disable-next-line camelcase
+        config.ecr_image_tag = flags.tag;
 
         fs.writeFileSync(
           `${process.cwd()}/${block.name}/config.json`,
           JSON.stringify(config, null, 4)
         );
-
       }
 
       return block;
