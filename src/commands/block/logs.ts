@@ -21,6 +21,11 @@ export default class Logs extends BaseCommand<typeof Logs> {
       description: "Follow logs",
       default: false,
     }),
+    region: Flags.string({
+      char: "r",
+      description: "AWS region to use",
+      default: "us-east-1",
+    }),
   };
 
   static args = { name: Args.string() };
@@ -57,7 +62,7 @@ export default class Logs extends BaseCommand<typeof Logs> {
     execSync(
       `aws logs tail ${
         flags.follow ? "--follow" : ""
-      } --profile ${awsProfile} /ecs/service/${ecsServiceName} --color auto`,
+      } --profile ${awsProfile} /ecs/service/${ecsServiceName} --region ${flags.region} --color auto`,
       {
         stdio: [process.stdin, process.stdout, process.stderr],
       }

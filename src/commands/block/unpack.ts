@@ -20,6 +20,11 @@ export default class Unpack extends BaseCommand<typeof Unpack> {
       description:
         "Url path to a json file that contains a packed block configuration",
     }),
+    region: Flags.string({
+      char: "r",
+      description: "AWS region to unpack block",
+      default: "us-east-1",
+    }),
   };
 
   static args = {
@@ -61,7 +66,7 @@ export default class Unpack extends BaseCommand<typeof Unpack> {
       chalk.green`Saving ${chalk.greenBright`${flags.name}`} as ${chalk.greenBright`${blockName}/`}`
     );
 
-    createBlock({ type, name: blockName, blockDefault: blockData });
+    createBlock({ type, name: blockName, region: flags.region, blockDefault: blockData });
 
     try {
       this.log("Successfully unpacked a block to the Digger project");
