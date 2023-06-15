@@ -60,6 +60,8 @@ export default class Generate extends BaseCommand<typeof Generate> {
       );
     }
 
+    const generatedTerraformDir = currentDiggerJson.generate_terraform_dir === "" ? "generated" : currentDiggerJson.generate_terraform_dir;
+
     const headers = diggerAPIKeyExists()
       ? {
           "X-Digger-Api-Key": diggerAPIKey(),
@@ -73,14 +75,14 @@ export default class Generate extends BaseCommand<typeof Generate> {
     // write response to file
     fs.writeFileSync("tmp.zip", Buffer.from(response.data, "base64"));
     // remove previous generated folder except tfstate file
-    if (fs.existsSync("generated")) {
-      fs.readdir("generated", (err, files) => {
+    if (fs.existsSync(generatedTerraformDir)) {
+      fs.readdir(generatedTerraformDir, (err, files) => {
         if (err) {
           console.log(err);
         }
 
         for (const file of files) {
-          const fileDir = path.join("generated", file);
+          const fileDir = path.join(generatedTerraformDir, file);
           if (file !== "terraform.tfstate" && file !== ".terraform") {
             fs.rmSync(fileDir, { recursive: true, force: true });
           }
@@ -89,7 +91,8 @@ export default class Generate extends BaseCommand<typeof Generate> {
     }
 
     try {
-      await extract("tmp.zip", { dir: `${process.cwd()}/generated` });
+      console.log("Extracting tmp.zip ");
+      await extract("tmp.zip", { dir: `${process.cwd()}/${generatedTerraformDir}` });
       console.log("Infrastructure generation complete!");
       console.log(
         "You can now create your infrastructure using dgctl provision command"
