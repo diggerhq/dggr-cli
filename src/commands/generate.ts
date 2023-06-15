@@ -60,7 +60,7 @@ export default class Generate extends BaseCommand<typeof Generate> {
       );
     }
 
-    const generatedTerraformDir = currentDiggerJson.generate_terraform_dir === "" ? "generated" : currentDiggerJson.generate_terraform_dir;
+    const generatedTerraformDir = "generated"
 
     const headers = diggerAPIKeyExists()
       ? {
