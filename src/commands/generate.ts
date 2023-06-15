@@ -91,7 +91,7 @@ export default class Generate extends BaseCommand<typeof Generate> {
     }
 
     try {
-      console.log("Extracting tmp.zip ");
+      console.log(`Extracting tmp.zip to ${process.cwd()}/${generatedTerraformDir}`);
       await extract("tmp.zip", { dir: `${process.cwd()}/${generatedTerraformDir}` });
       console.log("Infrastructure generation complete!");
       console.log(
