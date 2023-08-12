@@ -1149,13 +1149,14 @@
   resolved "https://registry.yarnpkg.com/@jahed/promises/-/promises-1.0.2.tgz#6643eced3333c9cea7a31c0a02cf3aa8a3734256"
   integrity sha512-Ak1PYoJ+nq9SoJ6fGCqCpwfB1/OpMadCuo1WhaNwkZ7EKXNzq1Kj60/KeZGkm1fkzZIOMPkAcKO0EeTxm/89uQ==
 
-"@jahed/terraform@^1.3.7":
-  version "1.3.7"
-  resolved "https://registry.yarnpkg.com/@jahed/terraform/-/terraform-1.3.7.tgz#90e84c1dd141e3a4234caf80ba69fbcbb2200903"
-  integrity sha512-yT0dBudlycF3FkbeO/uqJHOsyUXaKFBwRtCMbTAXnpH9s8fxNUrq3EAsTyjD8nV9W3Hk2IJv0/TQZJJE2OyNEQ==
+"@jahed/terraform@^1.5.5":
+  version "1.5.5"
+  resolved "https://registry.yarnpkg.com/@jahed/terraform/-/terraform-1.5.5.tgz#908cab733d769b87c7e83bbcfbef8f4f722cd2c6"
+  integrity sha512-ai3A1NintMbj55LioEYcdJ4zPSEgRYhIT+bfY1ZQfPvlauK4ZS7GsdF9ApjIvtF8l3bjfLOJrdy03c8FV7mK+w==
   dependencies:
     "@jahed/promises" "^1.0.2"
     find-cache-dir "^3.3.2"
+    openpgp "^5.9.0"
     yauzl "^2.10.0"
 
 "@jridgewell/resolve-uri@^3.0.3":
@@ -2112,6 +2113,16 @@ asap@^2.0.0:
   resolved "https://registry.yarnpkg.com/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
   integrity sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==
 
+asn1.js@^5.0.0:
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/asn1.js/-/asn1.js-5.4.1.tgz#11a980b84ebb91781ce35b0fdc2ee294e3783f07"
+  integrity sha512-+I//4cYPccV8LdmBLiX8CYvf9Sp3vQsrqu2QNXRcrbiWvcx/UdlFiqUJJzxRQxgsZmvhXhn4cSKeSmoFjVdupA==
+  dependencies:
+    bn.js "^4.0.0"
+    inherits "^2.0.1"
+    minimalistic-assert "^1.0.0"
+    safer-buffer "^2.1.0"
+
 assertion-error@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/assertion-error/-/assertion-error-1.1.0.tgz#e60b6b0e8f301bd97e5375215bda406c85118c0b"
@@ -2207,6 +2218,11 @@ bl@^4.0.3, bl@^4.1.0:
     buffer "^5.5.0"
     inherits "^2.0.4"
     readable-stream "^3.4.0"
+
+bn.js@^4.0.0:
+  version "4.12.0"
+  resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.12.0.tgz#775b3f278efbb9718eec7361f483fb36fbbfea88"
+  integrity sha512-c98Bf3tPniI+scsdk237ku1Dc3ujXQTSgyiPUDEOe7tRkhrqridvh8klBv0HCEso1OLOYcHuCv/cS6DNxKH+ZA==
 
 bowser@^2.11.0:
   version "2.11.0"
@@ -4464,6 +4480,11 @@ min-indent@^1.0.0:
   resolved "https://registry.yarnpkg.com/min-indent/-/min-indent-1.0.1.tgz#a63f681673b30571fbe8bc25686ae746eefa9869"
   integrity sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==
 
+minimalistic-assert@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/minimalistic-assert/-/minimalistic-assert-1.0.1.tgz#2e194de044626d4a10e7f7fbc00ce73e83e4d5c7"
+  integrity sha512-UtJcAD4yEaGtjPezWuO9wC4nwUnVH/8/Im3yEHQP4b67cXlD/Qr9hdITCU1xDbSEXg2XKNaP8jsReV7vQd00/A==
+
 minimatch@5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-5.0.1.tgz#fb9022f7528125187c92bd9e9b6366be1cf3415b"
@@ -4919,6 +4940,13 @@ onetime@^5.1.0, onetime@^5.1.2:
   integrity sha512-kbpaSSGJTWdAY5KPVeMOKXSrPtr8C8C7wodJbcsd51jRnmD+GZu8Y0VoU6Dm5Z4vWr0Ig/1NKuWRKf7j5aaYSg==
   dependencies:
     mimic-fn "^2.1.0"
+
+openpgp@^5.9.0:
+  version "5.9.0"
+  resolved "https://registry.yarnpkg.com/openpgp/-/openpgp-5.9.0.tgz#f7ebe7b1e228aebc494835509ec9239853faed61"
+  integrity sha512-wEI6TAinCAq8ZLZA4oZ3ZtJ2BhhHj+CiPCd8TzE7zCicr0V8tvG5UF76OtddLLOJcK63w3Aj3KiRd+VLMScirQ==
+  dependencies:
+    asn1.js "^5.0.0"
 
 optionator@^0.9.1:
   version "0.9.1"
@@ -5511,7 +5539,7 @@ safe-regex@^2.1.1:
   dependencies:
     regexp-tree "~0.1.1"
 
-"safer-buffer@>= 2.1.2 < 3", "safer-buffer@>= 2.1.2 < 3.0.0":
+"safer-buffer@>= 2.1.2 < 3", "safer-buffer@>= 2.1.2 < 3.0.0", safer-buffer@^2.1.0:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
